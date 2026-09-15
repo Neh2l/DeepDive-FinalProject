@@ -16,6 +16,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import SplashScreen from "./components/SplashScreen";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -57,6 +60,16 @@ function App() {
               path="about"
               element={<About />}
             />
+            <Route
+              path="checkout"
+              element={<Checkout />} />
+               <Route
+              path="orders"
+              element={<Orders />} />
+               <Route
+              path="orders/:id"
+              element={<OrderDetails />} />
+          
 
             <Route
               path="*"
