@@ -13,6 +13,9 @@ import { Link } from "react-router-dom";
 
 import DealsSection from "../components/Home/DealsSection";
 import FeaturedProducts from "../components/Home/FeaturedProducts";
+import PromoMosaic from "../components/Home/PromoMosaic";
+import WelcomeCard from "../components/WelcomeCard";
+// import CategorySlider from "../components/Home/CategorySlider";
 
 function Home() {
   const [timeLeft, setTimeLeft] = useState({
@@ -60,7 +63,10 @@ function Home() {
 
   return (
     <main className="min-h-screen bg-[#f6f6f6] text-gray-900">
-     
+
+      {/* Welcome Card */}
+      <WelcomeCard />
+
       <section className="relative overflow-hidden bg-[#111111]">
         <div className="mx-auto max-w-[1500px]">
           <div className="relative min-h-[620px] overflow-hidden lg:min-h-[680px]">
@@ -74,25 +80,20 @@ function Home() {
               <source src="/n56py1.mp4" type="video/mp4" />
             </video>
 
-         
             <div className="absolute inset-0 bg-black/30" />
 
-          
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/10" />
 
-           
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-           
             <div className="relative z-20 flex min-h-[620px] items-center px-6 py-20 sm:px-10 lg:min-h-[680px] lg:px-16 xl:px-24">
               <div className="max-w-2xl text-white">
-               
+
                 <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white backdrop-blur-md">
                   <FiZap className="text-[#ffd814]" />
                   THE EVERYDAY EDIT
                 </div>
 
-               
                 <h1 className="text-5xl font-black leading-[0.95] tracking-[-0.04em] sm:text-6xl lg:text-7xl xl:text-8xl">
                   Everything you need.
                   <span className="mt-2 block text-[#ffd814]">
@@ -100,13 +101,11 @@ function Home() {
                   </span>
                 </h1>
 
-               
                 <p className="mt-7 max-w-xl text-base leading-7 text-gray-300 sm:text-lg">
                   Discover thousands of products, unbeatable prices, and a
                   shopping experience designed around you.
                 </p>
 
-                
                 <div className="mt-9 flex flex-wrap gap-3">
                   <Link
                     to="/products"
@@ -163,8 +162,7 @@ function Home() {
         </div>
       </section>
 
-   
-      <section className="border-b border-gray-200 bg-white">
+      {/* <section className="border-b border-gray-200 bg-white">
         <div className="mx-auto grid max-w-[1400px] divide-y divide-gray-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
           <Feature
             icon={<FiTruck />}
@@ -190,15 +188,14 @@ function Home() {
             text="A shopping experience you'll enjoy"
           />
         </div>
-      </section>
+      </section> */}
 
-     
+      {/* <CategorySlider/> */}
+
       <DealsSection />
 
-      
       <FeaturedProducts />
 
-     
       <section className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1400px] overflow-hidden rounded-[28px] bg-[#111111]">
           <div className="grid items-center lg:grid-cols-2">
@@ -242,7 +239,8 @@ function Home() {
       {/* =====================================================
           TRENDING
       ====================================================== */}
-      <section className="px-4 py-14 sm:px-6 lg:px-8">
+
+      {/* <section className="px-4 py-14 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1400px]">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -284,9 +282,8 @@ function Home() {
             />
           </div>
         </div>
-      </section>
+      </section> */}
 
-      
       <section className="border-y border-gray-200 bg-white">
         <div className="mx-auto grid max-w-[1400px] gap-8 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
           <BenefitCard
@@ -309,7 +306,8 @@ function Home() {
         </div>
       </section>
 
-      
+      <PromoMosaic />
+
       <section className="bg-[#f6f6f6] px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ffd814] text-gray-950 shadow-sm">
@@ -337,7 +335,6 @@ function Home() {
     </main>
   );
 }
-
 
 function TimeBox({ value, label }) {
   return (
