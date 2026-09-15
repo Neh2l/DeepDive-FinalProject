@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import MainLayout from "./Layout/MainLayout";
@@ -15,54 +15,67 @@ import ErrorPage from "./pages/ErrorPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import SplashScreen from "./components/SplashScreen";
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
-    <BrowserRouter>
-      <Routes>
+    <>
+      {/* Premium Splash Screen */}
+      {showSplash && (
+        <SplashScreen onFinish={() => setShowSplash(false)} />
+      )}
 
-        {/* Main Layout - wraps ALL routes */}
-        <Route element={<MainLayout />}>
+      <BrowserRouter>
+        <Routes>
 
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
+          {/* Main Layout - wraps ALL routes */}
+          <Route element={<MainLayout />}>
 
-          <Route path="/login" element={<Login />} />
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
 
-          <Route path="/signup" element={<Register />} />
+            <Route path="/login" element={<Login />} />
 
-          <Route path="/cart" element={<Cart />} />
+            <Route path="/signup" element={<Register />} />
 
-          <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} />
 
-          <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/profile" element={<Profile />} />
 
-          <Route path="/products" element={<Products />} />
+            <Route path="/wishlist" element={<Wishlist />} />
 
-          <Route
-            path="/products/:id"
-            element={<ProductDetailsPage />}
-          />
+            <Route path="/products" element={<Products />} />
 
-          
-         <Route path="about" element={<About />} />
+            <Route
+              path="/products/:id"
+              element={<ProductDetailsPage />}
+            />
 
-         
-          <Route
-            path="*"
-            element={<ErrorPage />}
-          />
+            <Route
+              path="about"
+              element={<About />}
+            />
 
-        </Route>
-         <Route element={<ProtectedAdminRoute />}>
+            <Route
+              path="*"
+              element={<ErrorPage />}
+            />
+
+          </Route>
+
+          {/* Protected Admin Route */}
+          <Route element={<ProtectedAdminRoute />}>
             <Route
               path="/dashboard"
               element={<AdminDashboard />}
             />
           </Route>
 
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
