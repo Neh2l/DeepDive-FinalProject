@@ -13,7 +13,7 @@ import Products from "./pages/Products";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ErrorPage from "./pages/ErrorPage";
 import AdminDashboard from "./pages/AdminDashboard";
-import About from "./pages/about";
+import About from "./pages/About";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 function App() {
