@@ -310,22 +310,22 @@ function AdminDashboard() {
       name: "Products",
       icon: FiBox,
     },
-    {
-      name: "Orders",
-      icon: FiShoppingCart,
-    },
+    // {
+    //   name: "Orders",
+    //   icon: FiShoppingCart,
+    // },
     {
       name: "Customers",
       icon: FiUsers,
     },
-    {
-      name: "Analytics",
-      icon: FiBarChart2,
-    },
-    {
-      name: "Payments",
-      icon: FiDollarSign,
-    },
+    // {
+    //   name: "Analytics",
+    //   icon: FiBarChart2,
+    // },
+    // {
+    //   name: "Payments",
+    //   icon: FiDollarSign,
+    // },
     {
       name: "Settings",
       icon: FiSettings,
