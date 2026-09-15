@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
-  addProduct,
-  deleteProduct,
-  updateProduct,
-} from "../redux/productsSlice";
+  getProducts,
+  createProduct,
+  updateProductApi,
+  deleteProductApi,
+} from "../Apis/productsApi";
 
 import { logoutUser } from "../redux/authSlice";
 
@@ -39,10 +40,6 @@ function AdminDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const products = useSelector(
-    (state) => state.products.items
-  );
-
   const users = useSelector(
     (state) => state.auth.users || []
   );
@@ -54,6 +51,45 @@ function AdminDashboard() {
   const cartItems = useSelector(
     (state) => state.cart.items || []
   );
+
+  /*
+  ========================================
+  PRODUCTS FROM BACKEND
+  ========================================
+  */
+
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] =
+    useState(true);
+  const [productError, setProductError] =
+    useState("");
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setProductsLoading(true);
+        setProductError("");
+
+        const response = await getProducts();
+
+        setProducts(response.data || []);
+      } catch (error) {
+        console.error(
+          "Failed to load products:",
+          error
+        );
+
+        setProductError(
+          error.response?.data?.message ||
+            "Failed to load products"
+        );
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   const [activePage, setActivePage] =
     useState("Dashboard");
@@ -77,7 +113,6 @@ function AdminDashboard() {
     stock: "",
     image: "",
     description: "",
-    rating: "4.5",
   });
 
   const adminName =
@@ -107,17 +142,7 @@ function AdminDashboard() {
       0
     );
 
-  const averageRating =
-    products.length > 0
-      ? (
-          products.reduce(
-            (total, product) =>
-              total +
-              Number(product.rating || 0),
-            0
-          ) / products.length
-        ).toFixed(1)
-      : "0.0";
+  const averageRating = "4.5";
 
   const filteredProducts = useMemo(() => {
     const search =
@@ -179,7 +204,6 @@ function AdminDashboard() {
       stock: "",
       image: "",
       description: "",
-      rating: "4.5",
     });
 
     setShowProductModal(true);
@@ -193,13 +217,9 @@ function AdminDashboard() {
       category: product.category || "",
       price: product.price || "",
       stock: product.stock || "",
-      image:
-        product.image ||
-        product.thumbnail ||
-        "",
+      image: product.images?.[0] || "",
       description:
         product.description || "",
-      rating: product.rating || "4.5",
     });
 
     setShowProductModal(true);
@@ -219,7 +239,13 @@ function AdminDashboard() {
     }));
   };
 
-  const handleProductSubmit = (e) => {
+  /*
+  ========================================
+  ADD / EDIT PRODUCT
+  ========================================
+  */
+
+  const handleProductSubmit = async (e) => {
     e.preventDefault();
 
     if (!productForm.title.trim()) {
@@ -238,41 +264,84 @@ function AdminDashboard() {
       return;
     }
 
-    const productData = {
-      ...productForm,
+    try {
+      const productData = {
+        title: productForm.title.trim(),
+        category: productForm.category.trim(),
+        price: Number(productForm.price),
+        stock: Number(productForm.stock),
+        description:
+          productForm.description.trim(),
+        images: productForm.image.trim()
+          ? [productForm.image.trim()]
+          : [],
+      };
 
-      title: productForm.title.trim(),
+      /*
+      ========================================
+      EDIT PRODUCT
+      ========================================
+      */
 
-      category: productForm.category.trim(),
+      if (editingProduct) {
+        const response =
+          await updateProductApi(
+            editingProduct._id,
+            productData
+          );
 
-      price: Number(productForm.price),
+        const updatedProduct =
+          response.data;
 
-      stock: Number(productForm.stock),
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product._id ===
+            editingProduct._id
+              ? updatedProduct
+              : product
+          )
+        );
+      }
 
-      rating: Number(
-        productForm.rating || 4.5
-      ),
+      /*
+      ========================================
+      CREATE PRODUCT
+      ========================================
+      */
 
-      image:
-        productForm.image.trim() ||
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
-    };
+      else {
+        const response =
+          await createProduct(productData);
 
-    if (editingProduct) {
-      dispatch(
-        updateProduct({
-          id: editingProduct.id,
-          ...productData,
-        })
+        const newProduct = response.data;
+
+        setProducts((prevProducts) => [
+          newProduct,
+          ...prevProducts,
+        ]);
+      }
+
+      closeProductModal();
+    } catch (error) {
+      console.error(
+        "Product operation failed:",
+        error
       );
-    } else {
-      dispatch(addProduct(productData));
-    }
 
-    closeProductModal();
+      alert(
+        error.response?.data?.message ||
+          "Something went wrong"
+      );
+    }
   };
 
-  const handleDeleteProduct = (id) => {
+  /*
+  ========================================
+  DELETE PRODUCT
+  ========================================
+  */
+
+  const handleDeleteProduct = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
     );
@@ -281,7 +350,25 @@ function AdminDashboard() {
       return;
     }
 
-    dispatch(deleteProduct(id));
+    try {
+      await deleteProductApi(id);
+
+      setProducts((prevProducts) =>
+        prevProducts.filter(
+          (product) => product._id !== id
+        )
+      );
+    } catch (error) {
+      console.error(
+        "Delete product failed:",
+        error
+      );
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to delete product"
+      );
+    }
   };
 
   /*
@@ -440,7 +527,11 @@ function AdminDashboard() {
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Total Products"
-            value={totalProducts}
+            value={
+              productsLoading
+                ? "..."
+                : totalProducts
+            }
             icon={FiBox}
             trend="+4.5%"
             description="this month"
@@ -663,63 +754,85 @@ function AdminDashboard() {
               </thead>
 
               <tbody>
-                {products
-                  .slice(0, 5)
-                  .map((product) => (
-                    <tr
-                      key={product.id}
-                      className="border-b border-slate-50 transition hover:bg-slate-50"
+                {productsLoading ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-sm text-slate-400"
                     >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={
-                              product.thumbnail ||
-                              product.image
-                            }
-                            alt={product.title}
-                            className="h-11 w-11 rounded-xl object-cover"
-                          />
+                      Loading products...
+                    </td>
+                  </tr>
+                ) : productError ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-sm text-red-500"
+                    >
+                      {productError}
+                    </td>
+                  </tr>
+                ) : (
+                  products
+                    .slice(0, 5)
+                    .map((product) => (
+                      <tr
+                        key={product._id}
+                        className="border-b border-slate-50 transition hover:bg-slate-50"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={
+                                product.images?.[0] ||
+                                product.thumbnail ||
+                                product.image ||
+                                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+                              }
+                              alt={product.title}
+                              className="h-11 w-11 rounded-xl object-cover"
+                            />
 
-                          <span className="text-sm font-semibold text-slate-900">
-                            {product.title}
+                            <span className="text-sm font-semibold text-slate-900">
+                              {product.title}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-4 text-sm text-slate-500">
+                          {product.category}
+                        </td>
+
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                          $
+                          {Number(
+                            product.price || 0
+                          ).toFixed(2)}
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                              Number(
+                                product.stock || 0
+                              ) <= 10
+                                ? "bg-red-50 text-red-600"
+                                : "bg-emerald-50 text-emerald-600"
+                            }`}
+                          >
+                            {product.stock} in stock
                           </span>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="px-6 py-4 text-sm text-slate-500">
-                        {product.category}
-                      </td>
-
-                      <td className="px-6 py-4 text-sm font-bold text-slate-900">
-                        $
-                        {Number(
-                          product.price || 0
-                        ).toFixed(2)}
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            Number(
-                              product.stock || 0
-                            ) <= 10
-                              ? "bg-red-50 text-red-600"
-                              : "bg-emerald-50 text-emerald-600"
-                          }`}
-                        >
-                          {product.stock} in stock
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span className="flex items-center gap-1 text-sm font-semibold text-slate-700">
-                          <FiStar className="fill-yellow-400 text-yellow-400" />
-                          {product.rating || "4.5"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="px-6 py-4">
+                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-700">
+                            <FiStar className="fill-yellow-400 text-yellow-400" />
+                            4.5
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                )}
               </tbody>
             </table>
           </div>
@@ -816,115 +929,150 @@ function AdminDashboard() {
               </thead>
 
               <tbody>
-                {filteredProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b border-slate-50 transition hover:bg-slate-50"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={
-                            product.thumbnail ||
-                            product.image
-                          }
-                          alt={product.title}
-                          className="h-12 w-12 rounded-xl object-cover"
-                        />
-
-                        <div>
-                          <p className="text-sm font-bold text-slate-900">
-                            {product.title}
-                          </p>
-
-                          <p className="mt-1 max-w-xs truncate text-xs text-slate-400">
-                            {product.description ||
-                              "No description available"}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4 text-sm text-slate-500">
-                      {product.category}
-                    </td>
-
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900">
-                      $
-                      {Number(
-                        product.price || 0
-                      ).toFixed(2)}
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          Number(
-                            product.stock || 0
-                          ) <= 10
-                            ? "bg-red-50 text-red-600"
-                            : "bg-emerald-50 text-emerald-600"
-                        }`}
-                      >
-                        {product.stock}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span className="flex items-center gap-1 text-sm font-semibold">
-                        <FiStar className="fill-yellow-400 text-yellow-400" />
-                        {product.rating || "4.5"}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() =>
-                            openEditProduct(product)
-                          }
-                          className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white"
-                        >
-                          <FiEdit3 size={15} />
-                        </button>
-
-                        <button
-                          onClick={() =>
-                            handleDeleteProduct(
-                              product.id
-                            )
-                          }
-                          className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white"
-                        >
-                          <FiTrash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-
-                {filteredProducts.length === 0 && (
+                {productsLoading ? (
                   <tr>
                     <td
                       colSpan="6"
                       className="px-6 py-16 text-center"
                     >
                       <FiBox
-                        className="mx-auto text-slate-300"
+                        className="mx-auto animate-pulse text-slate-300"
                         size={40}
                       />
 
                       <p className="mt-3 text-sm font-semibold text-slate-700">
-                        No products found
-                      </p>
-
-                      <p className="mt-1 text-xs text-slate-400">
-                        Try another search or add a new
-                        product.
+                        Loading products...
                       </p>
                     </td>
                   </tr>
+                ) : productError ? (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-6 py-16 text-center text-sm text-red-500"
+                    >
+                      {productError}
+                    </td>
+                  </tr>
+                ) : (
+                  filteredProducts.map(
+                    (product) => (
+                      <tr
+                        key={product._id}
+                        className="border-b border-slate-50 transition hover:bg-slate-50"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={
+                                product.images?.[0] ||
+                                product.thumbnail ||
+                                product.image ||
+                                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+                              }
+                              alt={product.title}
+                              className="h-12 w-12 rounded-xl object-cover"
+                            />
+
+                            <div>
+                              <p className="text-sm font-bold text-slate-900">
+                                {product.title}
+                              </p>
+
+                              <p className="mt-1 max-w-xs truncate text-xs text-slate-400">
+                                {product.description ||
+                                  "No description available"}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-4 text-sm text-slate-500">
+                          {product.category}
+                        </td>
+
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                          $
+                          {Number(
+                            product.price || 0
+                          ).toFixed(2)}
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                              Number(
+                                product.stock || 0
+                              ) <= 10
+                                ? "bg-red-50 text-red-600"
+                                : "bg-emerald-50 text-emerald-600"
+                            }`}
+                          >
+                            {product.stock}
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <span className="flex items-center gap-1 text-sm font-semibold">
+                            <FiStar className="fill-yellow-400 text-yellow-400" />
+                            4.5
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() =>
+                                openEditProduct(
+                                  product
+                                )
+                              }
+                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white"
+                            >
+                              <FiEdit3 size={15} />
+                            </button>
+
+                            <button
+                              onClick={() =>
+                                handleDeleteProduct(
+                                  product._id
+                                )
+                              }
+                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white"
+                            >
+                              <FiTrash2 size={15} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  )
                 )}
+
+                {!productsLoading &&
+                  !productError &&
+                  filteredProducts.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="6"
+                        className="px-6 py-16 text-center"
+                      >
+                        <FiBox
+                          className="mx-auto text-slate-300"
+                          size={40}
+                        />
+
+                        <p className="mt-3 text-sm font-semibold text-slate-700">
+                          No products found
+                        </p>
+
+                        <p className="mt-1 text-xs text-slate-400">
+                          Try another search or add a new
+                          product.
+                        </p>
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           </div>
@@ -1574,10 +1722,9 @@ function AdminDashboard() {
                     min="0"
                     max="5"
                     step="0.1"
-                    value={productForm.rating}
-                    onChange={handleProductChange}
-                    placeholder="4.5"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    value="4.5"
+                    disabled
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 outline-none"
                   />
                 </div>
 

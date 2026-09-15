@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import CartList from "../components/Cart/CartList";
@@ -12,6 +13,8 @@ import {
 
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
+import { getProducts } from "../Apis/productsApi";
 
 function Cart() {
   // =========================================================
@@ -34,19 +37,28 @@ function Cart() {
       try {
         setLoadingProducts(true);
 
-        const response = await fetch(
-          "https://dummyjson.com/products?limit=0"
+        const response = await getProducts();
+
+        console.log("Cart Suggested Products:", response);
+
+        // Handle different possible backend response shapes
+        const productsData =
+          response?.data?.products ||
+          response?.data ||
+          response?.products ||
+          [];
+
+        setProducts(
+          Array.isArray(productsData)
+            ? productsData
+            : []
+        );
+      } catch (error) {
+        console.error(
+          "Suggested products error:",
+          error
         );
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-
-        const data = await response.json();
-
-        setProducts(data.products || []);
-      } catch (error) {
-        console.error("Suggested products error:", error);
         setProducts([]);
       } finally {
         setLoadingProducts(false);
@@ -61,7 +73,7 @@ function Cart() {
   // =========================================================
 
   const cartProductIds = cartItems.map(
-    (item) => item.id
+    (item) => item.id || item._id
   );
 
   // =========================================================
@@ -69,10 +81,11 @@ function Cart() {
   // =========================================================
 
   const suggestedProducts = products
-    .filter(
-      (product) =>
-        !cartProductIds.includes(product.id)
-    )
+    .filter((product) => {
+      const productId = product.id || product._id;
+
+      return !cartProductIds.includes(productId);
+    })
     .slice(0, 8);
 
   // =========================================================
@@ -241,7 +254,7 @@ function Cart() {
                   (product, index) => (
 
                     <ProductCard
-                      key={product.id}
+                      key={product._id || product.id}
                       product={product}
                       index={index}
                     />

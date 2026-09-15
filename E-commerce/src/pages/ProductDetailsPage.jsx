@@ -1,7 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiHome } from "react-icons/fi";
+
+import { getProductById } from "../Apis/productsApi";
 
 import ProductImages from "../components/Product/ProductImages";
 import ProductDetails from "../components/Product/ProductDetails";
@@ -19,19 +20,13 @@ function ProductDetailsPage() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `https://dummyjson.com/products/${id}`
-        );
+        const response = await getProductById(id);
 
-        if (!response.ok) {
-          throw new Error("Product not found");
-        }
+        console.log("🔥 PRODUCT DETAILS:", response);
 
-        const data = await response.json();
-
-        setProduct(data);
+        setProduct(response.data);
       } catch (err) {
-        console.error(err);
+        console.error("Product details error:", err);
         setError("We couldn't find this product.");
       } finally {
         setLoading(false);
@@ -56,9 +51,13 @@ function ProductDetailsPage() {
 
             <div className="space-y-5 rounded-3xl bg-white p-8">
               <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+
               <div className="h-10 w-3/4 animate-pulse rounded bg-gray-200" />
+
               <div className="h-20 w-full animate-pulse rounded bg-gray-200" />
+
               <div className="h-10 w-40 animate-pulse rounded bg-gray-200" />
+
               <div className="h-14 w-full animate-pulse rounded bg-gray-200" />
             </div>
 

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import {
@@ -25,11 +24,9 @@ function ProductDetails({ product }) {
 
   const [quantity, setQuantity] = useState(1);
 
-  const [showLoginModal, setShowLoginModal] =
-    useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const [loginAction, setLoginAction] =
-    useState("cart");
+  const [loginAction, setLoginAction] = useState("cart");
 
   const isLoggedIn = useSelector(
     (state) => state.auth.isLoggedIn
@@ -40,8 +37,10 @@ function ProductDetails({ product }) {
   );
 
   const isWishlisted = wishlistItems.some(
-    (item) => item.id === product.id
+    (item) => item._id === product._id
   );
+
+  // ================= DISCOUNT =================
 
   const discount = Math.round(
     product.discountPercentage || 0
@@ -62,7 +61,9 @@ function ProductDetails({ product }) {
   // ================= QUANTITY =================
 
   const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+    setQuantity((prev) =>
+      prev < product.stock ? prev + 1 : prev
+    );
   };
 
   const handleDecrease = () => {
@@ -103,6 +104,7 @@ function ProductDetails({ product }) {
   return (
     <>
       <div className="flex flex-col">
+
         {/* CATEGORY */}
 
         <span className="text-xs font-black uppercase tracking-[0.18em] text-yellow-600">
@@ -118,15 +120,18 @@ function ProductDetails({ product }) {
         {/* RATING */}
 
         <div className="mt-4 flex flex-wrap items-center gap-3">
+
           <div className="flex items-center gap-1 rounded-lg bg-yellow-50 px-3 py-2">
+
             <FiStar
               size={16}
               className="fill-yellow-400 text-yellow-400"
             />
 
             <span className="text-sm font-black">
-              {product.rating}
+              {product.rating || "4.5"}
             </span>
+
           </div>
 
           <span className="text-sm text-gray-400">
@@ -135,9 +140,18 @@ function ProductDetails({ product }) {
 
           <span className="h-1 w-1 rounded-full bg-gray-300" />
 
-          <span className="text-sm font-semibold text-green-600">
-            In Stock
+          <span
+            className={`text-sm font-semibold ${
+              product.stock > 0
+                ? "text-green-600"
+                : "text-red-500"
+            }`}
+          >
+            {product.stock > 0
+              ? "In Stock"
+              : "Out of Stock"}
           </span>
+
         </div>
 
         {/* DESCRIPTION */}
@@ -149,6 +163,7 @@ function ProductDetails({ product }) {
         {/* PRICE */}
 
         <div className="mt-7 flex flex-wrap items-end gap-3">
+
           <span className="text-3xl font-black text-gray-950">
             ${Number(product.price).toFixed(2)}
           </span>
@@ -164,6 +179,7 @@ function ProductDetails({ product }) {
               </span>
             </>
           )}
+
         </div>
 
         <div className="my-7 border-t border-gray-100" />
@@ -171,11 +187,13 @@ function ProductDetails({ product }) {
         {/* QUANTITY */}
 
         <div>
+
           <p className="mb-3 text-sm font-black text-gray-900">
             Quantity
           </p>
 
           <div className="flex w-fit items-center overflow-hidden rounded-xl border border-gray-200">
+
             <button
               type="button"
               onClick={handleDecrease}
@@ -191,24 +209,31 @@ function ProductDetails({ product }) {
             <button
               type="button"
               onClick={handleIncrease}
-              className="flex h-12 w-12 items-center justify-center text-gray-600 transition hover:bg-gray-100"
+              disabled={product.stock <= 0}
+              className="flex h-12 w-12 items-center justify-center text-gray-600 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <FiPlus size={16} />
             </button>
+
           </div>
+
         </div>
 
         {/* ACTION BUTTONS */}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 py-4 text-sm font-black text-gray-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-yellow-300 hover:shadow-lg"
+            disabled={product.stock <= 0}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 py-4 text-sm font-black text-gray-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-yellow-300 hover:shadow-lg disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:hover:translate-y-0 disabled:hover:shadow-none"
           >
             <FiShoppingCart size={19} />
 
-            Add to cart
+            {product.stock > 0
+              ? "Add to cart"
+              : "Out of stock"}
           </button>
 
           <button
@@ -220,6 +245,7 @@ function ProductDetails({ product }) {
                 : "border-gray-200 bg-white text-gray-800 hover:border-red-200 hover:bg-red-50 hover:text-red-500"
             }`}
           >
+
             <FiHeart
               size={19}
               className={
@@ -232,13 +258,17 @@ function ProductDetails({ product }) {
             {isWishlisted
               ? "Saved"
               : "Wishlist"}
+
           </button>
+
         </div>
 
         {/* FEATURES */}
 
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
+
           <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+
             <FiTruck
               className="text-green-600"
               size={20}
@@ -251,9 +281,11 @@ function ProductDetails({ product }) {
             <p className="mt-1 text-[10px] leading-4 text-gray-500">
               Fast delivery to your door
             </p>
+
           </div>
 
           <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+
             <FiShield
               className="text-blue-600"
               size={20}
@@ -266,9 +298,11 @@ function ProductDetails({ product }) {
             <p className="mt-1 text-[10px] leading-4 text-gray-500">
               Your payment is protected
             </p>
+
           </div>
 
           <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+
             <FiRefreshCw
               className="text-purple-600"
               size={20}
@@ -281,14 +315,19 @@ function ProductDetails({ product }) {
             <p className="mt-1 text-[10px] leading-4 text-gray-500">
               Simple return process
             </p>
+
           </div>
+
         </div>
 
         {/* PRODUCT INFO */}
 
         <div className="mt-7 rounded-2xl border border-gray-100 bg-white">
+
           <div className="grid grid-cols-2 divide-x divide-gray-100">
+
             <div className="p-4">
+
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
                 Brand
               </p>
@@ -296,21 +335,37 @@ function ProductDetails({ product }) {
               <p className="mt-1 text-sm font-bold text-gray-900">
                 {product.brand || "Shoply"}
               </p>
+
             </div>
 
             <div className="p-4">
+
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
                 Availability
               </p>
 
-              <p className="mt-1 flex items-center gap-1 text-sm font-bold text-green-600">
+              <p
+                className={`mt-1 flex items-center gap-1 text-sm font-bold ${
+                  product.stock > 0
+                    ? "text-green-600"
+                    : "text-red-500"
+                }`}
+              >
+
                 <FiCheck size={14} />
 
-                In Stock
+                {product.stock > 0
+                  ? `${product.stock} Available`
+                  : "Out of Stock"}
+
               </p>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
 
       {/* LOGIN REQUIRED MODAL */}
@@ -320,6 +375,7 @@ function ProductDetails({ product }) {
         onClose={() => setShowLoginModal(false)}
         action={loginAction}
       />
+
     </>
   );
 }

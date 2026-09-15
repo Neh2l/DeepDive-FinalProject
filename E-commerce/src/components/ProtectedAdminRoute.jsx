@@ -7,9 +7,10 @@ function ProtectedAdminRoute() {
     (state) => state.auth
   );
 
+  const userRole = user?.role?.toLowerCase();
+
   const isAdmin =
-    isLoggedIn &&
-    user?.role === "admin";
+    isLoggedIn && userRole === "admin";
 
   if (!isAdmin) {
     return <Navigate to="/login" replace />;

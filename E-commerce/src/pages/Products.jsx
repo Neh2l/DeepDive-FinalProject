@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 
 import {
@@ -15,29 +14,10 @@ import {
 } from "react-icons/fi";
 
 import ProductGrid from "../components/Product/ProductGrid";
+import { getProducts } from "../Apis/productsApi";
 
 const categories = [
   { label: "All", value: "all" },
-  { label: "Smartphones", value: "smartphones" },
-  { label: "Laptops", value: "laptops" },
-  { label: "Fragrances", value: "fragrances" },
-  { label: "Skincare", value: "skincare" },
-  { label: "Groceries", value: "groceries" },
-  { label: "Home Decoration", value: "home-decoration" },
-  { label: "Furniture", value: "furniture" },
-  { label: "Tops", value: "tops" },
-  { label: "Women's Dresses", value: "womens-dresses" },
-  { label: "Women's Shoes", value: "womens-shoes" },
-  { label: "Mens Shirts", value: "mens-shirts" },
-  { label: "Mens Shoes", value: "mens-shoes" },
-  { label: "Mens Watches", value: "mens-watches" },
-  { label: "Womens Watches", value: "womens-watches" },
-  { label: "Womens Bags", value: "womens-bags" },
-  { label: "Womens Jewellery", value: "womens-jewellery" },
-  { label: "Sunglasses", value: "sunglasses" },
-  { label: "Automotive", value: "automotive" },
-  { label: "Motorcycle", value: "motorcycle" },
-  { label: "Lighting", value: "lighting" },
 ];
 
 const sortOptions = [
@@ -75,7 +55,29 @@ function Products() {
   const productsPerPage = 18;
 
   // =========================================================
-  // FETCH PRODUCTS
+  // BACKEND CATEGORIES
+  // =========================================================
+
+  const backendCategories = useMemo(() => {
+    const uniqueCategories = [
+      ...new Set(
+        products
+          .map((product) => product.category)
+          .filter(Boolean)
+      ),
+    ];
+
+    return [
+      ...categories,
+      ...uniqueCategories.map((category) => ({
+        label: category,
+        value: category,
+      })),
+    ];
+  }, [products]);
+
+  // =========================================================
+  // FETCH PRODUCTS FROM BACKEND
   // =========================================================
 
   useEffect(() => {
@@ -83,17 +85,11 @@ function Products() {
       try {
         setLoading(true);
 
-        const response = await fetch(
-          "https://dummyjson.com/products?limit=0"
-        );
+        const response = await getProducts();
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
+        console.log("Backend Products:", response);
 
-        const data = await response.json();
-
-        setProducts(data.products || []);
+        setProducts(response.data || []);
       } catch (error) {
         console.error("Products error:", error);
         setProducts([]);
@@ -116,14 +112,15 @@ function Products() {
 
     return Math.ceil(
       Math.max(
-        ...products.map((product) =>
-          Number(product.price) || 0
+        ...products.map(
+          (product) => Number(product.price) || 0
         )
       )
     );
   }, [products]);
 
   // Set default max price after products load
+
   useEffect(() => {
     if (
       products.length > 0 &&
@@ -131,7 +128,11 @@ function Products() {
     ) {
       setMaxPrice(String(maxProductPrice));
     }
-  }, [products, maxProductPrice, maxPrice]);
+  }, [
+    products,
+    maxProductPrice,
+    maxPrice,
+  ]);
 
   // =========================================================
   // SEARCH + FILTER + SORT
@@ -213,7 +214,7 @@ function Products() {
     if (minRating > 0) {
       result = result.filter((product) => {
         const rating =
-          Number(product.rating) || 0;
+          Number(product.rating) || 4.5;
 
         return rating >= minRating;
       });
@@ -239,29 +240,32 @@ function Products() {
     if (sortBy === "price-low") {
       result.sort(
         (a, b) =>
-          Number(a.price) - Number(b.price)
+          Number(a.price) -
+          Number(b.price)
       );
     }
 
     if (sortBy === "price-high") {
       result.sort(
         (a, b) =>
-          Number(b.price) - Number(a.price)
+          Number(b.price) -
+          Number(a.price)
       );
     }
 
     if (sortBy === "rating") {
       result.sort(
         (a, b) =>
-          Number(b.rating) - Number(a.rating)
+          (Number(b.rating) || 4.5) -
+          (Number(a.rating) || 4.5)
       );
     }
 
     if (sortBy === "discount") {
       result.sort(
         (a, b) =>
-          Number(b.discountPercentage) -
-          Number(a.discountPercentage)
+          (Number(b.discountPercentage) || 0) -
+          (Number(a.discountPercentage) || 0)
       );
     }
 
@@ -283,20 +287,26 @@ function Products() {
   // =========================================================
 
   const totalPages = Math.ceil(
-    filteredProducts.length / productsPerPage
+    filteredProducts.length /
+      productsPerPage
   );
 
   const paginatedProducts = useMemo(() => {
     const start =
-      (currentPage - 1) * productsPerPage;
+      (currentPage - 1) *
+      productsPerPage;
 
     return filteredProducts.slice(
       start,
       start + productsPerPage
     );
-  }, [filteredProducts, currentPage]);
+  }, [
+    filteredProducts,
+    currentPage,
+  ]);
 
   // Go back to page 1 whenever filters change
+
   useEffect(() => {
     setCurrentPage(1);
   }, [
@@ -315,7 +325,8 @@ function Products() {
 
   const selectedSortLabel =
     sortOptions.find(
-      (option) => option.value === sortBy
+      (option) =>
+        option.value === sortBy
     )?.label || "Relevance";
 
   const activeFiltersCount =
@@ -332,7 +343,9 @@ function Products() {
     setSearch("");
     setSelectedCategory("all");
     setMinPrice("");
-    setMaxPrice(String(maxProductPrice));
+    setMaxPrice(
+      String(maxProductPrice)
+    );
     setMinRating(0);
     setOnlyDiscounted(false);
     setSortBy("relevance");
@@ -433,29 +446,32 @@ function Products() {
         <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
           <div className="flex gap-2 overflow-x-auto py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 
-            {categories.map((category) => {
-              const active =
-                selectedCategory === category.value;
+            {backendCategories.map(
+              (category) => {
+                const active =
+                  selectedCategory ===
+                  category.value;
 
-              return (
-                <button
-                  key={category.value}
-                  type="button"
-                  onClick={() =>
-                    setSelectedCategory(
-                      category.value
-                    )
-                  }
-                  className={`shrink-0 rounded-full border px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
-                    active
-                      ? "border-black bg-black text-white shadow-md"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-950"
-                  }`}
-                >
-                  {category.label}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={category.value}
+                    type="button"
+                    onClick={() =>
+                      setSelectedCategory(
+                        category.value
+                      )
+                    }
+                    className={`shrink-0 rounded-full border px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
+                      active
+                        ? "border-black bg-black text-white shadow-md"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-950"
+                    }`}
+                  >
+                    {category.label}
+                  </button>
+                );
+              }
+            )}
           </div>
         </div>
       </section>
@@ -594,7 +610,7 @@ function Products() {
                   </h3>
 
                   <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
-                    {categories.map(
+                    {backendCategories.map(
                       (category) => (
                         <button
                           key={category.value}
@@ -987,7 +1003,7 @@ function Products() {
                         {page}
                       </button>
                     ))}
-
+                  
                   <button
                     type="button"
                     disabled={

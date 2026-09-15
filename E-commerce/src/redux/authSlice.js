@@ -1,88 +1,71 @@
-import { createSlice } from "@reduxjs/toolkit";
 
-const ADMIN_EMAIL = "ahmed123@gmail.com";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const ADMIN_PASSWORD = "123456";
+import {
+  registerUser as registerUserApi,
+  loginUser as loginUserApi,
+} from "../Apis/authApi";
 
-const getStoredUser = () => {
-  try {
-    const savedUser = localStorage.getItem("shoplyUser");
 
-    return savedUser ? JSON.parse(savedUser) : null;
-  } catch {
-    localStorage.removeItem("shoplyUser");
-    return null;
-  }
-};
+// ==================== REGISTER ====================
 
-const getStoredUsers = () => {
-  try {
-    const savedUsers = localStorage.getItem("shoplyUsers");
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
 
-    if (!savedUsers) {
-      return [];
-    }
+  async (userData, { rejectWithValue }) => {
+    try {
+      const data = await registerUserApi(userData);
 
-    const parsedUsers = JSON.parse(savedUsers);
-
-    return Array.isArray(parsedUsers) ? parsedUsers : [];
-  } catch {
-    localStorage.removeItem("shoplyUsers");
-    return [];
-  }
-};
-
-/*
-========================================
-MIGRATE OLD USER
-========================================
-
-لو كان عندك user متسجل بالنظام القديم
-shoplyUser
-هنضيفه تلقائيًا إلى
-shoplyUsers
-*/
-
-const getInitialUsers = () => {
-  const users = getStoredUsers();
-
-  const oldUser = getStoredUser();
-
-  if (
-    oldUser &&
-    oldUser.role !== "admin" &&
-    oldUser.email
-  ) {
-    const exists = users.some(
-      (user) =>
-        user.email?.toLowerCase() ===
-        oldUser.email?.toLowerCase()
-    );
-
-    if (!exists) {
-      users.push({
-        ...oldUser,
-        role: "user",
-      });
-
-      localStorage.setItem(
-        "shoplyUsers",
-        JSON.stringify(users)
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
       );
     }
   }
+);
 
-  return users;
-};
+
+// ==================== LOGIN ====================
+
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+
+  async (userData, { rejectWithValue }) => {
+    try {
+      const data = await loginUserApi(userData);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Login failed. Please try again."
+      );
+    }
+  }
+);
+
+
+// ==================== INITIAL STATE ====================
+
+const savedUser = localStorage.getItem("shoplyUser");
+const savedToken = localStorage.getItem("token");
 
 const initialState = {
-  user: getStoredUser(),
+  user: savedUser ? JSON.parse(savedUser) : null,
 
-  isLoggedIn:
-    localStorage.getItem("shoplyLoggedIn") === "true",
+  token: savedToken || null,
 
-  users: getInitialUsers(),
+  isLoggedIn: !!savedToken,
+
+  loading: false,
+
+  error: null,
 };
+
+
+// ==================== SLICE ====================
 
 const authSlice = createSlice({
   name: "auth",
@@ -90,126 +73,8 @@ const authSlice = createSlice({
   initialState,
 
   reducers: {
-    /*
-    ========================================
-    REGISTER
-    ========================================
-    */
 
-    registerUser: (state, action) => {
-      const newUser = {
-        name: action.payload.name.trim(),
-
-        email: action.payload.email
-          .trim()
-          .toLowerCase(),
-
-        password: action.payload.password,
-
-        role: "user",
-      };
-
-      const existingUser = state.users.find(
-        (user) =>
-          user.email?.toLowerCase() ===
-          newUser.email.toLowerCase()
-      );
-
-      if (!existingUser) {
-        state.users.push(newUser);
-      }
-
-      /*
-      المستخدم الجديد يبقى Logged In
-      */
-
-      state.user = newUser;
-
-      state.isLoggedIn = true;
-
-      /*
-      Save ALL users
-      */
-
-      localStorage.setItem(
-        "shoplyUsers",
-        JSON.stringify(state.users)
-      );
-
-      /*
-      Save CURRENT logged-in user
-      */
-
-      localStorage.setItem(
-        "shoplyUser",
-        JSON.stringify(newUser)
-      );
-
-      localStorage.setItem(
-        "shoplyLoggedIn",
-        "true"
-      );
-    },
-
-    /*
-    ========================================
-    LOGIN
-    ========================================
-    */
-
-    loginUser: (state, action) => {
-      const loggedUser = {
-        ...action.payload,
-
-        email: action.payload.email
-          ?.trim()
-          .toLowerCase(),
-      };
-
-      state.user = loggedUser;
-
-      state.isLoggedIn = true;
-
-      /*
-      لو Admin
-      مش هنضيفه للعملاء
-      */
-
-      if (loggedUser.role !== "admin") {
-        const existingIndex = state.users.findIndex(
-          (user) =>
-            user.email?.toLowerCase() ===
-            loggedUser.email?.toLowerCase()
-        );
-
-        if (existingIndex === -1) {
-          state.users.push(loggedUser);
-        } else {
-          state.users[existingIndex] = loggedUser;
-        }
-
-        localStorage.setItem(
-          "shoplyUsers",
-          JSON.stringify(state.users)
-        );
-      }
-
-      localStorage.setItem(
-        "shoplyUser",
-        JSON.stringify(loggedUser)
-      );
-
-      localStorage.setItem(
-        "shoplyLoggedIn",
-        "true"
-      );
-    },
-
-    /*
-    ========================================
-    UPDATE USER
-    ========================================
-    */
+    // ==================== UPDATE USER ====================
 
     updateUser: (state, action) => {
       if (!state.user) return;
@@ -223,59 +88,107 @@ const authSlice = createSlice({
         "shoplyUser",
         JSON.stringify(state.user)
       );
-
-      /*
-      Update customer inside users array
-      */
-
-      if (state.user.role !== "admin") {
-        const index = state.users.findIndex(
-          (user) =>
-            user.email?.toLowerCase() ===
-            state.user.email?.toLowerCase()
-        );
-
-        if (index !== -1) {
-          state.users[index] = state.user;
-        }
-
-        localStorage.setItem(
-          "shoplyUsers",
-          JSON.stringify(state.users)
-        );
-      }
     },
 
-    /*
-    ========================================
-    LOGOUT
-    ========================================
-    */
+
+    // ==================== LOGOUT ====================
 
     logoutUser: (state) => {
       state.user = null;
-
+      state.token = null;
       state.isLoggedIn = false;
-
-      /*
-      IMPORTANT:
-      We DON'T delete shoplyUsers
-      */
+      state.error = null;
 
       localStorage.removeItem("shoplyUser");
-
-      localStorage.removeItem(
-        "shoplyLoggedIn"
-      );
+      localStorage.removeItem("token");
     },
+
+
+    // ==================== CLEAR ERROR ====================
+
+    clearAuthError: (state) => {
+      state.error = null;
+    },
+  },
+
+
+  // ==================== ASYNC ACTIONS ====================
+
+  extraReducers: (builder) => {
+
+    // ==================== REGISTER ====================
+
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+
+        localStorage.setItem(
+          "shoplyUser",
+          JSON.stringify(action.payload.user)
+        );
+
+        localStorage.setItem(
+          "token",
+          action.payload.token
+        );
+      })
+
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+
+    // ==================== LOGIN ====================
+
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+
+        localStorage.setItem(
+          "shoplyUser",
+          JSON.stringify(action.payload.user)
+        );
+
+        localStorage.setItem(
+          "token",
+          action.payload.token
+        );
+      })
+
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
+
+// ==================== EXPORT ACTIONS ====================
+
 export const {
-  registerUser,
-  loginUser,
   updateUser,
   logoutUser,
+  clearAuthError,
 } = authSlice.actions;
+
 
 export default authSlice.reducer;

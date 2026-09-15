@@ -8,10 +8,12 @@ import {
   FiEye,
   FiAward,
   FiCheck,
+  FiArrowUpRight,
+  FiZap,
+  FiTruck,
 } from "react-icons/fi";
 
 import { Link } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { addToCart } from "../../redux/cartSlice";
@@ -33,9 +35,36 @@ function ProductCard({ product, index = 0 }) {
     (state) => state.wishlist.items
   );
 
+  // ========================================
+  // PRODUCT DATA
+  // ========================================
+
+  const productId = product._id || product.id;
+
+  const productImage =
+    product.images?.[0] ||
+    product.thumbnail ||
+    product.image ||
+    "";
+
+  const normalizedProduct = {
+    ...product,
+    id: productId,
+    image: productImage,
+    thumbnail: productImage,
+  };
+
+  // ========================================
+  // WISHLIST
+  // ========================================
+
   const isWishlisted = wishlistItems.some(
-    (item) => item.id === product.id
+    (item) => (item._id || item.id) === productId
   );
+
+  // ========================================
+  // DISCOUNT
+  // ========================================
 
   const isBestSeller = index < 3;
 
@@ -48,10 +77,18 @@ function ProductCard({ product, index = 0 }) {
       ? product.price / (1 - discount / 100)
       : null;
 
+  // ========================================
+  // LOGIN MODAL
+  // ========================================
+
   const openLoginModal = (action) => {
     setLoginAction(action);
     setShowLoginModal(true);
   };
+
+  // ========================================
+  // ADD TO CART
+  // ========================================
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -64,11 +101,15 @@ function ProductCard({ product, index = 0 }) {
 
     dispatch(
       addToCart({
-        ...product,
+        ...normalizedProduct,
         quantity: 1,
       })
     );
   };
+
+  // ========================================
+  // WISHLIST
+  // ========================================
 
   const handleWishlist = (e) => {
     e.preventDefault();
@@ -79,122 +120,451 @@ function ProductCard({ product, index = 0 }) {
       return;
     }
 
-    dispatch(toggleWishlist(product));
+    dispatch(toggleWishlist(normalizedProduct));
   };
 
   return (
     <>
-      <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-yellow-200 hover:shadow-[0_20px_45px_rgba(0,0,0,0.10)]">
-        {isBestSeller ? (
-          <span className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded-md bg-black px-2.5 py-1 text-[9px] font-black uppercase tracking-wide text-yellow-400 shadow-md">
-            <FiAward size={11} />
-            Best seller
-          </span>
-        ) : discount > 10 ? (
-          <span className="absolute left-3 top-3 z-20 rounded-md bg-red-500 px-2.5 py-1 text-[10px] font-black text-white shadow-md">
-            -{discount}%
-          </span>
-        ) : null}
+      <article
+        className="
+          group
+          relative
+          w-full
+          max-w-[290px]
+          overflow-hidden
+          rounded-[18px]
+          border
+          border-gray-200
+          bg-white
+          transition-all
+          duration-500
+          hover:-translate-y-1
+          hover:border-gray-300
+          hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)]
+        "
+      >
+        {/* =====================================
+            IMAGE AREA
+        ===================================== */}
 
-        <button
-          type="button"
-          onClick={handleWishlist}
-          aria-label={
-            isWishlisted
-              ? "Remove from wishlist"
-              : "Add to wishlist"
-          }
-          className={`absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-md backdrop-blur transition-all duration-300 hover:scale-110 ${
-            isWishlisted
-              ? "text-red-500"
-              : "text-gray-500 hover:bg-red-50 hover:text-red-500"
-          }`}
+        <div
+          className="
+            relative
+            h-[250px]
+            overflow-hidden
+            bg-[#f8f8f8]
+          "
         >
-          <FiHeart
-            size={17}
-            className={
-              isWishlisted ? "fill-current" : ""
-            }
+          {/* Background */}
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+              bg-[radial-gradient(circle_at_50%_40%,#ffffff_0%,#f8f8f8_65%,#eeeeee_100%)]
+            "
           />
-        </button>
 
-        <Link
-          to={`/products/${product.id}`}
-          className="block"
-        >
-          <div className="relative flex h-52 items-center justify-center overflow-hidden bg-white p-5">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-yellow-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          {/* Best Seller */}
 
-            <div className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-300/0 blur-3xl transition-all duration-700 group-hover:bg-yellow-300/20" />
+          {isBestSeller && (
+            <div
+              className="
+                absolute
+                left-3
+                top-3
+                z-20
+                flex
+                items-center
+                gap-1.5
+                rounded-full
+                bg-gray-950
+                px-2.5
+                py-1.5
+                text-[9px]
+                font-extrabold
+                uppercase
+                tracking-[0.06em]
+                text-white
+              "
+            >
+              <FiAward size={11} />
 
-            <img
-              src={product.thumbnail || product.image}
-              alt={product.title}
-              className="relative z-10 h-full w-full object-contain transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-2"
-            />
-
-            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 translate-y-12 items-center gap-2 whitespace-nowrap rounded-full bg-black px-4 py-2 text-xs font-bold text-white opacity-0 shadow-lg transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-              <FiEye size={14} />
-              Quick view
+              Best Seller
             </div>
+          )}
 
-            <div className="absolute bottom-0 left-1/2 z-20 h-1 w-0 -translate-x-1/2 rounded-full bg-yellow-400 transition-all duration-500 group-hover:w-20" />
-          </div>
-        </Link>
+          {/* Discount */}
+
+          {discount > 0 && (
+            <div
+              className="
+                absolute
+                left-3
+                top-[43px]
+                z-20
+                flex
+                items-center
+                gap-1
+                rounded-full
+                bg-[#ffd814]
+                px-2.5
+                py-1
+                text-[9px]
+                font-black
+                text-gray-950
+              "
+            >
+              <FiZap size={10} />
+
+              {discount}% OFF
+            </div>
+          )}
+
+          {/* Wishlist */}
+
+          <button
+            type="button"
+            onClick={handleWishlist}
+            aria-label="Add to wishlist"
+            className={`
+              absolute
+              right-3
+              top-3
+              z-30
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-full
+              border
+              transition-all
+              duration-300
+              hover:scale-110
+              ${
+                isWishlisted
+                  ? "border-red-100 bg-red-50 text-red-500"
+                  : "border-gray-200 bg-white/90 text-gray-600 hover:border-gray-300 hover:text-red-500"
+              }
+            `}
+          >
+            <FiHeart
+              size={16}
+              className={
+                isWishlisted ? "fill-current" : ""
+              }
+            />
+          </button>
+
+          {/* Product Image */}
+
+          <Link
+            to={`/products/${productId}`}
+            className="
+              absolute
+              inset-0
+              flex
+              items-center
+              justify-center
+            "
+          >
+            <img
+              src={productImage}
+              alt={product.title}
+              className="
+                relative
+                z-10
+                h-full
+                w-full
+                object-contain
+                p-8
+                transition-transform
+                duration-700
+                ease-out
+                group-hover:scale-[1.07]
+              "
+            />
+          </Link>
+
+          {/* Quick View */}
+
+          <Link
+            to={`/products/${productId}`}
+            className="
+              absolute
+              bottom-3
+              left-1/2
+              z-30
+              flex
+              -translate-x-1/2
+              translate-y-3
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-gray-200
+              bg-white
+              px-4
+              py-2
+              text-[9px]
+              font-extrabold
+              uppercase
+              tracking-wide
+              text-gray-800
+              opacity-0
+              shadow-lg
+              transition-all
+              duration-300
+              group-hover:translate-y-0
+              group-hover:opacity-100
+            "
+          >
+            <FiEye size={12} />
+
+            Quick View
+          </Link>
+        </div>
+
+        {/* =====================================
+            PRODUCT CONTENT
+        ===================================== */}
 
         <div className="p-4">
-          <Link to={`/products/${product.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 transition-colors group-hover:text-yellow-600">
-              {product.category}
+          {/* Category + Verified */}
+
+          <div className="mb-2 flex items-center justify-between">
+            <span
+              className="
+                max-w-[150px]
+                truncate
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-[0.12em]
+                text-gray-400
+              "
+            >
+              {product.category || "Featured"}
             </span>
 
-            <h3 className="mt-1 min-h-[40px] line-clamp-2 text-sm font-bold leading-5 text-gray-800 transition-colors group-hover:text-black">
+            <span
+              className="
+                flex
+                items-center
+                gap-1
+                text-[9px]
+                font-bold
+                text-emerald-600
+              "
+            >
+              <FiCheck size={10} />
+
+              Verified
+            </span>
+          </div>
+
+          {/* Product Title */}
+
+          <Link to={`/products/${productId}`}>
+            <h3
+              className="
+                line-clamp-2
+                min-h-[42px]
+                text-[14px]
+                font-extrabold
+                leading-[1.45]
+                text-gray-950
+                transition-colors
+                duration-300
+                group-hover:text-gray-700
+              "
+            >
               {product.title}
             </h3>
           </Link>
 
-          <div className="mt-2 flex items-center gap-1">
-            <FiStar
-              size={13}
-              className="fill-yellow-400 text-yellow-400"
-            />
+          {/* Rating */}
 
-            <span className="text-xs font-black">
-              {product.rating || "4.5"}
-            </span>
+          <div className="mt-3 flex items-center gap-2">
+            <div
+              className="
+                flex
+                items-center
+                gap-1
+                rounded-md
+                bg-[#fff8d6]
+                px-2
+                py-1
+                text-[10px]
+                font-extrabold
+                text-gray-900
+              "
+            >
+              {product.rating
+                ? Number(product.rating).toFixed(1)
+                : "4.8"}
+
+              <FiStar
+                size={10}
+                className="fill-[#f5b800] text-[#f5b800]"
+              />
+            </div>
 
             <span className="text-[10px] text-gray-400">
               Excellent
             </span>
           </div>
 
+          {/* Price */}
+
           <div className="mt-3 flex items-end gap-2">
-            <span className="text-lg font-black text-gray-900 transition-colors group-hover:text-yellow-600">
+            <span
+              className="
+                text-[22px]
+                font-black
+                tracking-[-0.02em]
+                text-gray-950
+              "
+            >
               ${Number(product.price).toFixed(2)}
             </span>
 
             {oldPrice && (
-              <span className="text-[10px] text-gray-400 line-through">
+              <span
+                className="
+                  mb-1
+                  text-[11px]
+                  font-medium
+                  text-gray-400
+                  line-through
+                "
+              >
                 ${oldPrice.toFixed(2)}
               </span>
             )}
           </div>
 
-          <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-green-600">
-            <FiCheck size={12} />
-            FREE DELIVERY
+          {/* Delivery */}
+
+          <div
+            className="
+              mt-3
+              flex
+              items-center
+              gap-2
+              border-t
+              border-gray-100
+              pt-3
+            "
+          >
+            <FiTruck
+              size={14}
+              className="shrink-0 text-gray-500"
+            />
+
+            <p className="text-[10px] font-semibold text-gray-500">
+              Free delivery on eligible orders
+            </p>
           </div>
+
+          {/* Add To Cart */}
 
           <button
             type="button"
             onClick={handleAddToCart}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white py-2.5 text-xs font-bold text-gray-800 transition-all duration-300 hover:border-yellow-400 hover:bg-yellow-400 hover:text-black hover:shadow-md"
+            className="
+              group/cart
+              relative
+              mt-3
+              flex
+              w-full
+              items-center
+              justify-center
+              gap-2
+              overflow-hidden
+              rounded-xl
+              bg-gray-950
+              px-4
+              py-3
+              text-[11px]
+              font-extrabold
+              text-white
+              transition-all
+              duration-300
+              hover:bg-black
+              hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)]
+              active:scale-[0.98]
+            "
           >
-            <FiShoppingCart size={14} />
-            Add to cart
+            {/* Shine */}
+
+            <span
+              className="
+                pointer-events-none
+                absolute
+                inset-y-0
+                -left-[100%]
+                w-1/2
+                skew-x-[-20deg]
+                bg-white/15
+                transition-all
+                duration-700
+                group-hover/cart:left-[130%]
+              "
+            />
+
+            <FiShoppingCart
+              size={14}
+              className="
+                relative
+                z-10
+                transition-transform
+                duration-300
+                group-hover/cart:scale-110
+              "
+            />
+
+            <span className="relative z-10">
+              Add to Cart
+            </span>
+
+            <FiArrowUpRight
+              size={13}
+              className="
+                relative
+                z-10
+                transition-transform
+                duration-300
+                group-hover/cart:translate-x-0.5
+                group-hover/cart:-translate-y-0.5
+              "
+            />
           </button>
         </div>
-      </div>
+
+        {/* Bottom Accent */}
+
+        <div
+          className="
+            absolute
+            bottom-0
+            left-1/2
+            h-[2px]
+            w-0
+            -translate-x-1/2
+            bg-[#ffd814]
+            transition-all
+            duration-500
+            group-hover:w-1/2
+          "
+        />
+      </article>
+
+      {/* =====================================
+          LOGIN REQUIRED MODAL
+      ===================================== */}
 
       <LoginRequiredModal
         isOpen={showLoginModal}

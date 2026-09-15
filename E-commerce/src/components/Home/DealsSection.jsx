@@ -4,35 +4,12 @@ import { Link } from "react-router-dom";
 
 import ProductGrid from "../../components/Product/ProductGrid";
 
-function DealsSection() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+function DealsSection({ products = [], loading = false }) {
   const [timeLeft, setTimeLeft] = useState({
     hours: 8,
     minutes: 42,
     seconds: 19,
   });
-
-  useEffect(() => {
-    const fetchDeals = async () => {
-      try {
-        const response = await fetch(
-          "https://dummyjson.com/products?limit=8"
-        );
-
-        const data = await response.json();
-
-        setProducts(data.products || []);
-      } catch (error) {
-        console.error("Failed to load deals:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDeals();
-  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -78,10 +55,13 @@ function DealsSection() {
   return (
     <section className="bg-white px-4 py-14 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1400px]">
+
         {/* HEADER */}
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+
           <div>
             <div className="flex flex-wrap items-center gap-3">
+
               <span className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.15em] text-red-500">
                 <FiZap size={13} />
                 Flash Deals
@@ -90,6 +70,7 @@ function DealsSection() {
               <span className="text-sm font-medium text-gray-400">
                 Limited time only
               </span>
+
             </div>
 
             <h2 className="mt-3 text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">
@@ -103,6 +84,7 @@ function DealsSection() {
 
           {/* COUNTDOWN */}
           <div className="flex w-fit items-center gap-3 rounded-2xl border border-gray-200 bg-[#fafafa] px-4 py-3">
+
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#111111] text-[#ffd814]">
               <FiClock size={19} />
             </div>
@@ -113,17 +95,26 @@ function DealsSection() {
               </p>
 
               <div className="mt-1 flex items-center gap-1 text-sm font-black text-gray-950">
-                <span>{String(timeLeft.hours).padStart(2, "0")}</span>
+
+                <span>
+                  {String(timeLeft.hours).padStart(2, "0")}
+                </span>
+
                 <span className="text-gray-300">:</span>
+
                 <span>
                   {String(timeLeft.minutes).padStart(2, "0")}
                 </span>
+
                 <span className="text-gray-300">:</span>
+
                 <span>
                   {String(timeLeft.seconds).padStart(2, "0")}
                 </span>
+
               </div>
             </div>
+
           </div>
         </div>
 
@@ -135,14 +126,18 @@ function DealsSection() {
 
         {/* VIEW ALL */}
         <div className="mt-8 flex justify-center">
+
           <Link
             to="/products"
             className="group inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition-all duration-300 hover:border-gray-950 hover:bg-gray-950 hover:text-white"
           >
             View all deals
+
             <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
+
         </div>
+
       </div>
     </section>
   );
