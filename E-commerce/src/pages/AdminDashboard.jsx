@@ -1437,7 +1437,7 @@ function AdminDashboard() {
           <div className="flex items-center gap-3">
             {/* Search */}
 
-            <div className="relative hidden md:block">
+            {/* <div className="relative hidden md:block">
               <FiSearch
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
                 size={16}
@@ -1451,7 +1451,7 @@ function AdminDashboard() {
                 }
                 className="w-52 rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-xs outline-none transition focus:border-slate-400 focus:bg-white"
               />
-            </div>
+            </div> */}
 
             <div className="hidden h-8 w-px bg-slate-200 sm:block" />
 

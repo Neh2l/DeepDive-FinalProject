@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import {
@@ -14,18 +13,28 @@ import {
   FiPackage,
 } from "react-icons/fi";
 
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  useNavigate,
+} from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
 
 import { logoutUser } from "../../redux/authSlice";
+import { clearCart } from "../../redux/cartSlice";
+import { clearWishlist } from "../../redux/wishlistSlice";
 
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] =
+    useState(false);
 
   const { user, isLoggedIn } = useSelector(
     (state) => state.auth
@@ -53,10 +62,19 @@ function Navbar() {
 
 
   function handleLogout() {
+    // Clear cart
+    dispatch(clearCart());
+
+    // Clear wishlist
+    dispatch(clearWishlist());
+
+    // Logout user
     dispatch(logoutUser());
 
+    // Close mobile menu
     closeMobileMenu();
 
+    // Go to home
     navigate("/");
   }
 
@@ -93,7 +111,6 @@ function Navbar() {
           ================================================= */}
 
           <div className="flex min-h-[72px] items-center gap-4">
-
 
             {/* ================= MOBILE MENU BUTTON ================= */}
 
@@ -538,7 +555,7 @@ function Navbar() {
                       Welcome to Shoply
                     </p>
 
-                    <p className="text-sm font-white text-white text-opacity-10">
+                    <p className="text-sm font-medium text-white">
                       Sign in to your account
                     </p>
 
@@ -576,6 +593,7 @@ function Navbar() {
               >
 
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-500">
+
                   <FiHeart
                     size={19}
                     className={
@@ -584,6 +602,7 @@ function Navbar() {
                         : ""
                     }
                   />
+
                 </div>
 
                 <div>
@@ -650,7 +669,7 @@ function Navbar() {
                 <FiChevronRight size={17} />
               </NavLink>
 
- 
+
               <NavLink
                 to="/about"
                 onClick={closeMobileMenu}
