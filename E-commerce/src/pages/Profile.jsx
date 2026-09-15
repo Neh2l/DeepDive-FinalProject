@@ -8,9 +8,6 @@ import {
   FiMail,
   FiPackage,
   FiHeart,
-  FiMapPin,
-  FiCreditCard,
-  FiShield,
   FiEdit3,
   FiChevronRight,
   FiLogOut,
@@ -19,7 +16,7 @@ import {
   FiClock,
   FiCheckCircle,
   FiArrowRight,
-  FiSettings,
+  FiShield,
   FiStar,
   FiX,
   FiSave,
@@ -217,143 +214,184 @@ function Profile() {
 
           {/* ================= SIDEBAR ================= */}
 
-          <aside className="h-fit overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <aside className="h-fit overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm lg:sticky lg:top-24">
 
-            <div className="border-b border-gray-100 px-5 py-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-gray-400">
-                My Account
-              </p>
+            {/* SIDEBAR HEADER */}
+
+            <div className="border-b border-gray-100 bg-gradient-to-r from-[#fffdf0] to-white px-5 py-6">
+
+              <div className="flex items-center gap-3">
+
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ffd814] text-gray-950 shadow-sm">
+                  <FiUser size={20} />
+                </div>
+
+                <div>
+                  <p className="text-sm font-black text-gray-950">
+                    My Account
+                  </p>
+
+                  <p className="mt-0.5 text-xs text-gray-400">
+                    Manage your Shoply account
+                  </p>
+                </div>
+
+              </div>
+
             </div>
 
-            <nav className="p-2.5">
+            {/* NAVIGATION */}
+
+            <nav className="p-3">
+
+              {/* ACCOUNT OVERVIEW */}
 
               <button
                 type="button"
-                className="flex w-full items-center justify-between rounded-xl bg-[#fff8d6] px-4 py-3.5 text-sm font-bold text-gray-950"
+                className="group mb-1 flex w-full items-center justify-between rounded-xl bg-[#fff8d6] px-4 py-3.5 text-sm font-bold text-gray-950 shadow-sm"
               >
+
                 <span className="flex items-center gap-3">
-                  <FiUser size={18} />
-                  Account Overview
+
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ffd814] text-gray-950">
+                    <FiUser size={17} />
+                  </span>
+
+                  <span>
+                    Account Overview
+                  </span>
+
                 </span>
 
-                <FiChevronRight size={17} />
+                <FiChevronRight
+                  size={17}
+                  className="text-gray-700"
+                />
+
               </button>
+
+              {/* MY ORDERS */}
 
               <button
                 type="button"
                 onClick={() => navigate("/orders")}
-                className="group flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-950"
+                className="group mb-1 flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all duration-300 hover:bg-gray-50 hover:text-gray-950"
               >
+
                 <span className="flex items-center gap-3">
-                  <FiPackage
-                    size={18}
-                    className="text-gray-400 transition group-hover:text-gray-900"
-                  />
-                  My Orders
+
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-400 transition group-hover:bg-blue-50 group-hover:text-blue-600">
+                    <FiPackage size={17} />
+                  </span>
+
+                  <span>
+                    My Orders
+                  </span>
+
                 </span>
 
                 <FiChevronRight
                   size={17}
                   className="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-700"
                 />
+
               </button>
+
+              {/* WISHLIST */}
 
               <button
                 type="button"
                 onClick={() => navigate("/wishlist")}
-                className="group flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-950"
+                className="group flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all duration-300 hover:bg-gray-50 hover:text-gray-950"
               >
+
                 <span className="flex items-center gap-3">
-                  <FiHeart
-                    size={18}
-                    className="text-gray-400 transition group-hover:text-red-500"
-                  />
-                  Wishlist
+
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-400 transition group-hover:bg-red-50 group-hover:text-red-500">
+                    <FiHeart
+                      size={17}
+                      className={
+                        totalWishlistItems > 0
+                          ? "transition group-hover:scale-110"
+                          : ""
+                      }
+                    />
+                  </span>
+
+                  <span>
+                    Wishlist
+                  </span>
+
                 </span>
 
-                <FiChevronRight
-                  size={17}
-                  className="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-700"
-                />
-              </button>
+                <div className="flex items-center gap-2">
 
-              <button
-                type="button"
-                className="group flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-950"
-              >
-                <span className="flex items-center gap-3">
-                  <FiMapPin
-                    size={18}
-                    className="text-gray-400 transition group-hover:text-gray-900"
+                  {totalWishlistItems > 0 && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-50 px-1.5 text-[10px] font-bold text-red-500">
+                      {totalWishlistItems}
+                    </span>
+                  )}
+
+                  <FiChevronRight
+                    size={17}
+                    className="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-700"
                   />
-                  Addresses
-                </span>
 
-                <FiChevronRight
-                  size={17}
-                  className="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-700"
-                />
+                </div>
+
               </button>
 
-              <button
-                type="button"
-                className="group flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-950"
-              >
-                <span className="flex items-center gap-3">
-                  <FiCreditCard
-                    size={18}
-                    className="text-gray-400 transition group-hover:text-gray-900"
-                  />
-                  Payment Methods
-                </span>
+              {/* SPACER */}
 
-                <FiChevronRight
-                  size={17}
-                  className="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-700"
-                />
-              </button>
+              <div className="h-36" />
 
-              <button
-                type="button"
-                className="group flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-950"
-              >
-                <span className="flex items-center gap-3">
-                  <FiShield
-                    size={18}
-                    className="text-gray-400 transition group-hover:text-gray-900"
-                  />
-                  Security
-                </span>
+              {/* ACCOUNT STATUS */}
 
-                <FiChevronRight
-                  size={17}
-                  className="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-700"
-                />
-              </button>
+              <div className="mx-1 mb-3 rounded-xl border border-gray-100 bg-[#fafafa] p-4">
+
+                <div className="flex items-center gap-3">
+
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-green-600">
+                    <FiShield size={17} />
+                  </div>
+
+                  <div className="min-w-0">
+
+                    <p className="text-xs font-bold text-gray-900">
+                      Account Active
+                    </p>
+
+                    <p className="mt-0.5 truncate text-[11px] text-gray-400">
+                      Your account is secure
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* DIVIDER */}
 
               <div className="my-2 border-t border-gray-100" />
 
-              <button
-                type="button"
-                className="group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 hover:text-gray-950"
-              >
-                <FiSettings
-                  size={18}
-                  className="text-gray-400 group-hover:text-gray-900"
-                />
-                Settings
-              </button>
+              {/* SIGN OUT */}
 
               <button
                 type="button"
                 onClick={handleLogout}
-                className="group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-semibold text-red-500 transition hover:bg-red-50"
+                className="group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-semibold text-red-500 transition-all duration-300 hover:bg-red-50"
               >
-                <FiLogOut
-                  size={18}
-                  className="transition group-hover:-translate-x-0.5"
-                />
+
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 transition group-hover:bg-red-100">
+                  <FiLogOut
+                    size={17}
+                    className="transition group-hover:-translate-x-0.5"
+                  />
+                </span>
+
                 Sign Out
+
               </button>
 
             </nav>
@@ -375,6 +413,7 @@ function Profile() {
                 onClick={() => navigate("/orders")}
                 className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
+
                 <div className="flex items-start justify-between">
 
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:scale-105">
@@ -402,6 +441,7 @@ function Profile() {
                 onClick={() => navigate("/wishlist")}
                 className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
+
                 <div className="flex items-start justify-between">
 
                   <div
@@ -411,6 +451,7 @@ function Profile() {
                         : "bg-gray-50 text-gray-500"
                     }`}
                   >
+
                     <FiHeart
                       size={21}
                       className={
@@ -419,6 +460,7 @@ function Profile() {
                           : ""
                       }
                     />
+
                   </div>
 
                   <FiChevronRight className="text-gray-300 transition group-hover:translate-x-1 group-hover:text-gray-700" />
@@ -442,6 +484,7 @@ function Profile() {
                 onClick={() => navigate("/cart")}
                 className="group rounded-2xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
+
                 <div className="flex items-start justify-between">
 
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-gray-900 transition group-hover:scale-105">
@@ -497,6 +540,7 @@ function Profile() {
               <div className="flex flex-col gap-4 border-b border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
+
                   <h2 className="text-lg font-black text-gray-950">
                     Personal Information
                   </h2>
@@ -504,6 +548,7 @@ function Profile() {
                   <p className="mt-1 text-sm text-gray-500">
                     Your account details and contact information
                   </p>
+
                 </div>
 
                 <button
@@ -574,6 +619,7 @@ function Profile() {
                   onClick={() => navigate("/orders")}
                   className="group rounded-2xl border border-gray-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
+
                   <div className="mb-6 flex items-center justify-between">
 
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition duration-300 group-hover:scale-110">
@@ -601,6 +647,7 @@ function Profile() {
                   onClick={() => navigate("/wishlist")}
                   className="group rounded-2xl border border-gray-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
+
                   <div className="mb-6 flex items-center justify-between">
 
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-500 transition duration-300 group-hover:scale-110">
@@ -641,6 +688,7 @@ function Profile() {
                   onClick={() => navigate("/products")}
                   className="group rounded-2xl border border-gray-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
+
                   <div className="mb-6 flex items-center justify-between">
 
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-50 text-gray-900 transition duration-300 group-hover:scale-110">
@@ -680,6 +728,7 @@ function Profile() {
                   </div>
 
                   <div>
+
                     <h3 className="text-sm font-bold">
                       Fast Delivery
                     </h3>
@@ -687,6 +736,7 @@ function Profile() {
                     <p className="mt-1 text-xs leading-5 text-gray-400">
                       Reliable delivery right to your door.
                     </p>
+
                   </div>
 
                 </div>
@@ -698,6 +748,7 @@ function Profile() {
                   </div>
 
                   <div>
+
                     <h3 className="text-sm font-bold">
                       Easy Shopping
                     </h3>
@@ -705,6 +756,7 @@ function Profile() {
                     <p className="mt-1 text-xs leading-5 text-gray-400">
                       A simple experience from browsing to checkout.
                     </p>
+
                   </div>
 
                 </div>
@@ -716,6 +768,7 @@ function Profile() {
                   </div>
 
                   <div>
+
                     <h3 className="text-sm font-bold">
                       Secure Account
                     </h3>
@@ -723,6 +776,7 @@ function Profile() {
                     <p className="mt-1 text-xs leading-5 text-gray-400">
                       Your personal information stays protected.
                     </p>
+
                   </div>
 
                 </div>
@@ -753,6 +807,7 @@ function Profile() {
       {/* ================================================= */}
 
       {isEditOpen && (
+
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4 py-6 backdrop-blur-sm"
           onMouseDown={(e) => {
@@ -924,6 +979,7 @@ function Profile() {
           </div>
 
         </div>
+
       )}
 
     </main>
