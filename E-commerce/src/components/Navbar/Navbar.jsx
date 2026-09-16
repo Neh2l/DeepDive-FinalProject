@@ -62,19 +62,19 @@ function Navbar() {
 
 
   function handleLogout() {
-    // Clear cart
+   
     dispatch(clearCart());
 
-    // Clear wishlist
+    
     dispatch(clearWishlist());
 
-    // Logout user
+   
     dispatch(logoutUser());
 
-    // Close mobile menu
+   
     closeMobileMenu();
 
-    // Go to home
+   
     navigate("/");
   }
 
@@ -371,7 +371,7 @@ function Navbar() {
 
 
             <NavLink
-              to="/category/smartphones"
+              to="/products"
               className="text-sm font-medium text-gray-600 transition hover:text-black"
             >
               Electronics
@@ -379,7 +379,7 @@ function Navbar() {
 
 
             <NavLink
-              to="/category/mens-shirts"
+              to="/products"
               className="text-sm font-medium text-gray-600 transition hover:text-black"
             >
               Fashion
@@ -387,7 +387,7 @@ function Navbar() {
 
 
             <NavLink
-              to="/category/furniture"
+              to="/products"
               className="text-sm font-medium text-gray-600 transition hover:text-black"
             >
               Home & Furniture
@@ -395,7 +395,7 @@ function Navbar() {
 
 
             <NavLink
-              to="/category/beauty"
+              to="/products"
               className="text-sm font-medium text-gray-600 transition hover:text-black"
             >
               Beauty
@@ -403,7 +403,7 @@ function Navbar() {
 
 
             <NavLink
-              to="/category/sports-accessories"
+              to="/products"
               className="text-sm font-medium text-gray-600 transition hover:text-black"
             >
               Sports

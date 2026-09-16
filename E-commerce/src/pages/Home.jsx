@@ -46,7 +46,7 @@ function Home() {
 
         const response = await getProducts();
 
-        console.log("🔥 HOME PRODUCTS:", response);
+        console.log(" HOME PRODUCTS:", response);
 
         const backendProducts = response.data || [];
 

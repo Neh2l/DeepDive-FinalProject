@@ -1,210 +1,345 @@
-
 import {
   FiFacebook,
   FiInstagram,
   FiTwitter,
   FiYoutube,
   FiMail,
+  FiPhone,
+  FiMapPin,
+  FiChevronRight,
 } from "react-icons/fi";
 
 import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-[#111] text-white">
-      {/* Newsletter */}
-      <div className="border-b border-white/10">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-5 px-4 py-10 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-2xl font-black">
-              Stay in the loop.
-            </h2>
+    <footer className="border-t border-gray-200 bg-white text-gray-800">
 
-            <p className="mt-2 text-sm text-gray-400">
-              Get exclusive deals and new arrivals in your inbox.
+      {/* ================= MAIN FOOTER ================= */}
+      <div className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10">
+
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+
+          {/* ================= BRAND ================= */}
+          <div className="max-w-sm">
+
+            <Link
+              to="/"
+              className="inline-block text-3xl font-black tracking-tight"
+            >
+              <span className="text-yellow-400">shop</span>ly
+            </Link>
+
+            <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
+              Your everyday marketplace for products,
+              great deals and everything you need in one place.
             </p>
-          </div>
 
-          <div className="flex w-full max-w-md">
-            <div className="relative flex-1">
-              <FiMail
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+            {/* Social Media */}
+            <div className="mt-6 flex items-center gap-3">
+
+              <Social
+                icon={<FiFacebook size={17} />}
+                label="Facebook"
               />
 
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="h-12 w-full rounded-l-lg bg-white px-11 text-sm text-black outline-none"
+              <Social
+                icon={<FiInstagram size={17} />}
+                label="Instagram"
               />
+
+              <Social
+                icon={<FiTwitter size={17} />}
+                label="Twitter"
+              />
+
+              <Social
+                icon={<FiYoutube size={17} />}
+                label="YouTube"
+              />
+
             </div>
 
-            <button
-              type="button"
-              className="rounded-r-lg bg-yellow-400 px-5 text-sm font-bold text-black transition hover:bg-yellow-300"
-            >
-              Subscribe
-            </button>
           </div>
+
+          {/* ================= SHOP ================= */}
+          <FooterColumn
+            title="Shop"
+            links={[
+              {
+                label: "All Products",
+                to: "/products",
+              },
+              {
+                label: "Electronics",
+                to: "/products?category=smartphones",
+              },
+              {
+                label: "Fashion",
+                to: "/products?category=mens-shirts",
+              },
+              {
+                label: "Beauty",
+                to: "/products?category=beauty",
+              },
+              {
+                label: "Home & Furniture",
+                to: "/products?category=furniture",
+              },
+            ]}
+          />
+
+          {/* ================= HELP ================= */}
+          <FooterColumn
+            title="Help & Support"
+            links={[
+              {
+                label: "My Account",
+                to: "/profile",
+              },
+              {
+                label: "My Orders",
+                to: "/orders",
+              },
+              {
+                label: "Shipping",
+                to: "/shipping",
+              },
+              {
+                label: "Returns",
+                to: "/returns",
+              },
+              {
+                label: "Payment",
+                to: "/payment",
+              },
+              {
+                label: "Contact Us",
+                to: "/contact",
+              },
+            ]}
+          />
+
+          {/* ================= ABOUT ================= */}
+          <FooterColumn
+            title="About Shoply"
+            links={[
+              {
+                label: "About Us",
+                to: "/about",
+              },
+              {
+                label: "Careers",
+                to: "/careers",
+              },
+              {
+                label: "Privacy Policy",
+                to: "/privacy",
+              },
+              {
+                label: "Terms & Conditions",
+                to: "/terms",
+              },
+            ]}
+          />
+
         </div>
+
+        {/* ================= CONTACT ================= */}
+        <div className="mt-12 border-t border-gray-100 pt-8">
+
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+            <Contact
+              icon={<FiPhone size={17} />}
+              text="+20 100 000 0000"
+            />
+
+            <Contact
+              icon={<FiMail size={17} />}
+              text="support@shoply.com"
+            />
+
+            <Contact
+              icon={<FiMapPin size={17} />}
+              text="Egypt"
+            />
+
+          </div>
+
+        </div>
+
       </div>
 
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <Link
-            to="/"
-            className="inline-block text-3xl font-black transition-opacity hover:opacity-80"
-          >
-            <span className="text-yellow-400">shop</span>ly
-          </Link>
+      {/* ================= BOTTOM BAR ================= */}
+      <div className="border-t border-gray-200 bg-[#fafafa]">
 
-          <p className="mt-4 max-w-xs text-sm leading-6 text-gray-400">
-            Your everyday marketplace for products,
-            deals and everything in between.
+        <div className="mx-auto flex max-w-[1400px] flex-col gap-5 px-6 py-5 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between lg:px-10">
+
+          {/* Copyright */}
+          <p>
+            © 2026 Shoply. All rights reserved.
           </p>
 
-          <div className="mt-5 flex gap-3">
-            <Social
-              icon={<FiFacebook />}
-              label="Facebook"
-            />
+          {/* Legal Links */}
+          <div className="flex items-center gap-5">
 
-            <Social
-              icon={<FiInstagram />}
-              label="Instagram"
-            />
+            <Link
+              to="/privacy"
+              className="transition-colors duration-200 hover:text-gray-900"
+            >
+              Privacy Policy
+            </Link>
 
-            <Social
-              icon={<FiTwitter />}
-              label="Twitter"
-            />
+            <Link
+              to="/terms"
+              className="transition-colors duration-200 hover:text-gray-900"
+            >
+              Terms & Conditions
+            </Link>
 
-            <Social
-              icon={<FiYoutube />}
-              label="YouTube"
-            />
           </div>
+
+          {/* Cash On Delivery */}
+          <div className="flex items-center gap-3">
+
+            <span className="text-xs text-gray-500">
+              Payment:
+            </span>
+
+            <div className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 shadow-sm">
+
+              <span className="text-sm">
+                💵
+              </span>
+
+              <span className="text-xs font-semibold text-gray-700">
+                Cash on Delivery
+              </span>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <FooterColumn
-          title="Shop"
-          links={[
-            {
-              label: "All Products",
-              to: "/products",
-            },
-            {
-              label: "Electronics",
-              to: "/products?category=smartphones",
-            },
-            {
-              label: "Fashion",
-              to: "/products?category=mens-shirts",
-            },
-            {
-              label: "Beauty",
-              to: "/products?category=beauty",
-            },
-            {
-              label: "Home & Furniture",
-              to: "/products?category=furniture",
-            },
-          ]}
-        />
-
-        <FooterColumn
-          title="Help"
-          links={[
-            {
-              label: "Your Account",
-              to: "/profile",
-            },
-            {
-              label: "My Orders",
-              to: "/my-orders",
-            },
-            {
-              label: "Shipping",
-              to: "/shipping",
-            },
-            {
-              label: "Returns",
-              to: "/returns",
-            },
-            {
-              label: "Payment",
-              to: "/payment",
-            },
-            {
-              label: "Contact Us",
-              to: "/contact",
-            },
-          ]}
-        />
-
-        {/* About */}
-        <FooterColumn
-          title="About"
-          links={[
-            {
-              label: "About Shoply",
-              to: "/about",
-            },
-            {
-              label: "Careers",
-              to: "/careers",
-            },
-            {
-              label: "Privacy Policy",
-              to: "/privacy",
-            },
-            {
-              label: "Terms & Conditions",
-              to: "/terms",
-            },
-          ]}
-        />
       </div>
 
-      <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-gray-500">
-        © 2026 Shoply. All rights reserved.
-      </div>
     </footer>
   );
 }
 
+
+/* =========================================================
+   FOOTER COLUMN
+========================================================= */
+
 function FooterColumn({ title, links }) {
   return (
     <div>
-      <h3 className="mb-5 text-sm font-bold">
+
+      <h3 className="mb-5 text-sm font-bold text-gray-900">
         {title}
       </h3>
 
       <ul className="space-y-3">
+
         {links.map((link) => (
           <li key={link.label}>
+
             <Link
               to={link.to}
-              className="text-sm text-gray-400 transition hover:text-white"
+              className="
+                group
+                inline-flex
+                items-center
+                text-sm
+                text-gray-500
+                transition-colors
+                duration-200
+                hover:text-gray-900
+              "
             >
+
               {link.label}
+
+              <FiChevronRight
+                size={13}
+                className="
+                  ml-1
+                  opacity-0
+                  transition-all
+                  duration-200
+                  group-hover:translate-x-1
+                  group-hover:opacity-100
+                "
+              />
+
             </Link>
+
           </li>
         ))}
+
       </ul>
+
     </div>
   );
 }
+
+
+/* =========================================================
+   SOCIAL MEDIA
+========================================================= */
 
 function Social({ icon, label }) {
   return (
     <button
       type="button"
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-gray-300 transition-all duration-300 hover:-translate-y-1 hover:bg-yellow-400 hover:text-black"
+      className="
+        flex
+        h-10
+        w-10
+        items-center
+        justify-center
+        rounded-full
+        bg-yellow-400
+        text-black
+        shadow-sm
+        ring-1
+        ring-yellow-400/20
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:bg-yellow-300
+        hover:shadow-lg
+      "
     >
       {icon}
     </button>
   );
 }
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+function Contact({ icon, text }) {
+  return (
+    <div className="flex items-center gap-3">
+
+      <div className="text-yellow-500">
+        {icon}
+      </div>
+
+      <span className="text-sm text-gray-600">
+        {text}
+      </span>
+
+    </div>
+  );
+}
+
 
 export default Footer;
