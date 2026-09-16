@@ -1,4 +1,7 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+
 import {
   FiArrowLeft,
   FiCalendar,
@@ -6,47 +9,162 @@ import {
   FiChevronRight,
   FiMapPin,
   FiPackage,
-  FiPhone,
   FiShield,
+  FiShoppingBag,
   FiTruck,
   FiX,
 } from "react-icons/fi";
 
-function getSavedOrders() {
-  try {
-    const savedOrders = localStorage.getItem(
-      "shoplyOrders"
-    );
-
-    if (!savedOrders) {
-      return [];
-    }
-
-    const parsedOrders = JSON.parse(savedOrders);
-
-    return Array.isArray(parsedOrders)
-      ? parsedOrders
-      : [];
-  } catch {
-    return [];
-  }
-}
+import {
+  getOrderById,
+  cancelOrder,
+} from "../Apis/ordersApi";
 
 function OrderDetails() {
   const { id } = useParams();
-  const navigate = useNavigate();
 
-  const orders = getSavedOrders();
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [canceling, setCanceling] = useState(false);
+  const [cancelError, setCancelError] = useState("");
 
-  const order = orders.find(
-    (item) => item._id === id
-  );
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-  // Order doesn't exist
-  if (!order) {
+        console.log(" ORDER ID FROM URL:", id);
+
+        const data = await getOrderById(id);
+
+        console.log(" ORDER DETAILS FROM BACKEND:", data);
+
+        const orderData =
+          data.order ||
+          data.data ||
+          data;
+
+        console.log(
+          " ACTUAL ORDER:",
+          orderData
+        );
+
+        setOrder(orderData);
+      } catch (error) {
+        console.error(
+          "Failed to fetch order:",
+          error
+        );
+
+        console.log(
+          " BACKEND ERROR:",
+          error.response?.data
+        );
+
+        setError(
+          error.response?.data?.message ||
+            "Failed to load this order."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchOrder();
+    }
+  }, [id]);
+
+  // =========================
+  // Cancel Order
+  // =========================
+
+  const handleCancelOrder = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to cancel this order?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setCanceling(true);
+      setCancelError("");
+
+      console.log(
+        " CANCELING ORDER:",
+        id
+      );
+
+      const data = await cancelOrder(id);
+
+      console.log(
+        " CANCEL RESPONSE:",
+        data
+      );
+
+      const updatedOrder =
+        data.order ||
+        data.data ||
+        data;
+
+      setOrder((currentOrder) => ({
+        ...currentOrder,
+        ...(updatedOrder || {}),
+        status: "Canceled",
+      }));
+    } catch (error) {
+      console.error(
+        "Failed to cancel order:",
+        error
+      );
+
+      console.log(
+        " CANCEL ERROR:",
+        error.response?.data
+      );
+
+      setCancelError(
+        error.response?.data?.message ||
+          "Failed to cancel this order."
+      );
+    } finally {
+      setCanceling(false);
+    }
+  };
+
+  // =========================
+  // Loading
+  // =========================
+
+  if (loading) {
     return (
       <main className="min-h-screen bg-[#f7f7f7] px-4 py-16">
         <div className="mx-auto max-w-xl rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center shadow-sm">
+
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900" />
+
+          <p className="mt-4 text-sm font-bold text-gray-500">
+            Loading order details...
+          </p>
+
+        </div>
+      </main>
+    );
+  }
+
+  // =========================
+  // Error
+  // =========================
+
+  if (error || !order) {
+    return (
+      <main className="min-h-screen bg-[#f7f7f7] px-4 py-16">
+        <div className="mx-auto max-w-xl rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center shadow-sm">
+
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
             <FiPackage size={28} />
           </div>
@@ -56,8 +174,8 @@ function OrderDetails() {
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-gray-500">
-            We couldn't find this order. It may have been
-            removed or the order ID is incorrect.
+            {error ||
+              "We couldn't find this order. It may have been removed or the order ID is incorrect."}
           </p>
 
           <Link
@@ -67,10 +185,15 @@ function OrderDetails() {
             <FiArrowLeft size={17} />
             Back to Orders
           </Link>
+
         </div>
       </main>
     );
   }
+
+  // =========================
+  // Order Information
+  // =========================
 
   const date = new Date(
     order.createdAt
@@ -87,11 +210,17 @@ function OrderDetails() {
     minute: "2-digit",
   });
 
-  const totalItems = order.items.reduce(
+  const totalItems = (
+    order.items || []
+  ).reduce(
     (total, item) =>
       total + item.quantity,
     0
   );
+
+  // =========================
+  // Status
+  // =========================
 
   const statusSteps = [
     {
@@ -126,9 +255,18 @@ function OrderDetails() {
   const isCanceled =
     order.status === "Canceled";
 
+  const canCancel =
+    order.status === "Pending";
+
+  // =========================
+  // UI
+  // =========================
+
   return (
     <main className="min-h-screen bg-[#f7f7f7] text-gray-900">
+
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+
         {/* Back */}
 
         <Link
@@ -136,13 +274,16 @@ function OrderDetails() {
           className="mb-6 inline-flex items-center gap-2 text-sm font-bold text-gray-500 transition hover:text-gray-900"
         >
           <FiArrowLeft size={16} />
+
           Back to Orders
         </Link>
 
         {/* Header */}
 
         <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+
           <div>
+
             <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
               Shoply
             </p>
@@ -152,6 +293,7 @@ function OrderDetails() {
             </h1>
 
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+
               <span className="font-bold text-gray-900">
                 #{order._id}
               </span>
@@ -165,8 +307,12 @@ function OrderDetails() {
 
               <span className="h-1 w-1 rounded-full bg-gray-300" />
 
-              <span>{time}</span>
+              <span>
+                {time}
+              </span>
+
             </div>
+
           </div>
 
           <span
@@ -182,16 +328,23 @@ function OrderDetails() {
           >
             {order.status}
           </span>
+
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+
+          {/* ========================= */}
           {/* LEFT */}
+          {/* ========================= */}
 
           <div className="space-y-6">
-            {/* Order Status */}
+
+            {/* Order Progress */}
 
             <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-7">
+
               <div className="mb-7">
+
                 <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
                   Order Progress
                 </p>
@@ -199,16 +352,21 @@ function OrderDetails() {
                 <h2 className="mt-1 text-xl font-black">
                   Track your order
                 </h2>
+
               </div>
 
               {isCanceled ? (
+
                 <div className="rounded-2xl border border-red-100 bg-red-50 p-5">
+
                   <div className="flex items-start gap-4">
+
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
                       <FiX size={20} />
                     </div>
 
                     <div>
+
                       <h3 className="text-sm font-black text-red-700">
                         Order Canceled
                       </h3>
@@ -216,13 +374,20 @@ function OrderDetails() {
                       <p className="mt-1 text-xs leading-5 text-red-600/80">
                         This order has been canceled.
                       </p>
+
                     </div>
+
                   </div>
+
                 </div>
+
               ) : (
+
                 <div className="space-y-6">
+
                   {statusSteps.map(
                     (step, index) => {
+
                       const stepIndex =
                         statusOrder.indexOf(
                           step.status
@@ -241,9 +406,9 @@ function OrderDetails() {
                           key={step.status}
                           className="relative flex gap-4"
                         >
+
                           {index <
-                            statusSteps.length -
-                              1 && (
+                            statusSteps.length - 1 && (
                             <div
                               className={`absolute left-[19px] top-11 h-[calc(100%+8px)] w-px ${
                                 stepIndex <
@@ -269,6 +434,7 @@ function OrderDetails() {
                           </div>
 
                           <div className="pt-1">
+
                             <h3
                               className={`text-sm font-black ${
                                 active
@@ -284,21 +450,29 @@ function OrderDetails() {
                             <p className="mt-1 text-xs leading-5 text-gray-500">
                               {step.description}
                             </p>
+
                           </div>
+
                         </div>
                       );
                     }
                   )}
+
                 </div>
               )}
+
             </section>
 
             {/* Products */}
 
             <section className="rounded-3xl border border-gray-200 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+
               <div className="border-b border-gray-100 p-6">
+
                 <div className="flex items-center justify-between">
+
                   <div>
+
                     <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
                       Order Items
                     </p>
@@ -309,15 +483,22 @@ function OrderDetails() {
                         ? "item"
                         : "items"}
                     </h2>
+
                   </div>
 
-                  <FiShoppingBagIcon />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+                    <FiShoppingBag size={18} />
+                  </div>
+
                 </div>
+
               </div>
 
               <div className="divide-y divide-gray-100">
-                {order.items.map(
+
+                {(order.items || []).map(
                   (item, index) => {
+
                     const productImage =
                       item.product?.thumbnail ||
                       item.product?.image ||
@@ -337,7 +518,9 @@ function OrderDetails() {
                         key={`${order._id}-${index}`}
                         className="flex gap-4 p-6"
                       >
+
                         <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-gray-100">
+
                           {productImage ? (
                             <img
                               src={productImage}
@@ -346,14 +529,14 @@ function OrderDetails() {
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-gray-300">
-                              <FiPackage
-                                size={25}
-                              />
+                              <FiPackage size={25} />
                             </div>
                           )}
+
                         </div>
 
                         <div className="min-w-0 flex-1">
+
                           <h3 className="font-black text-gray-900">
                             {productName}
                           </h3>
@@ -364,34 +547,49 @@ function OrderDetails() {
                           </p>
 
                           <p className="mt-3 text-sm font-bold text-gray-600">
-                            ${Number(item.price).toFixed(2)}{" "}
+                            $
+                            {Number(
+                              item.price
+                            ).toFixed(2)}{" "}
                             each
                           </p>
+
                         </div>
 
                         <div className="text-right">
+
                           <p className="text-base font-black text-gray-900">
                             $
                             {Number(
                               itemTotal
                             ).toFixed(2)}
                           </p>
+
                         </div>
+
                       </div>
                     );
                   }
                 )}
+
               </div>
+
             </section>
+
           </div>
 
+          {/* ========================= */}
           {/* RIGHT */}
+          {/* ========================= */}
 
           <aside className="space-y-6 lg:sticky lg:top-6">
+
             {/* Summary */}
 
             <section className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(0,0,0,0.06)]">
+
               <div className="border-b border-gray-100 p-6">
+
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
                   Shoply
                 </p>
@@ -399,10 +597,13 @@ function OrderDetails() {
                 <h2 className="mt-1 text-2xl font-black">
                   Order Summary
                 </h2>
+
               </div>
 
               <div className="space-y-4 p-6">
+
                 <div className="flex justify-between text-sm">
+
                   <span className="text-gray-500">
                     Items
                   </span>
@@ -410,9 +611,11 @@ function OrderDetails() {
                   <span className="font-bold">
                     {totalItems}
                   </span>
+
                 </div>
 
                 <div className="flex justify-between text-sm">
+
                   <span className="text-gray-500">
                     Payment
                   </span>
@@ -421,36 +624,45 @@ function OrderDetails() {
                     {order.paymentMethod ===
                     "COD"
                       ? "Cash on Delivery"
-                      : order.paymentMethod}
+                      : order.paymentMethod ||
+                        "N/A"}
                   </span>
+
                 </div>
 
                 <div className="h-px bg-gray-100" />
 
                 <div className="flex items-end justify-between">
+
                   <span className="text-sm font-bold text-gray-500">
                     Total
                   </span>
 
                   <span className="text-3xl font-black">
                     $
-                    {Number(order.total).toFixed(
-                      2
-                    )}
+                    {Number(
+                      order.total
+                    ).toFixed(2)}
                   </span>
+
                 </div>
+
               </div>
+
             </section>
 
             {/* Delivery */}
 
             <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+
               <div className="mb-5 flex items-center gap-3">
+
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffd600] text-black">
                   <FiMapPin size={18} />
                 </div>
 
                 <div>
+
                   <h2 className="text-base font-black">
                     Delivery Information
                   </h2>
@@ -458,39 +670,89 @@ function OrderDetails() {
                   <p className="text-[11px] text-gray-400">
                     Shipping address
                   </p>
+
                 </div>
+
               </div>
 
               <div className="rounded-2xl bg-gray-50 p-4">
+
                 <p className="text-sm font-bold leading-6 text-gray-800">
                   {order.shippingAddress}
                 </p>
+
               </div>
+
             </section>
 
             {/* Payment */}
 
             <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+
               <div className="flex items-center gap-3">
+
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
                   <FiTruck size={18} />
                 </div>
 
                 <div>
+
                   <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
                     Payment Method
                   </p>
 
                   <p className="mt-1 text-sm font-black">
-                    Cash on Delivery
+                    {order.paymentMethod ===
+                    "COD"
+                      ? "Cash on Delivery"
+                      : order.paymentMethod ||
+                        "N/A"}
                   </p>
+
                 </div>
+
               </div>
+
             </section>
+
+            {/* Cancel Error */}
+
+            {cancelError && (
+              <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+
+                <p className="text-xs font-bold leading-5 text-red-600">
+                  {cancelError}
+                </p>
+
+              </div>
+            )}
+
+            {/* Cancel Order */}
+
+            {canCancel && (
+              <button
+                type="button"
+                onClick={handleCancelOrder}
+                disabled={canceling}
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white py-3.5 text-sm font-black text-red-600 transition hover:border-red-600 hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+
+                <FiX
+                  size={17}
+                  className="transition-transform group-hover:rotate-90"
+                />
+
+                {canceling
+                  ? "Canceling Order..."
+                  : "Cancel Order"}
+
+              </button>
+            )}
 
             {/* Security */}
 
             <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4">
+
               <FiShield
                 size={18}
                 className="shrink-0 text-green-600"
@@ -500,7 +762,10 @@ function OrderDetails() {
                 Your order information is securely
                 stored with Shoply.
               </p>
+
             </div>
+
+            {/* All Orders */}
 
             <Link
               to="/orders"
@@ -513,18 +778,12 @@ function OrderDetails() {
                 className="transition-transform group-hover:translate-x-1"
               />
             </Link>
+
           </aside>
+
         </div>
       </div>
     </main>
-  );
-}
-
-function FiShoppingBagIcon() {
-  return (
-    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
-      <FiPackage size={18} />
-    </div>
   );
 }
 

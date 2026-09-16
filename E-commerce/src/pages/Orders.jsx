@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FiArrowRight,
@@ -8,31 +9,49 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 
-function getSavedOrders() {
-  try {
-    const savedOrders = localStorage.getItem(
-      "shoplyOrders"
-    );
-
-    if (!savedOrders) {
-      return [];
-    }
-
-    const parsedOrders = JSON.parse(savedOrders);
-
-    return Array.isArray(parsedOrders)
-      ? parsedOrders
-      : [];
-  } catch {
-    return [];
-  }
-}
+import { getMyOrders } from "../Apis/ordersApi";
 
 function Orders() {
-  const [activeFilter, setActiveFilter] =
-    useState("All");
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const orders = getSavedOrders();
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getMyOrders();
+
+        console.log(" ORDERS FROM BACKEND:", data);
+        console.log(" FIRST ORDER:", data.orders?.[0]);
+
+        const ordersData = data.orders || data.data || [];
+
+        setOrders(
+          Array.isArray(ordersData)
+            ? ordersData
+            : []
+        );
+      } catch (error) {
+        console.error(
+          "Failed to fetch orders:",
+          error
+        );
+
+        setError(
+          error.response?.data?.message ||
+            "Failed to load your orders."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   const filters = [
     "All",
@@ -53,6 +72,7 @@ function Orders() {
   return (
     <main className="min-h-screen bg-[#f7f7f7] text-gray-900">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+
         {/* Header */}
 
         <div className="mb-8">
@@ -64,6 +84,7 @@ function Orders() {
               size={16}
               className="rotate-180"
             />
+
             Continue shopping
           </Link>
 
@@ -112,9 +133,35 @@ function Orders() {
           </div>
         </div>
 
-        {/* Orders */}
+        {/* Loading */}
 
-        {filteredOrders.length > 0 ? (
+        {loading ? (
+          <div className="rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center">
+            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900" />
+
+            <p className="mt-4 text-sm font-bold text-gray-500">
+              Loading your orders...
+            </p>
+          </div>
+        ) : error ? (
+          /* Error */
+
+          <div className="rounded-3xl border border-red-200 bg-red-50 px-6 py-12 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-500">
+              <FiPackage size={27} />
+            </div>
+
+            <h2 className="mt-5 text-xl font-black text-red-700">
+              Something went wrong
+            </h2>
+
+            <p className="mt-2 text-sm text-red-600">
+              {error}
+            </p>
+          </div>
+        ) : filteredOrders.length > 0 ? (
+          /* Orders */
+
           <div className="space-y-5">
             {filteredOrders.map((order) => (
               <OrderCard
@@ -124,6 +171,8 @@ function Orders() {
             ))}
           </div>
         ) : (
+          /* Empty */
+
           <div className="rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
               <FiShoppingBag size={27} />
@@ -144,9 +193,7 @@ function Orders() {
             >
               Start Shopping
 
-              <FiArrowRight
-                size={16}
-              />
+              <FiArrowRight size={16} />
             </Link>
           </div>
         )}
@@ -178,9 +225,13 @@ function OrderCard({ order }) {
       "bg-red-100 text-red-700",
   };
 
-  const firstItems = order.items.slice(0, 3);
+  const firstItems = (
+    order.items || []
+  ).slice(0, 3);
 
-  const totalItems = order.items.reduce(
+  const totalItems = (
+    order.items || []
+  ).reduce(
     (total, item) =>
       total + item.quantity,
     0
@@ -188,6 +239,7 @@ function OrderCard({ order }) {
 
   return (
     <article className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+
       {/* Top */}
 
       <div className="flex flex-col gap-4 border-b border-gray-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
@@ -204,6 +256,7 @@ function OrderCard({ order }) {
 
           <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
             <FiCalendar size={13} />
+
             {date}
           </div>
         </div>
@@ -253,16 +306,16 @@ function OrderCard({ order }) {
             );
           })}
 
-          {order.items.length > 3 && (
+          {order.items?.length > 3 && (
             <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100 text-xs font-black text-gray-500">
               +{order.items.length - 3}
             </div>
           )}
         </div>
 
-        {/* Information */}
 
         <div className="mt-6 grid gap-5 border-t border-gray-100 pt-5 sm:grid-cols-3">
+
           <div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
               Items
@@ -284,7 +337,7 @@ function OrderCard({ order }) {
             <p className="mt-1 text-sm font-black">
               {order.paymentMethod === "COD"
                 ? "Cash on Delivery"
-                : order.paymentMethod}
+                : order.paymentMethod || "N/A"}
             </p>
           </div>
 
@@ -294,12 +347,13 @@ function OrderCard({ order }) {
             </p>
 
             <p className="mt-1 text-lg font-black">
-              ${Number(order.total).toFixed(2)}
+              $
+              {Number(order.total).toFixed(2)}
             </p>
           </div>
+
         </div>
 
-        {/* View Order */}
 
         <Link
           to={`/orders/${order._id}`}

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -13,6 +14,7 @@ import {
 } from "react-icons/fi";
 
 import { clearCart } from "../redux/cartSlice";
+import { createOrder } from "../Apis/ordersApi";
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -47,7 +49,7 @@ function Checkout() {
     }));
   };
 
-  const handleConfirmOrder = () => {
+  const handleConfirmOrder = async () => {
     if (
       !formData.fullName.trim() ||
       !formData.phone.trim() ||
@@ -65,53 +67,46 @@ function Checkout() {
 
     setIsSubmitting(true);
 
-    const newOrder = {
-      _id: `ORD-${Date.now()}`,
-
-      items: items.map((item) => ({
-        product: {
-          id: item.id,
-          title: item.title,
-          image: item.thumbnail || item.image,
-          thumbnail: item.thumbnail || item.image,
-        },
-
-        quantity: item.quantity,
-        price: item.price,
-      })),
-
-      status: "Pending",
-
-      total,
-
-      shippingAddress: `${formData.fullName}, ${formData.phone}, ${formData.city}, ${formData.address}`,
-
-      paymentMethod: "COD",
-
-      createdAt: new Date().toISOString(),
-    };
-
     try {
-      const savedOrders = JSON.parse(
-        localStorage.getItem("shoplyOrders") || "[]"
-      );
+      const orderData = {
+        items: items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
 
-      savedOrders.unshift(newOrder);
+        shippingAddress: `${formData.fullName}, ${formData.phone}, ${formData.city}, ${formData.address}`,
 
-      localStorage.setItem(
-        "shoplyOrders",
-        JSON.stringify(savedOrders)
-      );
+        paymentMethod: "COD",
+      };
+
+      console.log(" ORDER DATA SENT TO BACKEND:", orderData);
+
+      const data = await createOrder(orderData);
+
+      console.log(" ORDER CREATED BY BACKEND:", data);
+
+      const createdOrder = data.order || data.data || data;
+
+      console.log(" CREATED ORDER:", createdOrder);
+
+      if (!createdOrder?._id) {
+        throw new Error("Order ID was not returned from backend.");
+      }
 
       dispatch(clearCart());
 
-      setTimeout(() => {
-        navigate(`/orders/${newOrder._id}`);
-      }, 800);
+      navigate(`/orders/${createdOrder._id}`);
     } catch (error) {
-      console.error("Order creation error:", error);
+      console.error(" ORDER CREATION ERROR:", error);
+      console.error(
+        " BACKEND ERROR:",
+        error.response?.data
+      );
 
-      alert("Something went wrong. Please try again.");
+      alert(
+        error.response?.data?.message ||
+          "Something went wrong while creating your order."
+      );
 
       setIsSubmitting(false);
     }
@@ -138,6 +133,7 @@ function Checkout() {
             className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#ffd600] px-6 py-3.5 text-sm font-black text-black transition hover:bg-[#f5cc00]"
           >
             Start Shopping
+
             <FiArrowLeft
               size={17}
               className="rotate-180"
@@ -151,6 +147,7 @@ function Checkout() {
   return (
     <main className="min-h-screen bg-[#f7f7f7] text-gray-900">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+
         {/* Header */}
 
         <div className="mb-8">
@@ -179,9 +176,11 @@ function Checkout() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+
           {/* LEFT */}
 
           <div className="space-y-6">
+
             {/* Shipping Information */}
 
             <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-7">
@@ -202,6 +201,7 @@ function Checkout() {
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
+
                 {/* Full Name */}
 
                 <div>
@@ -307,6 +307,7 @@ function Checkout() {
 
               <div className="rounded-2xl border-2 border-gray-900 bg-gray-50 p-4">
                 <div className="flex items-center gap-4">
+
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffd600] text-black">
                     <FiTruck size={18} />
                   </div>
@@ -327,6 +328,7 @@ function Checkout() {
                       className="text-white"
                     />
                   </div>
+
                 </div>
               </div>
             </section>
@@ -350,6 +352,7 @@ function Checkout() {
 
           <aside className="lg:sticky lg:top-6">
             <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(0,0,0,0.06)]">
+
               {/* Header */}
 
               <div className="border-b border-gray-100 p-6">
@@ -371,6 +374,7 @@ function Checkout() {
                     className="flex gap-3"
                   >
                     <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+
                       <img
                         src={
                           item.thumbnail ||
@@ -383,6 +387,7 @@ function Checkout() {
                       <span className="absolute right-1 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-900 px-1 text-[9px] font-black text-white">
                         {item.quantity}
                       </span>
+
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -391,7 +396,7 @@ function Checkout() {
                       </p>
 
                       <p className="mt-1 text-xs text-gray-400">
-                        ${item.price.toFixed(2)} ×{" "}
+                        ${Number(item.price).toFixed(2)} ×{" "}
                         {item.quantity}
                       </p>
                     </div>
@@ -411,6 +416,7 @@ function Checkout() {
 
               <div className="border-t border-gray-100 p-6">
                 <div className="space-y-3">
+
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">
                       Subtotal
@@ -448,6 +454,7 @@ function Checkout() {
                       ${total.toFixed(2)}
                     </span>
                   </div>
+
                 </div>
 
                 <button
@@ -467,6 +474,7 @@ function Checkout() {
                     />
                   )}
                 </button>
+
               </div>
             </div>
           </aside>

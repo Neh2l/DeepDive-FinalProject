@@ -27,6 +27,8 @@ import {
   updateUser,
 } from "../redux/authSlice";
 
+import { getMyOrders } from "../Apis/ordersApi";
+
 function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,6 +51,34 @@ function Profile() {
   );
 
   const totalWishlistItems = wishlistItems.length;
+
+
+  const [ordersCount, setOrdersCount] = useState(0);
+
+  useEffect(() => {
+    const fetchOrdersCount = async () => {
+      try {
+        const data = await getMyOrders();
+
+        const orders = Array.isArray(data.orders)
+          ? data.orders
+          : [];
+
+        setOrdersCount(orders.length);
+      } catch (error) {
+        console.error(
+          "Failed to fetch orders count:",
+          error
+        );
+
+        setOrdersCount(0);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchOrdersCount();
+    }
+  }, [isLoggedIn]);
 
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -206,17 +236,14 @@ function Profile() {
         </div>
       </section>
 
-      {/* ================= CONTENT ================= */}
 
       <section className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 lg:px-8">
 
         <div className="grid gap-7 lg:grid-cols-[270px_minmax(0,1fr)]">
 
-          {/* ================= SIDEBAR ================= */}
 
           <aside className="h-fit overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm lg:sticky lg:top-24">
 
-            {/* SIDEBAR HEADER */}
 
             <div className="border-b border-gray-100 bg-gradient-to-r from-[#fffdf0] to-white px-5 py-6">
 
@@ -240,11 +267,9 @@ function Profile() {
 
             </div>
 
-            {/* NAVIGATION */}
 
             <nav className="p-3">
 
-              {/* ACCOUNT OVERVIEW */}
 
               <button
                 type="button"
@@ -425,7 +450,7 @@ function Profile() {
                 </div>
 
                 <p className="mt-5 text-2xl font-black text-gray-950">
-                  0
+                  {ordersCount}
                 </p>
 
                 <p className="mt-1 text-sm font-medium text-gray-500">
