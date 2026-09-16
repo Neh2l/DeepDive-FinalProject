@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://finalproject-backend-new.vercel.app/api",
-  withCredentials: true,
+  baseURL: "https://deep-dive-final-project-7slr.vercel.app/api",
+  withCredentials: false,
 });
 
 axiosInstance.interceptors.request.use(
