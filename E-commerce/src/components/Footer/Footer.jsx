@@ -11,12 +11,21 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { getProducts } from "../../Apis/productsApi";
 
 function Footer() {
   const [footerCategories, setFooterCategories] = useState([]);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     const fetchCategories = async () => {
