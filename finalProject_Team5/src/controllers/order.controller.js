@@ -118,7 +118,13 @@ const getMyOrders = async (req, res) => {
         const orders = await Order.find({
             user: userId
         })
-            .select("items status total shippingAddress createdAt")
+            .select(
+                "items status total shippingAddress paymentMethod createdAt"
+            )
+            .populate(
+                "items.product",
+                "name price images thumbnail"
+            )
             .sort({ createdAt: -1 });
 
         return res.status(200).json({
