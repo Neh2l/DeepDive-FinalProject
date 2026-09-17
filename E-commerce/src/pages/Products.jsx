@@ -36,10 +36,14 @@ function Products() {
   const categoryFromUrl =
     searchParams.get("category");
 
+  const searchFromUrl =
+    searchParams.get("search") || "";
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] =
+    useState(searchFromUrl);
 
   const [selectedCategory, setSelectedCategory] =
     useState(categoryFromUrl || "all");
@@ -116,6 +120,14 @@ function Products() {
     categoryFromUrl,
     backendCategories,
   ]);
+
+  // =========================================================
+  // SEARCH FROM NAVBAR
+  // =========================================================
+
+  useEffect(() => {
+    setSearch(searchFromUrl);
+  }, [searchFromUrl]);
 
   // =========================================================
   // FETCH PRODUCTS FROM BACKEND
@@ -866,7 +878,7 @@ function Products() {
                           "500"
                         );
                       }}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
                     >
                       $200 - $500
                     </button>

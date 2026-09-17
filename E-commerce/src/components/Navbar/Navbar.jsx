@@ -46,6 +46,10 @@ function Navbar() {
   const [navCategories, setNavCategories] =
     useState([]);
 
+  // SEARCH
+  const [searchQuery, setSearchQuery] =
+    useState("");
+
   const { user, isLoggedIn } = useSelector(
     (state) => state.auth
   );
@@ -98,6 +102,25 @@ function Navbar() {
 
     fetchCategories();
   }, []);
+
+  // =========================================================
+  // SEARCH
+  // =========================================================
+
+  function handleSearch(event) {
+    event.preventDefault();
+
+    const query = searchQuery.trim();
+
+    if (!query) {
+      navigate("/products");
+      return;
+    }
+
+    navigate(
+      `/products?search=${encodeURIComponent(query)}`
+    );
+  }
 
   // =========================================================
   // CLOSE MOBILE MENU
@@ -206,10 +229,14 @@ function Navbar() {
               </div>
             </button>
 
-            {/* SEARCH */}
+            {/* =================================================
+                DESKTOP SEARCH
+            ================================================= */}
 
-            <div className="relative hidden flex-1 md:block">
-
+            <form
+              onSubmit={handleSearch}
+              className="relative hidden flex-1 md:block"
+            >
               <FiSearch
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
                 size={20}
@@ -217,11 +244,14 @@ function Navbar() {
 
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(event) =>
+                  setSearchQuery(event.target.value)
+                }
                 placeholder="Search for products, brands and more..."
                 className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
               />
-
-            </div>
+            </form>
 
             {/* ACCOUNT */}
 
@@ -396,9 +426,14 @@ function Navbar() {
 
           </div>
 
-          {/* MOBILE SEARCH */}
+          {/* =================================================
+              MOBILE SEARCH
+          ================================================= */}
 
-          <div className="pb-3 md:hidden">
+          <form
+            onSubmit={handleSearch}
+            className="pb-3 md:hidden"
+          >
 
             <div className="relative">
 
@@ -409,13 +444,17 @@ function Navbar() {
 
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(event) =>
+                  setSearchQuery(event.target.value)
+                }
                 placeholder="Search products, brands and more..."
                 className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
               />
 
             </div>
 
-          </div>
+          </form>
 
           {/* =================================================
               DYNAMIC CATEGORIES
