@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
   FiFacebook,
   FiInstagram,
@@ -11,14 +13,42 @@ import {
 
 import { Link } from "react-router-dom";
 
+import { getProducts } from "../../Apis/productsApi";
+
 function Footer() {
+  const [footerCategories, setFooterCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getProducts();
+        const products = response.data || [];
+
+        const uniqueCategories = [
+          ...new Set(
+            products
+              .map((product) => product.category)
+              .filter(Boolean)
+          ),
+        ];
+
+        setFooterCategories(uniqueCategories);
+      } catch (error) {
+        console.error("Footer categories error:", error);
+        setFooterCategories([]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <footer className="border-t border-gray-200 bg-white text-gray-800 dark:border-[#2a2a2a] dark:bg-[#111111] dark:text-gray-200">
 
       {/* ================= MAIN FOOTER ================= */}
       <div className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10">
 
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.2fr_1.8fr_1fr_1fr]">
 
           {/* ================= BRAND ================= */}
           <div className="max-w-sm">
@@ -63,31 +93,82 @@ function Footer() {
           </div>
 
           {/* ================= SHOP ================= */}
-          <FooterColumn
-            title="Shop"
-            links={[
-              {
-                label: "All Products",
-                to: "/products",
-              },
-              {
-                label: "Electronics",
-                to: "/products?category=smartphones",
-              },
-              {
-                label: "Fashion",
-                to: "/products?category=mens-shirts",
-              },
-              {
-                label: "Beauty",
-                to: "/products?category=beauty",
-              },
-              {
-                label: "Home & Furniture",
-                to: "/products?category=furniture",
-              },
-            ]}
-          />
+          <div>
+
+            <h3 className="mb-5 text-sm font-bold text-gray-900 dark:text-white">
+              Shop
+            </h3>
+
+            <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+
+              {/* All Products */}
+              <Link
+                to="/products"
+                className="
+                  group
+                  inline-flex
+                  items-center
+                  text-sm
+                  text-gray-500
+                  transition-colors
+                  duration-200
+                  hover:text-gray-900
+                  dark:text-gray-400
+                  dark:hover:text-white
+                "
+              >
+                All Products
+
+                <FiChevronRight
+                  size={13}
+                  className="
+                    ml-1
+                    opacity-0
+                    transition-all
+                    duration-200
+                    group-hover:translate-x-1
+                    group-hover:opacity-100
+                  "
+                />
+              </Link>
+
+              {/* Dynamic Categories */}
+              {footerCategories.map((category) => (
+                <Link
+                  key={category}
+                  to={`/products?category=${encodeURIComponent(category)}`}
+                  className="
+                    group
+                    inline-flex
+                    items-center
+                    text-sm
+                    text-gray-500
+                    transition-colors
+                    duration-200
+                    hover:text-gray-900
+                    dark:text-gray-400
+                    dark:hover:text-white
+                  "
+                >
+                  {category}
+
+                  <FiChevronRight
+                    size={13}
+                    className="
+                      ml-1
+                      opacity-0
+                      transition-all
+                      duration-200
+                      group-hover:translate-x-1
+                      group-hover:opacity-100
+                    "
+                  />
+                </Link>
+              ))}
+
+            </div>
+
+          </div>
 
           {/* ================= HELP ================= */}
           <FooterColumn
