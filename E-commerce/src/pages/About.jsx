@@ -28,7 +28,7 @@ const team = [
       "Builds the systems and APIs that power Shoply behind the scenes.",
     icon: FiLayers,
     initials: "MG",
-    image: "/mohamed.jpg",
+    image: "/mohamed.jpeg",
   },
   {
     name: "Aya Ahmed",
@@ -37,7 +37,7 @@ const team = [
       "Works on reliable backend solutions and the core logic behind the platform.",
     icon: FiZap,
     initials: "AA",
-    image: "/aya-ahmed.jpg",
+    image: "/ayaahmed.jpeg",
   },
   {
     name: "Aya Gamal",
@@ -46,7 +46,7 @@ const team = [
       "Helps build secure, scalable, and efficient services for the Shoply experience.",
     icon: FiShield,
     initials: "AG",
-    image: "/aya-gamal.jpg",
+    image: "/ayagamal.jpeg",
   },
 ];
 
