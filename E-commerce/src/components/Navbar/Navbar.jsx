@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import {
@@ -151,8 +152,8 @@ function Navbar() {
   const mobileLinkClass = ({ isActive }) =>
     `flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition ${
       isActive
-        ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-400/10 dark:text-yellow-400"
-        : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-[#222]"
+        ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-400/10 dark:!text-yellow-400"
+        : "text-gray-700 hover:bg-gray-100 dark:!text-white dark:hover:bg-[#222]"
     }`;
 
   return (
@@ -794,7 +795,10 @@ function Navbar() {
                 className={mobileLinkClass}
               >
                 Home
-                <FiChevronRight size={17} />
+                <FiChevronRight
+                  size={17}
+                  className="shrink-0 dark:text-white"
+                />
               </NavLink>
 
               <NavLink
@@ -803,7 +807,10 @@ function Navbar() {
                 className={mobileLinkClass}
               >
                 All Products
-                <FiChevronRight size={17} />
+                <FiChevronRight
+                  size={17}
+                  className="shrink-0 dark:text-white"
+                />
               </NavLink>
 
               {navCategories.map(
@@ -817,7 +824,10 @@ function Navbar() {
                     className={mobileLinkClass}
                   >
                     {category}
-                    <FiChevronRight size={17} />
+                    <FiChevronRight
+                      size={17}
+                      className="shrink-0 dark:text-white"
+                    />
                   </NavLink>
                 )
               )}
