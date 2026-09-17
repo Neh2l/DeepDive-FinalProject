@@ -42,21 +42,40 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({});
-    res.status(200).json({ success: true, count: products.length, data: products });
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
+
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
-    res.status(200).json({ success: true, data: product });
+
+    res.status(200).json({
+      success: true,
+      data: product,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -71,38 +90,77 @@ exports.updateProduct = async (req, res) => {
       });
     }
 
+    /*
+    ========================================
+    UPDATE IMAGES
+    ========================================
+    */
+
     let images = product.images;
 
-    // لو المستخدم رفع صور جديدة
+    // لو المستخدم رفع صورة جديدة
     if (req.files && req.files.length > 0) {
 
       // حذف الصور القديمة من Cloudinary
       if (product.images && product.images.length > 0) {
         for (const image of product.images) {
-          await cloudinary.uploader.destroy(image.public_id);
+          await cloudinary.uploader.destroy(
+            image.public_id
+          );
         }
       }
 
-      // الصور الجديدة
+      // حفظ الصور الجديدة
       images = req.files.map((file) => ({
         url: file.path,
         public_id: file.filename,
       }));
     }
 
-    product.name = req.body.name ?? product.name;
-    product.description = req.body.description ?? product.description;
-    product.price = req.body.price ?? product.price;
-    product.discountPrice =
-      req.body.discountPrice ?? product.discountPrice;
-    product.category = req.body.category ?? product.category;
-    product.branches = req.body.branches ?? product.branches;
-    product.colors = req.body.colors ?? product.colors;
-    product.sizes = req.body.sizes ?? product.sizes;
+    /*
+    ========================================
+    VALIDATE CATEGORY
+    ========================================
+    */
+
+    if (req.body.category) {
+      const category = await Category.findById(
+        req.body.category
+      );
+
+      if (!category) {
+        return res.status(404).json({
+          status: "fail",
+          message: "Category not found",
+        });
+      }
+    }
+
+    /*
+    ========================================
+    UPDATE PRODUCT DATA
+    ========================================
+    */
+
+    product.title =
+      req.body.title ?? product.title;
+
+    product.description =
+      req.body.description ?? product.description;
+
+    product.price =
+      req.body.price ?? product.price;
+
+    product.stock =
+      req.body.stock ?? product.stock;
+
+    product.category =
+      req.body.category ?? product.category;
 
     product.images = images;
 
-    const updatedProduct = await product.save();
+    const updatedProduct =
+      await product.save();
 
     res.status(200).json({
       success: true,
@@ -130,7 +188,9 @@ exports.deleteProduct = async (req, res) => {
 
     if (product.images && product.images.length > 0) {
       for (const image of product.images) {
-        await cloudinary.uploader.destroy(image.public_id);
+        await cloudinary.uploader.destroy(
+          image.public_id
+        );
       }
     }
 
@@ -140,6 +200,7 @@ exports.deleteProduct = async (req, res) => {
       success: true,
       message: "Product deleted successfully",
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
