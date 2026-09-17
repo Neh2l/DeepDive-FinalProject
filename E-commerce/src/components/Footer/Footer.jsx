@@ -21,13 +21,6 @@ function Footer() {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [location.pathname, location.search]);
-
-  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await getProducts();
@@ -50,6 +43,13 @@ function Footer() {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [location.pathname, location.search]);
 
   return (
     <footer className="border-t border-gray-200 bg-white text-gray-800 dark:border-[#2a2a2a] dark:bg-[#111111] dark:text-gray-200">

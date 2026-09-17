@@ -6,7 +6,7 @@ const getProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found"
+        message: "User not found",
       });
     }
 
@@ -15,28 +15,27 @@ const getProfile = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
-
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
-
 // Update Profile
+
 const updateProfile = async (req, res) => {
   try {
     const { name, email } = req.body;
 
     if (!name && !email) {
       return res.status(400).json({
-        message: "Please provide name or email to update"
+        message: "Please provide name or email to update",
       });
     }
 
@@ -44,14 +43,14 @@ const updateProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found"
+        message: "User not found",
       });
     }
 
     if (name) {
       if (name.trim().length < 2) {
         return res.status(400).json({
-          message: "Name must be at least 2 characters"
+          message: "Name must be at least 2 characters",
         });
       }
 
@@ -65,18 +64,18 @@ const updateProfile = async (req, res) => {
 
       if (!emailRegex.test(newEmail)) {
         return res.status(400).json({
-          message: "Please enter a valid email"
+          message: "Please enter a valid email",
         });
       }
 
       const existingUser = await User.findOne({
         email: newEmail,
-        _id: { $ne: user._id }
+        _id: { $ne: user._id },
       });
 
       if (existingUser) {
         return res.status(409).json({
-          message: "Email is already registered"
+          message: "Email is already registered",
         });
       }
 
@@ -87,26 +86,42 @@ const updateProfile = async (req, res) => {
 
     res.status(200).json({
       message: "Profile updated successfully",
-
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
-
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
+// Get All Users
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+
+    res.status(200).json({
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
 
 module.exports = {
   getProfile,
-  updateProfile
+  updateProfile,
+  getAllUsers,
 };

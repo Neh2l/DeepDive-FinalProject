@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 
 import {
@@ -30,15 +29,12 @@ import {
 import { logoutUser } from "../../redux/authSlice";
 import { clearCart } from "../../redux/cartSlice";
 import { clearWishlist } from "../../redux/wishlistSlice";
-
 import { useTheme } from "../../context/ThemeContext";
-
 import { getProducts } from "../../Apis/productsApi";
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { theme, toggleTheme } = useTheme();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] =
@@ -79,7 +75,6 @@ function Navbar() {
     const fetchCategories = async () => {
       try {
         const response = await getProducts();
-
         const products = response.data || [];
 
         const uniqueCategories = [
@@ -141,7 +136,6 @@ function Navbar() {
     dispatch(logoutUser());
 
     closeMobileMenu();
-
     navigate("/");
   }
 
@@ -171,6 +165,7 @@ function Navbar() {
       ====================================================== */}
 
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur dark:border-[#2a2a2a] dark:bg-[#171717]/95">
+
         <div className="mx-auto max-w-[1400px] px-4">
 
           {/* =================================================
@@ -257,20 +252,17 @@ function Navbar() {
             {/* ACCOUNT */}
 
             {isLoggedIn && user ? (
-
               <div className="group relative hidden sm:block">
 
                 <button
                   type="button"
                   className="flex items-center gap-2 rounded-xl px-3 py-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525]"
                 >
-
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-400/10 dark:text-yellow-400">
                     <FiUser size={19} />
                   </div>
 
                   <div className="text-left">
-
                     <p className="text-[11px] text-gray-500 dark:text-gray-400">
                       Hello,{" "}
                       {user.name.split(" ")[0]}
@@ -279,9 +271,7 @@ function Navbar() {
                     <p className="max-w-[110px] truncate text-sm font-bold text-gray-900 dark:text-white">
                       {user.name}
                     </p>
-
                   </div>
-
                 </button>
 
                 <div className="invisible absolute right-0 top-full z-50 w-48 translate-y-2 rounded-2xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
@@ -294,6 +284,7 @@ function Navbar() {
                       size={17}
                       className="text-gray-700 dark:!text-white"
                     />
+
                     My Account
                   </Link>
 
@@ -305,6 +296,7 @@ function Navbar() {
                       size={17}
                       className="text-gray-700 dark:!text-white"
                     />
+
                     My Orders
                   </Link>
 
@@ -318,20 +310,15 @@ function Navbar() {
                   </button>
 
                 </div>
-
               </div>
-
             ) : (
-
               <Link
                 to="/login"
                 className="hidden items-center gap-2 rounded-xl px-3 py-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525] sm:flex"
               >
-
                 <FiUser size={21} />
 
                 <div className="text-left">
-
                   <p className="text-[11px] text-gray-500 dark:text-gray-400">
                     Hello, sign in
                   </p>
@@ -339,11 +326,8 @@ function Navbar() {
                   <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     Account
                   </p>
-
                 </div>
-
               </Link>
-
             )}
 
             {/* THEME */}
@@ -354,7 +338,6 @@ function Navbar() {
               aria-label="Toggle theme"
               className="group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-yellow-300 hover:bg-yellow-50 hover:text-yellow-600 hover:shadow-md dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-yellow-400 dark:hover:bg-[#222] dark:hover:text-yellow-400"
             >
-
               <span
                 className={`absolute transition-all duration-500 ${
                   theme === "light"
@@ -374,7 +357,6 @@ function Navbar() {
               >
                 <FiSun size={20} />
               </span>
-
             </button>
 
             {/* WISHLIST */}
@@ -387,7 +369,6 @@ function Navbar() {
                   : "text-gray-900 dark:text-white"
               }`}
             >
-
               <FiHeart
                 size={23}
                 className={
@@ -402,7 +383,6 @@ function Navbar() {
                   {totalWishlistItems}
                 </span>
               )}
-
             </Link>
 
             {/* CART */}
@@ -411,7 +391,6 @@ function Navbar() {
               to="/cart"
               className="relative rounded-xl p-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525]"
             >
-
               <FiShoppingCart
                 size={24}
                 className="text-gray-900 dark:text-white"
@@ -422,7 +401,6 @@ function Navbar() {
                   {totalItems}
                 </span>
               )}
-
             </Link>
 
           </div>
@@ -435,7 +413,6 @@ function Navbar() {
             onSubmit={handleSearch}
             className="pb-3 md:hidden"
           >
-
             <div className="relative">
 
               <FiSearch
@@ -454,7 +431,6 @@ function Navbar() {
               />
 
             </div>
-
           </form>
 
           {/* =================================================
@@ -560,7 +536,6 @@ function Navbar() {
           <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
 
             {isLoggedIn && user ? (
-
               <div className="rounded-2xl bg-gray-950 p-4 dark:bg-[#1c1c1c]">
 
                 <div className="flex items-center gap-3">
@@ -604,9 +579,7 @@ function Navbar() {
                 </div>
 
               </div>
-
             ) : (
-
               <Link
                 to="/login"
                 onClick={closeMobileMenu}
@@ -639,7 +612,6 @@ function Navbar() {
                 />
 
               </Link>
-
             )}
 
           </div>
@@ -756,7 +728,9 @@ function Navbar() {
               >
 
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-50 text-gray-900 dark:bg-yellow-400/10 dark:text-yellow-400">
+
                   <FiShoppingCart size={19} />
+
                 </div>
 
                 <div>
@@ -795,10 +769,12 @@ function Navbar() {
                 className={mobileLinkClass}
               >
                 Home
+
                 <FiChevronRight
                   size={17}
                   className="shrink-0 dark:text-white"
                 />
+
               </NavLink>
 
               <NavLink
@@ -807,10 +783,12 @@ function Navbar() {
                 className={mobileLinkClass}
               >
                 All Products
+
                 <FiChevronRight
                   size={17}
                   className="shrink-0 dark:text-white"
                 />
+
               </NavLink>
 
               {navCategories.map(
@@ -824,10 +802,12 @@ function Navbar() {
                     className={mobileLinkClass}
                   >
                     {category}
+
                     <FiChevronRight
                       size={17}
                       className="shrink-0 dark:text-white"
                     />
+
                   </NavLink>
                 )
               )}
@@ -863,7 +843,6 @@ function Navbar() {
             {/* LOGOUT */}
 
             {isLoggedIn && user && (
-
               <button
                 type="button"
                 onClick={handleLogout}
@@ -881,7 +860,6 @@ function Navbar() {
                 <FiChevronRight size={17} />
 
               </button>
-
             )}
 
           </div>
