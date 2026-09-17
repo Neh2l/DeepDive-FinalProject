@@ -29,6 +29,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["Buyer", "Admin"],
       default: "Buyer"
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    verificationCode: {
+      type: String
+    },
+    verificationCodeExpires: {
+      type: Date
     }
   },
   {
