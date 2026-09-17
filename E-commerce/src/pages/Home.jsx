@@ -370,7 +370,7 @@ function Home() {
 
               </p>
 
-              <Link
+              {/* <Link
                 to="/products"
                 className="group mt-8 inline-flex items-center gap-3 rounded-xl bg-white px-6 py-4 text-sm font-black text-gray-950 transition-all duration-300 hover:-translate-y-1 hover:bg-[#ffd814]"
               >
@@ -379,7 +379,15 @@ function Home() {
 
                 <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
 
-              </Link>
+              </Link> */}
+              <Link
+  to="/products"
+  className="group mt-8 inline-flex items-center gap-3 rounded-xl bg-white px-6 py-4 text-sm font-black !text-gray-950 transition-all duration-300 hover:-translate-y-1 hover:bg-[#ffd814] dark:bg-white dark:!text-gray-950"
+>
+  Start Shopping
+
+  <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+</Link>
 
             </div>
 
