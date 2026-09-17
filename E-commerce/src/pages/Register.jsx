@@ -1,7 +1,9 @@
-
 import { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   FiMail,
   FiLock,
@@ -19,6 +21,7 @@ import { registerUser } from "../redux/authSlice";
 
 function Register() {
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const { loading, error } = useSelector((state) => state.auth);
@@ -31,9 +34,13 @@ function Register() {
   });
 
   const [errors, setErrors] = useState({});
+
   const [showPassword, setShowPassword] = useState(false);
+
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+
   const [success, setSuccess] = useState(false);
 
   const validateForm = () => {
@@ -119,8 +126,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] flex items-center justify-center px-4 py-10">
-
+    <div className="min-h-screen bg-[#f5f5f5] flex items-center justify-center px-4 py-10 dark:bg-[#111111]">
       <div className="w-full max-w-[480px]">
 
         {/* LOGO */}
@@ -134,7 +140,7 @@ function Register() {
               <FiShoppingBag className="text-gray-950 text-xl" />
             </div>
 
-            <span className="text-[28px] font-black tracking-tight text-gray-950">
+            <span className="text-[28px] font-black tracking-tight text-gray-950 dark:text-white">
               Shoply
             </span>
           </Link>
@@ -142,16 +148,16 @@ function Register() {
 
         {/* CARD */}
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] px-6 py-8 sm:px-9 sm:py-9">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] px-6 py-8 sm:px-9 sm:py-9 dark:bg-[#1a1a1a] dark:border-[#2a2a2a]">
 
           {/* HEADER */}
 
           <div className="mb-7">
-            <h1 className="text-2xl font-black text-gray-900">
+            <h1 className="text-2xl font-black text-gray-900 dark:text-white">
               Create your Shoply account
             </h1>
 
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 mt-2 dark:text-gray-400">
               Join us and start shopping today.
             </p>
           </div>
@@ -159,7 +165,7 @@ function Register() {
           {/* ERROR */}
 
           {error && (
-            <div className="mb-5 flex items-start gap-3 rounded-lg bg-red-50 border border-red-100 p-3.5 text-red-600 text-sm font-medium">
+            <div className="mb-5 flex items-start gap-3 rounded-lg bg-red-50 border border-red-100 p-3.5 text-red-600 text-sm font-medium dark:bg-red-950/30 dark:border-red-900/40 dark:text-red-400">
               <FiAlertCircle className="shrink-0 mt-0.5" />
 
               <span>{error}</span>
@@ -169,7 +175,7 @@ function Register() {
           {/* SUCCESS */}
 
           {success && (
-            <div className="mb-5 flex items-center gap-3 rounded-lg bg-green-50 border border-green-100 p-3.5 text-green-600 text-sm font-medium">
+            <div className="mb-5 flex items-center gap-3 rounded-lg bg-green-50 border border-green-100 p-3.5 text-green-600 text-sm font-medium dark:bg-green-950/30 dark:border-green-900/40 dark:text-green-400">
               <FiCheck className="shrink-0" />
 
               <span>
@@ -186,7 +192,7 @@ function Register() {
             {/* NAME */}
 
             <div>
-              <label className="block text-sm font-bold text-gray-800 mb-2">
+              <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Full name
               </label>
 
@@ -202,8 +208,8 @@ function Register() {
                   className={`w-full h-12 pl-10 pr-4 rounded-lg border ${
                     errors.name
                       ? "border-red-400"
-                      : "border-gray-300"
-                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700`}
+                      : "border-gray-300 dark:border-[#3a3a3a]"
+                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-400 dark:focus:ring-gray-400`}
                 />
               </div>
 
@@ -217,7 +223,7 @@ function Register() {
             {/* EMAIL */}
 
             <div>
-              <label className="block text-sm font-bold text-gray-800 mb-2">
+              <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Email address
               </label>
 
@@ -233,8 +239,8 @@ function Register() {
                   className={`w-full h-12 pl-10 pr-4 rounded-lg border ${
                     errors.email
                       ? "border-red-400"
-                      : "border-gray-300"
-                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700`}
+                      : "border-gray-300 dark:border-[#3a3a3a]"
+                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-400 dark:focus:ring-gray-400`}
                 />
               </div>
 
@@ -248,7 +254,7 @@ function Register() {
             {/* PASSWORD */}
 
             <div>
-              <label className="block text-sm font-bold text-gray-800 mb-2">
+              <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Password
               </label>
 
@@ -264,8 +270,8 @@ function Register() {
                   className={`w-full h-12 pl-10 pr-11 rounded-lg border ${
                     errors.password
                       ? "border-red-400"
-                      : "border-gray-300"
-                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700`}
+                      : "border-gray-300 dark:border-[#3a3a3a]"
+                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-400 dark:focus:ring-gray-400`}
                 />
 
                 <button
@@ -273,7 +279,7 @@ function Register() {
                   onClick={() =>
                     setShowPassword((prev) => !prev)
                   }
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors dark:hover:text-white"
                 >
                   {showPassword ? (
                     <FiEyeOff />
@@ -293,7 +299,7 @@ function Register() {
             {/* CONFIRM PASSWORD */}
 
             <div>
-              <label className="block text-sm font-bold text-gray-800 mb-2">
+              <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Confirm password
               </label>
 
@@ -309,8 +315,8 @@ function Register() {
                   className={`w-full h-12 pl-10 pr-11 rounded-lg border ${
                     errors.confirmPassword
                       ? "border-red-400"
-                      : "border-gray-300"
-                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700`}
+                      : "border-gray-300 dark:border-[#3a3a3a]"
+                  } bg-white text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-400 dark:focus:ring-gray-400`}
                 />
 
                 <button
@@ -318,7 +324,7 @@ function Register() {
                   onClick={() =>
                     setShowConfirmPassword((prev) => !prev)
                   }
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors dark:hover:text-white"
                 >
                   {showConfirmPassword ? (
                     <FiEyeOff />
@@ -339,6 +345,7 @@ function Register() {
 
             <div>
               <label className="flex items-start gap-2.5 cursor-pointer">
+
                 <input
                   type="checkbox"
                   checked={acceptedTerms}
@@ -348,16 +355,17 @@ function Register() {
                   className="mt-0.5 w-4 h-4 accent-[#ffd800]"
                 />
 
-                <span className="text-xs leading-5 text-gray-500">
-                  I agree to the{" "}
-                  <span className="text-gray-900 font-semibold">
+                <span className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+                  I agree to{" "}
+                  <span className="text-gray-900 font-semibold dark:text-white">
                     Terms & Conditions
                   </span>{" "}
                   and{" "}
-                  <span className="text-gray-900 font-semibold">
+                  <span className="text-gray-900 font-semibold dark:text-white">
                     Privacy Policy
                   </span>
                 </span>
+
               </label>
 
               {errors.terms && (
@@ -388,31 +396,39 @@ function Register() {
                 </>
               )}
             </button>
+
           </form>
 
           {/* LOGIN */}
 
-          <div className="mt-7 pt-6 border-t border-gray-100 text-center">
-            <p className="text-sm text-gray-500">
+          <div className="mt-7 pt-6 border-t border-gray-100 text-center dark:border-[#2a2a2a]">
+
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Already have an account?{" "}
+
               <Link
                 to="/login"
-                className="font-bold text-gray-900 hover:underline"
+                className="font-bold text-gray-900 hover:underline dark:text-white"
               >
                 Sign in
               </Link>
+
             </p>
+
           </div>
 
           {/* SECURITY */}
 
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
+
             <FiShield />
 
             <span>
               Your information is protected and secure
             </span>
+
           </div>
+
         </div>
 
         {/* FOOTER */}

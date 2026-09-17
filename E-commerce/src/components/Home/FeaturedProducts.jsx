@@ -5,7 +5,7 @@ import ProductGrid from "../../components/Product/ProductGrid";
 
 function FeaturedProducts({ products = [], loading = false }) {
   return (
-    <section className="bg-[#f6f6f6] px-4 py-14 sm:px-6 lg:px-8">
+    <section className="bg-[#f6f6f6] px-4 py-14 dark:bg-[#111111] sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1400px]">
 
         {/* HEADER */}
@@ -21,11 +21,11 @@ function FeaturedProducts({ products = [], loading = false }) {
 
             </div>
 
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-gray-950 dark:text-white sm:text-4xl">
               Featured Products
             </h2>
 
-            <p className="mt-2 max-w-xl text-sm leading-6 text-gray-500">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-gray-500 dark:text-gray-400">
               Discover some of our highest-rated products, selected
               for a better shopping experience.
             </p>
@@ -34,7 +34,7 @@ function FeaturedProducts({ products = [], loading = false }) {
 
           <Link
             to="/products"
-            className="group flex w-fit items-center gap-2 text-sm font-bold text-gray-700 transition hover:text-gray-950"
+            className="group flex w-fit items-center gap-2 text-sm font-bold text-gray-700 transition hover:text-gray-950 dark:text-gray-300 dark:hover:text-white"
           >
             Explore all
 

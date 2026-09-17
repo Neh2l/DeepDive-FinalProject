@@ -438,16 +438,16 @@ function AdminDashboard() {
     description,
   }) => {
     return (
-      <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-        <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-slate-100 transition-transform duration-500 group-hover:scale-150" />
+      <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+        <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-slate-100 transition-transform duration-500 group-hover:scale-150 dark:bg-[#252525]" />
 
         <div className="relative flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
               {title}
             </p>
 
-            <h3 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
+            <h3 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               {value}
             </h3>
 
@@ -465,7 +465,7 @@ function AdminDashboard() {
             </div>
           </div>
 
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-lg">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-lg dark:bg-[#252525]">
             <Icon size={20} />
           </div>
         </div>
@@ -498,15 +498,15 @@ function AdminDashboard() {
         <div className="mb-8">
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
-              <p className="mb-2 text-sm font-medium text-slate-500">
+              <p className="mb-2 text-sm font-medium text-slate-500 dark:text-gray-400">
                 {formattedDate}
               </p>
 
-              <h1 className="text-3xl font-bold tracking-tight text-slate-950">
-                Good morning, {adminName} 👋
+              <h1 className="text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
+                Good morning, {adminName} 
               </h1>
 
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
                 Here&apos;s what&apos;s happening with
                 your store today.
               </p>
@@ -565,19 +565,19 @@ function AdminDashboard() {
         {/* Charts */}
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.7fr_1fr]">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-slate-950">
+                <h2 className="text-lg font-bold text-slate-950 dark:text-white">
                   Sales Performance
                 </h2>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
                   Monthly sales overview
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-600">
+              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400">
                 <FiTrendingUp />
                 +18.4%
               </div>
@@ -612,13 +612,13 @@ function AdminDashboard() {
 
           {/* Store Health */}
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
             <div className="mb-6">
-              <h2 className="text-lg font-bold text-slate-950">
+              <h2 className="text-lg font-bold text-slate-950 dark:text-white">
                 Store Health
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
                 Current store overview
               </p>
             </div>
@@ -626,50 +626,50 @@ function AdminDashboard() {
             <div className="space-y-5">
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600">
+                  <span className="text-sm text-slate-600 dark:text-gray-400">
                     Products
                   </span>
 
-                  <span className="text-sm font-bold text-slate-900">
+                  <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {totalProducts}
                   </span>
                 </div>
 
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
                   <div className="h-full w-[82%] rounded-full bg-slate-900" />
                 </div>
               </div>
 
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600">
+                  <span className="text-sm text-slate-600 dark:text-gray-400">
                     Customers
                   </span>
 
-                  <span className="text-sm font-bold text-slate-900">
+                  <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {totalCustomers}
                   </span>
                 </div>
 
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
                   <div className="h-full w-[68%] rounded-full bg-emerald-500" />
                 </div>
               </div>
 
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600">
+                  <span className="text-sm text-slate-600 dark:text-gray-400">
                     Inventory
                   </span>
 
-                  <span className="text-sm font-bold text-slate-900">
+                  <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {lowStockProducts.length === 0
                       ? "Healthy"
                       : `${lowStockProducts.length} low`}
                   </span>
                 </div>
 
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
                   <div
                     className={`h-full rounded-full ${
                       lowStockProducts.length > 0
@@ -681,18 +681,18 @@ function AdminDashboard() {
               </div>
             </div>
 
-            <div className="mt-7 rounded-xl bg-slate-50 p-4">
+            <div className="mt-7 rounded-xl bg-slate-50 p-4 dark:bg-[#171717]">
               <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 shadow-sm">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 shadow-sm dark:bg-[#252525]">
                   <FiActivity />
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
                     Everything looks good
                   </p>
 
-                  <p className="mt-1 text-xs leading-5 text-slate-500">
+                  <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-gray-400">
                     Your store is running smoothly.
                     Keep adding great products.
                   </p>
@@ -704,14 +704,14 @@ function AdminDashboard() {
 
         {/* Recent Products */}
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-col justify-between gap-4 border-b border-slate-100 p-6 sm:flex-row sm:items-center">
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+          <div className="flex flex-col justify-between gap-4 border-b border-slate-100 p-6 sm:flex-row sm:items-center dark:border-[#2a2a2a]">
             <div>
-              <h2 className="text-lg font-bold text-slate-950">
+              <h2 className="text-lg font-bold text-slate-950 dark:text-white">
                 Recent Products
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
                 Your latest products
               </p>
             </div>
@@ -720,7 +720,7 @@ function AdminDashboard() {
               onClick={() =>
                 setActivePage("Products")
               }
-              className="flex items-center gap-1 text-sm font-semibold text-slate-900 transition hover:text-emerald-600"
+              className="flex items-center gap-1 text-sm font-semibold text-slate-900 transition hover:text-emerald-600 dark:text-gray-300"
             >
               View all
               <FiChevronRight />
@@ -730,7 +730,7 @@ function AdminDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-slate-100 text-left text-xs uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-slate-100 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a]">
                   <th className="px-6 py-4 font-semibold">
                     Product
                   </th>
@@ -778,7 +778,7 @@ function AdminDashboard() {
                     .map((product) => (
                       <tr
                         key={product._id}
-                        className="border-b border-slate-50 transition hover:bg-slate-50"
+                        className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
@@ -793,17 +793,17 @@ function AdminDashboard() {
                               className="h-11 w-11 rounded-xl object-cover"
                             />
 
-                            <span className="text-sm font-semibold text-slate-900">
+                            <span className="text-sm font-semibold text-slate-900 dark:text-white">
                               {product.title}
                             </span>
                           </div>
                         </td>
 
-                        <td className="px-6 py-4 text-sm text-slate-500">
+                        <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
                           {product.category}
                         </td>
 
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                           $
                           {Number(
                             product.price || 0
@@ -816,8 +816,8 @@ function AdminDashboard() {
                               Number(
                                 product.stock || 0
                               ) <= 10
-                                ? "bg-red-50 text-red-600"
-                                : "bg-emerald-50 text-emerald-600"
+                                ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
+                                : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
                             }`}
                           >
                             {product.stock} in stock
@@ -825,7 +825,7 @@ function AdminDashboard() {
                         </td>
 
                         <td className="px-6 py-4">
-                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-700">
+                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
                             <FiStar className="fill-yellow-400 text-yellow-400" />
                             4.5
                           </span>
@@ -852,15 +852,15 @@ function AdminDashboard() {
       <>
         <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
               Store Management
             </p>
 
-            <h1 className="mt-1 text-3xl font-bold text-slate-950">
+            <h1 className="mt-1 text-3xl font-bold text-slate-950 dark:text-white">
               Products
             </h1>
 
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
               Manage your store products and inventory.
             </p>
           </div>
@@ -888,20 +888,20 @@ function AdminDashboard() {
                 setSearchTerm(e.target.value)
               }
               placeholder="Search products..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
             />
           </div>
 
-          <div className="flex items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600">
+          <div className="flex items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300">
             {filteredProducts.length} products
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px]">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
                   <th className="px-6 py-4">
                     Product
                   </th>
@@ -940,7 +940,7 @@ function AdminDashboard() {
                         size={40}
                       />
 
-                      <p className="mt-3 text-sm font-semibold text-slate-700">
+                      <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
                         Loading products...
                       </p>
                     </td>
@@ -959,7 +959,7 @@ function AdminDashboard() {
                     (product) => (
                       <tr
                         key={product._id}
-                        className="border-b border-slate-50 transition hover:bg-slate-50"
+                        className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
@@ -975,7 +975,7 @@ function AdminDashboard() {
                             />
 
                             <div>
-                              <p className="text-sm font-bold text-slate-900">
+                              <p className="text-sm font-bold text-slate-900 dark:text-white">
                                 {product.title}
                               </p>
 
@@ -987,11 +987,11 @@ function AdminDashboard() {
                           </div>
                         </td>
 
-                        <td className="px-6 py-4 text-sm text-slate-500">
+                        <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
                           {product.category}
                         </td>
 
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                           $
                           {Number(
                             product.price || 0
@@ -1004,8 +1004,8 @@ function AdminDashboard() {
                               Number(
                                 product.stock || 0
                               ) <= 10
-                                ? "bg-red-50 text-red-600"
-                                : "bg-emerald-50 text-emerald-600"
+                                ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
+                                : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
                             }`}
                           >
                             {product.stock}
@@ -1013,7 +1013,7 @@ function AdminDashboard() {
                         </td>
 
                         <td className="px-6 py-4">
-                          <span className="flex items-center gap-1 text-sm font-semibold">
+                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
                             <FiStar className="fill-yellow-400 text-yellow-400" />
                             4.5
                           </span>
@@ -1027,7 +1027,7 @@ function AdminDashboard() {
                                   product
                                 )
                               }
-                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white"
+                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-300 dark:hover:bg-white dark:hover:text-slate-950"
                             >
                               <FiEdit3 size={15} />
                             </button>
@@ -1038,7 +1038,7 @@ function AdminDashboard() {
                                   product._id
                                 )
                               }
-                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white"
+                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white dark:bg-red-950/30 dark:text-red-400"
                             >
                               <FiTrash2 size={15} />
                             </button>
@@ -1058,11 +1058,11 @@ function AdminDashboard() {
                         className="px-6 py-16 text-center"
                       >
                         <FiBox
-                          className="mx-auto text-slate-300"
+                          className="mx-auto text-slate-300 dark:text-gray-600"
                           size={40}
                         />
 
-                        <p className="mt-3 text-sm font-semibold text-slate-700">
+                        <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
                           No products found
                         </p>
 
@@ -1091,15 +1091,15 @@ function AdminDashboard() {
     return (
       <>
         <div className="mb-7">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
             Customer Management
           </p>
 
-          <h1 className="mt-1 text-3xl font-bold text-slate-950">
+          <h1 className="mt-1 text-3xl font-bold text-slate-950 dark:text-white">
             Customers
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
             All registered customers appear here
             automatically.
           </p>
@@ -1128,11 +1128,11 @@ function AdminDashboard() {
           />
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
                   <th className="px-6 py-4">
                     Customer
                   </th>
@@ -1155,29 +1155,29 @@ function AdminDashboard() {
                 {users.map((user, index) => (
                   <tr
                     key={`${user.email}-${index}`}
-                    className="border-b border-slate-50 hover:bg-slate-50"
+                    className="border-b border-slate-50 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white dark:bg-[#252525]">
                           {user.name
                             ?.charAt(0)
                             ?.toUpperCase() ||
                             "U"}
                         </div>
 
-                        <span className="text-sm font-semibold text-slate-900">
+                        <span className="text-sm font-semibold text-slate-900 dark:text-white">
                           {user.name}
                         </span>
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-slate-500">
+                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
                       {user.email}
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
                         Customer
                       </span>
                     </td>
@@ -1197,11 +1197,11 @@ function AdminDashboard() {
           {users.length === 0 && (
             <div className="px-6 py-16 text-center">
               <FiUsers
-                className="mx-auto text-slate-300"
+                className="mx-auto text-slate-300 dark:text-gray-600"
                 size={42}
               />
 
-              <p className="mt-3 text-sm font-semibold text-slate-700">
+              <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
                 No customers yet
               </p>
             </div>
@@ -1248,15 +1248,15 @@ function AdminDashboard() {
     return (
       <>
         <div className="mb-7">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
             Sales Management
           </p>
 
-          <h1 className="mt-1 text-3xl font-bold text-slate-950">
+          <h1 className="mt-1 text-3xl font-bold text-slate-950 dark:text-white">
             Orders
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
             Monitor recent orders and their status.
           </p>
         </div>
@@ -1286,11 +1286,11 @@ function AdminDashboard() {
           />
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
                   <th className="px-6 py-4">
                     Order
                   </th>
@@ -1313,17 +1313,17 @@ function AdminDashboard() {
                 {orders.map((order) => (
                   <tr
                     key={order.id}
-                    className="border-b border-slate-50 hover:bg-slate-50"
+                    className="border-b border-slate-50 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
                   >
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                       {order.id}
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-slate-600">
+                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-gray-400">
                       {order.customer}
                     </td>
 
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                       {order.amount}
                     </td>
 
@@ -1332,11 +1332,11 @@ function AdminDashboard() {
                         className={`rounded-full px-3 py-1 text-xs font-semibold ${
                           order.status ===
                           "Delivered"
-                            ? "bg-emerald-50 text-emerald-600"
+                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
                             : order.status ===
                               "Processing"
-                            ? "bg-amber-50 text-amber-600"
-                            : "bg-blue-50 text-blue-600"
+                            ? "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400"
+                            : "bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400"
                         }`}
                       >
                         {order.status}
@@ -1366,19 +1366,19 @@ function AdminDashboard() {
     return (
       <div className="flex min-h-[500px] items-center justify-center">
         <div className="max-w-md text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-900 text-white shadow-xl">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-900 text-white shadow-xl dark:bg-[#252525]">
             <Icon size={32} />
           </div>
 
-          <h1 className="mt-6 text-3xl font-bold text-slate-950">
+          <h1 className="mt-6 text-3xl font-bold text-slate-950 dark:text-white">
             {title}
           </h1>
 
-          <p className="mt-3 text-sm leading-6 text-slate-500">
+          <p className="mt-3 text-sm leading-6 text-slate-500 dark:text-gray-400">
             {description}
           </p>
 
-          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-600">
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400">
             <FiActivity />
             Module ready for integration
           </div>
@@ -1434,7 +1434,7 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#111111] dark:text-white">
       {/* Mobile Overlay */}
 
       {sidebarOpen && (
@@ -1562,11 +1562,11 @@ function AdminDashboard() {
       <div className="lg:pl-64">
         {/* Header */}
 
-        <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl dark:border-[#2a2a2a] dark:bg-[#171717]/90 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 lg:hidden dark:border-[#2a2a2a] dark:text-gray-300"
             >
               <FiMenu size={20} />
             </button>
@@ -1576,7 +1576,7 @@ function AdminDashboard() {
                 Shoply / Admin
               </p>
 
-              <h2 className="text-lg font-bold text-slate-950">
+              <h2 className="text-lg font-bold text-slate-950 dark:text-white">
                 {activePage}
               </h2>
             </div>
@@ -1585,25 +1585,25 @@ function AdminDashboard() {
           <div className="flex items-center gap-3">
             {/* Search */}
 
-            {/* <div className="relative hidden md:block">
-              <FiSearch
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={16}
-              />
-
-              <input
-                type="text"
-                placeholder="Quick search..."
-                onChange={(e) =>
-                  setSearchTerm(e.target.value)
-                }
-                className="w-52 rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-xs outline-none transition focus:border-slate-400 focus:bg-white"
-              />
+            {/* <div className="relative hidden md:block"> 
+              <FiSearch 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" 
+                size={16} 
+              /> 
+ 
+              <input 
+                type="text" 
+                placeholder="Quick search..." 
+                onChange={(e) => 
+                  setSearchTerm(e.target.value) 
+                } 
+                className="w-52 rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-xs outline-none transition focus:border-slate-400 focus:bg-white" 
+              /> 
             </div> */}
 
-            <div className="hidden h-8 w-px bg-slate-200 sm:block" />
+            <div className="hidden h-8 w-px bg-slate-200 dark:bg-[#2a2a2a] sm:block" />
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white dark:bg-[#252525]">
               {adminName
                 .charAt(0)
                 .toUpperCase()}
@@ -1622,16 +1622,16 @@ function AdminDashboard() {
 
       {showProductModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white shadow-2xl">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white shadow-2xl dark:bg-[#1a1a1a]">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
               <div>
-                <h2 className="text-xl font-bold text-slate-950">
+                <h2 className="text-xl font-bold text-slate-950 dark:text-white">
                   {editingProduct
                     ? "Edit Product"
                     : "Add New Product"}
                 </h2>
 
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-slate-500 dark:text-gray-400">
                   {editingProduct
                     ? "Update product information"
                     : "Add a new product to your store"}
@@ -1640,7 +1640,7 @@ function AdminDashboard() {
 
               <button
                 onClick={closeProductModal}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition hover:bg-slate-900 hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-400 dark:hover:bg-white dark:hover:text-slate-950"
               >
                 <FiX />
               </button>
@@ -1652,7 +1652,7 @@ function AdminDashboard() {
             >
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Product Name
                   </label>
 
@@ -1661,12 +1661,12 @@ function AdminDashboard() {
                     value={productForm.title}
                     onChange={handleProductChange}
                     placeholder="e.g. Premium Wireless Headphones"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Category
                   </label>
 
@@ -1675,12 +1675,12 @@ function AdminDashboard() {
                     value={productForm.category}
                     onChange={handleProductChange}
                     placeholder="Electronics"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Price
                   </label>
 
@@ -1691,12 +1691,12 @@ function AdminDashboard() {
                     value={productForm.price}
                     onChange={handleProductChange}
                     placeholder="99"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Stock
                   </label>
 
@@ -1707,12 +1707,12 @@ function AdminDashboard() {
                     value={productForm.stock}
                     onChange={handleProductChange}
                     placeholder="20"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Rating
                   </label>
 
@@ -1724,12 +1724,12 @@ function AdminDashboard() {
                     step="0.1"
                     value="4.5"
                     disabled
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 outline-none"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 outline-none dark:border-[#2a2a2a] dark:bg-[#222] dark:text-gray-400"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Image URL
                   </label>
 
@@ -1738,12 +1738,12 @@ function AdminDashboard() {
                     value={productForm.image}
                     onChange={handleProductChange}
                     placeholder="https://..."
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                     Description
                   </label>
 
@@ -1753,16 +1753,16 @@ function AdminDashboard() {
                     value={productForm.description}
                     onChange={handleProductChange}
                     placeholder="Write a short product description..."
-                    className="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+                    className="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
                 </div>
               </div>
 
-              <div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end dark:border-[#2a2a2a]">
                 <button
                   type="button"
                   onClick={closeProductModal}
-                  className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                  className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:text-gray-300 dark:hover:bg-[#222]"
                 >
                   Cancel
                 </button>

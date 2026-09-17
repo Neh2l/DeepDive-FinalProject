@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import {
   FiArrowRight,
@@ -86,9 +85,8 @@ const stats = [
 
 function About() {
   return (
-    <main className="overflow-hidden bg-white text-gray-950">
+    <main className="overflow-hidden bg-white text-gray-950 dark:bg-[#111111] dark:text-white">
 
-      
       <section className="relative isolate flex min-h-[680px] items-center overflow-hidden bg-gray-950">
 
         <div className="absolute -left-40 top-10 h-96 w-96 rounded-full bg-yellow-400/10 blur-3xl" />
@@ -237,10 +235,9 @@ function About() {
       </section>
 
 
-     
-      <section className="border-b border-gray-100 bg-white">
+      <section className="border-b border-gray-100 bg-white dark:border-[#2a2a2a] dark:bg-[#111111]">
 
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-gray-100 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-gray-100 px-5 dark:divide-[#2a2a2a] sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-8 lg:px-12">
 
           {stats.map((stat) => (
 
@@ -249,7 +246,7 @@ function About() {
               className="px-6 py-10 text-center sm:py-12"
             >
 
-              <p className="text-4xl font-black tracking-tight text-gray-950">
+              <p className="text-4xl font-black tracking-tight text-gray-950 dark:text-white">
                 {stat.number}
               </p>
 
@@ -269,7 +266,7 @@ function About() {
       {/* =====================================================
           OUR STORY
       ===================================================== */}
-      <section className="bg-gray-50 py-24 sm:py-28">
+      <section className="bg-gray-50 py-24 dark:bg-[#171717] sm:py-28">
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
 
@@ -281,7 +278,7 @@ function About() {
                 Our story
               </p>
 
-              <h2 className="mt-4 max-w-xl text-4xl font-black leading-tight tracking-[-0.03em] text-gray-950 sm:text-5xl">
+              <h2 className="mt-4 max-w-xl text-4xl font-black leading-tight tracking-[-0.03em] text-gray-950 dark:text-white sm:text-5xl">
                 We believe shopping should be
                 <span className="text-gray-400">
                   {" "}
@@ -289,7 +286,7 @@ function About() {
                 </span>
               </h2>
 
-              <div className="mt-8 space-y-5 text-[15px] leading-8 text-gray-600">
+              <div className="mt-8 space-y-5 text-[15px] leading-8 text-gray-600 dark:text-gray-400">
 
                 <p>
                   Shoply was created with a clear goal: to build an online
@@ -320,7 +317,7 @@ function About() {
 
                     <div
                       key={member.name}
-                      className="h-10 w-10 overflow-hidden rounded-full border-2 border-gray-50 bg-gray-950"
+                      className="h-10 w-10 overflow-hidden rounded-full border-2 border-gray-50 bg-gray-950 dark:border-[#171717]"
                     >
 
                       <img
@@ -335,7 +332,7 @@ function About() {
 
                 </div>
 
-                <p className="text-sm font-bold text-gray-700">
+                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">
                   Built by a team that cares.
                 </p>
 
@@ -451,7 +448,7 @@ function About() {
       {/* =====================================================
           WHY SHOPLY
       ===================================================== */}
-      <section className="bg-white py-24 sm:py-28">
+      <section className="bg-white py-24 dark:bg-[#111111] sm:py-28">
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
 
@@ -461,7 +458,7 @@ function About() {
               Why Shoply
             </p>
 
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.03em] text-gray-950 sm:text-5xl">
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.03em] text-gray-950 dark:text-white sm:text-5xl">
               Designed around
               <span className="text-gray-400">
                 {" "}
@@ -469,7 +466,7 @@ function About() {
               </span>
             </h2>
 
-            <p className="mt-5 text-sm leading-7 text-gray-500">
+            <p className="mt-5 text-sm leading-7 text-gray-500 dark:text-gray-400">
               We combine technology and thoughtful design to make every
               shopping interaction feel easier.
             </p>
@@ -487,7 +484,7 @@ function About() {
 
                 <div
                   key={feature.title}
-                  className="group rounded-[1.75rem] border border-gray-100 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-gray-200 hover:shadow-2xl"
+                  className="group rounded-[1.75rem] border border-gray-100 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-gray-200 hover:shadow-2xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:hover:border-[#3a3a3a]"
                 >
 
                   <div className="flex items-start justify-between">
@@ -496,23 +493,23 @@ function About() {
                       <Icon size={23} />
                     </div>
 
-                    <span className="text-xs font-black text-gray-200">
+                    <span className="text-xs font-black text-gray-200 dark:text-gray-600">
                       0{index + 1}
                     </span>
 
                   </div>
 
 
-                  <h3 className="mt-8 text-xl font-black text-gray-950">
+                  <h3 className="mt-8 text-xl font-black text-gray-950 dark:text-white">
                     {feature.title}
                   </h3>
 
-                  <p className="mt-3 text-sm leading-7 text-gray-500">
+                  <p className="mt-3 text-sm leading-7 text-gray-500 dark:text-gray-400">
                     {feature.text}
                   </p>
 
 
-                  <div className="mt-7 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 transition-colors group-hover:text-gray-950">
+                  <div className="mt-7 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 transition-colors group-hover:text-gray-950 dark:group-hover:text-white">
 
                     Shoply experience
 
@@ -538,7 +535,7 @@ function About() {
       ===================================================== */}
       <section
         id="team"
-        className="bg-gray-50 py-24 sm:py-28"
+        className="bg-gray-50 py-24 dark:bg-[#171717] sm:py-28"
       >
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
@@ -552,7 +549,7 @@ function About() {
                 The team
               </p>
 
-              <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-[-0.03em] text-gray-950 sm:text-5xl">
+              <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-[-0.03em] text-gray-950 dark:text-white sm:text-5xl">
                 The people behind
                 <span className="text-gray-400">
                   {" "}
@@ -562,7 +559,7 @@ function About() {
 
             </div>
 
-            <p className="max-w-md text-sm leading-7 text-gray-500 md:text-right">
+            <p className="max-w-md text-sm leading-7 text-gray-500 dark:text-gray-400 md:text-right">
               Four people. Different responsibilities. One shared goal:
               building a better digital shopping experience.
             </p>
@@ -581,7 +578,7 @@ function About() {
 
                 <div
                   key={member.name}
-                  className="group relative overflow-hidden rounded-[1.75rem] border border-gray-100 bg-white p-4 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl sm:p-5"
+                  className="group relative overflow-hidden rounded-[1.75rem] border border-gray-100 bg-white p-4 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a] sm:p-5"
                 >
 
                   <div className="relative h-64 w-full overflow-hidden rounded-[1.5rem] bg-gray-950">
@@ -620,7 +617,7 @@ function About() {
                   {/* ================= INFO ================= */}
                   <div className="px-1 pb-1 pt-6">
 
-                    <h3 className="text-xl font-black text-gray-950">
+                    <h3 className="text-xl font-black text-gray-950 dark:text-white">
                       {member.name}
                     </h3>
 
@@ -628,7 +625,7 @@ function About() {
                       {member.role}
                     </p>
 
-                    <p className="mt-4 text-sm leading-7 text-gray-500">
+                    <p className="mt-4 text-sm leading-7 text-gray-500 dark:text-gray-400">
                       {member.description}
                     </p>
 
@@ -636,7 +633,7 @@ function About() {
 
 
                   {/* Bottom status */}
-                  <div className="mt-5 flex items-center gap-2 border-t border-gray-100 px-1 pt-5 text-xs font-bold text-gray-400">
+                  <div className="mt-5 flex items-center gap-2 border-t border-gray-100 px-1 pt-5 text-xs font-bold text-gray-400 dark:border-[#2a2a2a]">
 
                     <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
 
@@ -660,7 +657,7 @@ function About() {
       {/* =====================================================
           FINAL CTA
       ===================================================== */}
-      <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
+      <section className="bg-white px-5 py-24 dark:bg-[#111111] sm:px-8 sm:py-28">
 
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gray-950 px-7 py-16 sm:px-12 sm:py-20 lg:px-20">
 

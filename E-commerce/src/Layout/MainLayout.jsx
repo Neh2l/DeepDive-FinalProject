@@ -4,7 +4,7 @@ import Footer from "../components/Footer/Footer";
 
 function MainLayout() {
   return (
-    <div className="min-h-screen bg-[#f7f7f7]">
+    <div className="min-h-screen bg-[#f7f7f7] dark:bg-[#111111]">
       <Navbar />
 
       <main>

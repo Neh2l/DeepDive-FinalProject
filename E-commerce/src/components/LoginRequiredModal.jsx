@@ -24,7 +24,7 @@ function LoginRequiredModal({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-[430px] overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-[0_30px_100px_rgba(0,0,0,0.25)] animate-[modalIn_0.3s_ease-out]"
+        className="relative w-full max-w-[430px] overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-[0_30px_100px_rgba(0,0,0,0.25)] animate-[modalIn_0.3s_ease-out] dark:border-[#2a2a2a] dark:bg-[#1a1a1a]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Accent */}
@@ -35,7 +35,7 @@ function LoginRequiredModal({
           type="button"
           onClick={onClose}
           aria-label="Close modal"
-          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-all duration-200 hover:rotate-90 hover:bg-gray-100 hover:text-gray-900"
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-all duration-200 hover:rotate-90 hover:bg-gray-100 hover:text-gray-900 dark:bg-[#222] dark:text-gray-400 dark:hover:bg-[#2a2a2a] dark:hover:text-white"
         >
           <FiX size={18} />
         </button>
@@ -54,8 +54,8 @@ function LoginRequiredModal({
             <div
               className={`relative flex h-20 w-20 items-center justify-center rounded-[24px] border ${
                 isWishlist
-                  ? "border-red-100 bg-red-50 text-red-500"
-                  : "border-yellow-100 bg-yellow-50 text-yellow-600"
+                  ? "border-red-100 bg-red-50 text-red-500 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-400"
+                  : "border-yellow-100 bg-yellow-50 text-yellow-600 dark:border-yellow-900/40 dark:bg-yellow-950/30 dark:text-yellow-400"
               }`}
             >
               {isWishlist ? (
@@ -75,11 +75,11 @@ function LoginRequiredModal({
               Almost there
             </span>
 
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-gray-950 sm:text-3xl">
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-gray-950 dark:text-white sm:text-3xl">
               Login required
             </h2>
 
-            <p className="mx-auto mt-3 max-w-[340px] text-sm leading-6 text-gray-500">
+            <p className="mx-auto mt-3 max-w-[340px] text-sm leading-6 text-gray-500 dark:text-gray-400">
               {isWishlist
                 ? "Sign in to save your favorite products and access your wishlist anytime."
                 : "Sign in to add products to your cart and continue shopping with Shoply."}
@@ -87,12 +87,12 @@ function LoginRequiredModal({
           </div>
 
           {/* Mini Trust */}
-          <div className="mt-6 flex items-center justify-center gap-2 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-green-600 shadow-sm">
+          <div className="mt-6 flex items-center justify-center gap-2 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 dark:border-[#2a2a2a] dark:bg-[#171717]">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-green-600 shadow-sm dark:bg-[#222]">
               <FiShield size={14} />
             </div>
 
-            <span className="text-[10px] font-bold text-gray-500">
+            <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">
               Your shopping experience is secure
             </span>
           </div>
@@ -115,7 +115,7 @@ function LoginRequiredModal({
             <Link
               to="/signup"
               onClick={onClose}
-              className="group flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3.5 text-sm font-bold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
+              className="group flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3.5 text-sm font-bold text-gray-700 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-gray-200 dark:hover:border-gray-500 dark:hover:bg-[#222]"
             >
               Create Account
 
@@ -130,7 +130,7 @@ function LoginRequiredModal({
           <button
             type="button"
             onClick={onClose}
-            className="mt-5 w-full text-center text-xs font-bold text-gray-400 transition-colors hover:text-gray-700"
+            className="mt-5 w-full text-center text-xs font-bold text-gray-400 transition-colors hover:text-gray-700 dark:hover:text-white"
           >
             Continue browsing
           </button>

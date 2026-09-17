@@ -40,25 +40,25 @@ function ProductDetailsPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#f6f6f6]">
+      <main className="min-h-screen bg-[#f6f6f6] dark:bg-[#111111]">
         <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 lg:px-8">
 
-          <div className="mb-6 h-4 w-48 animate-pulse rounded bg-gray-200" />
+          <div className="mb-6 h-4 w-48 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
           <div className="grid gap-8 lg:grid-cols-2">
 
-            <div className="min-h-[500px] animate-pulse rounded-3xl bg-white" />
+            <div className="min-h-[500px] animate-pulse rounded-3xl bg-white dark:bg-[#1a1a1a]" />
 
-            <div className="space-y-5 rounded-3xl bg-white p-8">
-              <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+            <div className="space-y-5 rounded-3xl bg-white p-8 dark:bg-[#1a1a1a]">
+              <div className="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-10 w-3/4 animate-pulse rounded bg-gray-200" />
+              <div className="h-10 w-3/4 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-20 w-full animate-pulse rounded bg-gray-200" />
+              <div className="h-20 w-full animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-10 w-40 animate-pulse rounded bg-gray-200" />
+              <div className="h-10 w-40 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-14 w-full animate-pulse rounded bg-gray-200" />
+              <div className="h-14 w-full animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
             </div>
 
           </div>
@@ -71,19 +71,19 @@ function ProductDetailsPage() {
 
   if (error || !product) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#f6f6f6] px-4">
+      <main className="flex min-h-screen items-center justify-center bg-[#f6f6f6] px-4 dark:bg-[#111111]">
 
-        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 dark:bg-red-950/30 dark:text-red-400">
             !
           </div>
 
-          <h1 className="mt-5 text-2xl font-black text-gray-950">
+          <h1 className="mt-5 text-2xl font-black text-gray-950 dark:text-white">
             Product not found
           </h1>
 
-          <p className="mt-2 text-sm leading-6 text-gray-500">
+          <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
             The product you're looking for may have
             been removed or doesn't exist anymore.
           </p>
@@ -104,39 +104,39 @@ function ProductDetailsPage() {
   // ================= PRODUCT =================
 
   return (
-    <main className="min-h-screen bg-[#f6f6f6]">
+    <main className="min-h-screen bg-[#f6f6f6] dark:bg-[#111111]">
 
       {/* ================= BREADCRUMB ================= */}
 
-      <div className="border-b border-gray-200 bg-white">
+      <div className="border-b border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#171717]">
         <div className="mx-auto max-w-[1400px] px-4 py-4 sm:px-6 lg:px-8">
 
           <div className="flex items-center gap-2 overflow-hidden text-xs">
 
             <Link
               to="/"
-              className="flex shrink-0 items-center gap-1 font-semibold text-gray-400 transition hover:text-gray-950"
+              className="flex shrink-0 items-center gap-1 font-semibold text-gray-400 transition hover:text-gray-950 dark:hover:text-white"
             >
               <FiHome size={13} />
               Home
             </Link>
 
-            <span className="text-gray-300">
+            <span className="text-gray-300 dark:text-gray-600">
               /
             </span>
 
             <Link
               to="/products"
-              className="shrink-0 font-semibold text-gray-400 transition hover:text-gray-950"
+              className="shrink-0 font-semibold text-gray-400 transition hover:text-gray-950 dark:hover:text-white"
             >
               Products
             </Link>
 
-            <span className="text-gray-300">
+            <span className="text-gray-300 dark:text-gray-600">
               /
             </span>
 
-            <span className="truncate font-bold text-gray-800">
+            <span className="truncate font-bold text-gray-800 dark:text-gray-200">
               {product.title}
             </span>
 
@@ -159,7 +159,7 @@ function ProductDetailsPage() {
 
           {/* DETAILS */}
 
-          <div className="min-w-0 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8 lg:p-10">
+          <div className="min-w-0 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a] sm:p-8 lg:p-10">
             <ProductDetails product={product} />
           </div>
 
@@ -173,7 +173,7 @@ function ProductDetailsPage() {
 
         <Link
           to="/products"
-          className="group inline-flex items-center gap-2 text-sm font-bold text-gray-500 transition hover:text-gray-950"
+          className="group inline-flex items-center gap-2 text-sm font-bold text-gray-500 transition hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
         >
           <FiArrowLeft
             size={17}

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 
 import CartList from "../components/Cart/CartList";
@@ -93,7 +92,7 @@ function Cart() {
   // =========================================================
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] text-[#171717]">
+    <div className="min-h-screen bg-[#f6f6f6] text-[#171717] dark:bg-[#111111] dark:text-white">
 
       {/* =====================================================
           BACKGROUND DECORATIONS
@@ -131,7 +130,7 @@ function Cart() {
                 Shoply
               </p>
 
-              <h1 className="text-3xl font-black tracking-tight text-[#171717] sm:text-4xl">
+              <h1 className="text-3xl font-black tracking-tight text-[#171717] dark:text-white sm:text-4xl">
                 Shopping Cart
               </h1>
 
@@ -140,7 +139,7 @@ function Cart() {
           </div>
 
 
-          <p className="mt-3 max-w-xl text-sm leading-6 text-gray-500">
+          <p className="mt-3 max-w-xl text-sm leading-6 text-gray-500 dark:text-gray-400">
             Review your items, update quantities, and get everything ready
             for checkout.
           </p>
@@ -158,7 +157,7 @@ function Cart() {
               CART ITEMS
           ==================================================== */}
 
-          <section className="rounded-3xl border border-gray-200 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-6">
+          <section className="rounded-3xl border border-gray-200 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:border-[#2a2a2a] dark:bg-[#1a1a1a] sm:p-6">
 
             <CartList />
 
@@ -197,7 +196,7 @@ function Cart() {
 
                   <div className="mb-2 flex items-center gap-2">
 
-                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-yellow-100 text-yellow-600">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-yellow-100 text-yellow-600 dark:bg-[#2a2500] dark:text-yellow-400">
 
                       <FiStar size={16} />
 
@@ -211,12 +210,12 @@ function Cart() {
                   </div>
 
 
-                  <h2 className="text-2xl font-black tracking-tight text-gray-950 sm:text-3xl">
+                  <h2 className="text-2xl font-black tracking-tight text-gray-950 dark:text-white sm:text-3xl">
                     Suggested for you
                   </h2>
 
 
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     You may also like these picks
                   </p>
 
@@ -229,7 +228,7 @@ function Cart() {
 
                 <Link
                   to="/products"
-                  className="group inline-flex items-center gap-2 text-sm font-bold text-gray-900 transition hover:text-yellow-600"
+                  className="group inline-flex items-center gap-2 text-sm font-bold text-gray-900 transition hover:text-yellow-600 dark:text-gray-300 dark:hover:text-yellow-400"
                 >
 
                   View all
@@ -279,11 +278,11 @@ function Cart() {
 
             <div className="mb-7">
 
-              <div className="mb-2 h-4 w-32 animate-pulse rounded bg-gray-200" />
+              <div className="mb-2 h-4 w-32 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-8 w-64 animate-pulse rounded bg-gray-200" />
+              <div className="h-8 w-64 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="mt-2 h-4 w-48 animate-pulse rounded bg-gray-200" />
+              <div className="mt-2 h-4 w-48 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
             </div>
 
@@ -295,22 +294,22 @@ function Cart() {
 
                   <div
                     key={item}
-                    className="overflow-hidden rounded-2xl border border-gray-200 bg-white"
+                    className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#1a1a1a]"
                   >
 
-                    <div className="h-52 animate-pulse bg-gray-100" />
+                    <div className="h-52 animate-pulse bg-gray-100 dark:bg-[#222]" />
 
                     <div className="space-y-3 p-4">
 
-                      <div className="h-3 w-20 animate-pulse rounded bg-gray-100" />
+                      <div className="h-3 w-20 animate-pulse rounded bg-gray-100 dark:bg-[#2a2a2a]" />
 
-                      <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+                      <div className="h-4 w-full animate-pulse rounded bg-gray-100 dark:bg-[#2a2a2a]" />
 
-                      <div className="h-4 w-3/4 animate-pulse rounded bg-gray-100" />
+                      <div className="h-4 w-3/4 animate-pulse rounded bg-gray-100 dark:bg-[#2a2a2a]" />
 
-                      <div className="h-5 w-24 animate-pulse rounded bg-gray-100" />
+                      <div className="h-5 w-24 animate-pulse rounded bg-gray-100 dark:bg-[#2a2a2a]" />
 
-                      <div className="h-9 w-full animate-pulse rounded-lg bg-gray-100" />
+                      <div className="h-9 w-full animate-pulse rounded-lg bg-gray-100 dark:bg-[#2a2a2a]" />
 
                     </div>
 

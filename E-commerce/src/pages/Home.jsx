@@ -151,7 +151,7 @@ function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#f6f6f6] text-gray-900">
+    <main className="min-h-screen bg-[#f6f6f6] text-gray-900 dark:bg-[#111111] dark:text-white">
 
       {/* =====================================================
           WELCOME CARD
@@ -406,7 +406,7 @@ function Home() {
           BENEFITS
       ====================================================== */}
 
-      <section className="border-y border-gray-200 bg-white">
+      <section className="border-y border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
         <div className="mx-auto grid max-w-[1400px] gap-8 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
 
@@ -442,7 +442,7 @@ function Home() {
           FINAL CTA
       ====================================================== */}
 
-      <section className="bg-[#f6f6f6] px-4 py-16 sm:px-6 lg:px-8">
+      <section className="bg-[#f6f6f6] px-4 py-16 dark:bg-[#111111] sm:px-6 lg:px-8">
 
         <div className="mx-auto max-w-3xl text-center">
 
@@ -452,13 +452,13 @@ function Home() {
 
           </div>
 
-          <h2 className="mt-6 text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">
+          <h2 className="mt-6 text-3xl font-black tracking-tight text-gray-950 dark:text-white sm:text-4xl">
 
             Ready to find something amazing?
 
           </h2>
 
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-gray-500 sm:text-base">
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-gray-500 dark:text-gray-400 sm:text-base">
 
             Explore Shoply and discover products selected to make your everyday
             life a little better.
@@ -520,11 +520,11 @@ function BenefitCard({ icon, title, text }) {
 
       <div>
 
-        <h3 className="font-black text-gray-950">
+        <h3 className="font-black text-gray-950 dark:text-white">
           {title}
         </h3>
 
-        <p className="mt-2 text-sm leading-6 text-gray-500">
+        <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
           {text}
         </p>
 

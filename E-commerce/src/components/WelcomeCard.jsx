@@ -35,29 +35,32 @@ function WelcomeCard() {
   return (
     <div
       className={`
-        fixed
-        bottom-6
-        right-6
-        z-[100]
-        w-[365px]
-        overflow-hidden
-        rounded-[28px]
-        border
-        border-black/[0.06]
-        bg-white/[0.97]
-        backdrop-blur-xl
-        shadow-[0_30px_100px_rgba(0,0,0,0.18)]
-        transition-all
-        duration-[950ms]
+        fixed 
+        bottom-6 
+        right-6 
+        z-[100] 
+        w-[365px] 
+        overflow-hidden 
+        rounded-[28px] 
+        border 
+        border-black/[0.06] 
+        bg-white/[0.97] 
+        backdrop-blur-xl 
+        shadow-[0_30px_100px_rgba(0,0,0,0.18)] 
+        transition-all 
+        duration-[950ms] 
         ease-[cubic-bezier(.16,1,.3,1)]
 
-        ${
-          visible
-            ? "translate-x-0 translate-y-0 opacity-100"
-            : "translate-x-[18%] translate-y-[150%] opacity-0"
-        }
+        ${ 
+          visible 
+            ? "translate-x-0 translate-y-0 opacity-100" 
+            : "translate-x-[18%] translate-y-[150%] opacity-0" 
+        } 
 
         ${attention ? "animate-[welcomeAttention_0.75s_ease-out]" : ""}
+
+        dark:border-[#2a2a2a]
+        dark:bg-[#1a1a1a]
       `}
     >
       {/* Top yellow accent */}
@@ -89,6 +92,10 @@ function WelcomeCard() {
             hover:bg-black
             hover:text-white
             hover:rotate-90
+            dark:bg-[#222]
+            dark:text-gray-400
+            dark:hover:bg-white
+            dark:hover:text-black
           "
         >
           <FiX size={13} strokeWidth={1.8} />
@@ -108,6 +115,7 @@ function WelcomeCard() {
               bg-[#f5f5f2]
               transition-transform
               duration-700
+              dark:bg-[#222]
               ${attention ? "scale-[1.04]" : "scale-100"}
             `}
           >
@@ -150,27 +158,27 @@ function WelcomeCard() {
               <span className="h-[3px] w-[3px] rounded-full bg-[#ffd814]" />
             </div>
 
-            <h3 className="mt-2 text-[21px] font-medium leading-[0.98] tracking-[-0.05em] text-[#111]">
+            <h3 className="mt-2 text-[21px] font-medium leading-[0.98] tracking-[-0.05em] text-[#111] dark:text-white">
               Wait...
               <br />
               <span className="font-semibold">you found us.</span>
             </h3>
 
-            <p className="mt-2.5 max-w-[175px] text-[11px] font-normal leading-[1.55] text-gray-500">
+            <p className="mt-2.5 max-w-[175px] text-[11px] font-normal leading-[1.55] text-gray-500 dark:text-gray-400">
               There’s something worth discovering here.
             </p>
           </div>
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-5 border-t border-black/[0.06] pt-4">
+        <div className="mt-5 border-t border-black/[0.06] pt-4 dark:border-[#2a2a2a]">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Your next favorite thing
               </p>
 
-              <p className="mt-1 text-[10px] text-gray-500">
+              <p className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
                 might be one click away.
               </p>
             </div>
@@ -217,7 +225,7 @@ function WelcomeCard() {
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gray-100">
+      <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gray-100 dark:bg-[#2a2a2a]">
         <div className="h-full w-full origin-left bg-[#ffd814] animate-[welcomeProgress_6.5s_linear_forwards]" />
       </div>
     </div>

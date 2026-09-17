@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   FiSearch,
@@ -11,6 +11,8 @@ import {
   FiX,
   FiChevronRight,
   FiPackage,
+  FiMoon,
+  FiSun,
 } from "react-icons/fi";
 
 import {
@@ -28,13 +30,21 @@ import { logoutUser } from "../../redux/authSlice";
 import { clearCart } from "../../redux/cartSlice";
 import { clearWishlist } from "../../redux/wishlistSlice";
 
+import { useTheme } from "../../context/ThemeContext";
+
+import { getProducts } from "../../Apis/productsApi";
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const { theme, toggleTheme } = useTheme();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] =
     useState(false);
+
+  const [navCategories, setNavCategories] =
+    useState([]);
 
   const { user, isLoggedIn } = useSelector(
     (state) => state.auth
@@ -53,80 +63,112 @@ function Navbar() {
     0
   );
 
-  const totalWishlistItems = wishlistItems.length;
+  const totalWishlistItems =
+    wishlistItems.length;
 
+  // =========================================================
+  // GET CATEGORIES FROM BACKEND
+  // =========================================================
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getProducts();
+
+        const products = response.data || [];
+
+        const uniqueCategories = [
+          ...new Set(
+            products
+              .map((product) => product.category)
+              .filter(Boolean)
+          ),
+        ];
+
+        setNavCategories(uniqueCategories);
+      } catch (error) {
+        console.error(
+          "Navbar categories error:",
+          error
+        );
+
+        setNavCategories([]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // =========================================================
+  // CLOSE MOBILE MENU
+  // =========================================================
 
   function closeMobileMenu() {
     setIsMobileMenuOpen(false);
   }
 
+  // =========================================================
+  // LOGOUT
+  // =========================================================
 
   function handleLogout() {
-   
     dispatch(clearCart());
-
-    
     dispatch(clearWishlist());
-
-   
     dispatch(logoutUser());
 
-   
     closeMobileMenu();
 
-   
     navigate("/");
   }
 
+  // =========================================================
+  // MOBILE LINK CLASS
+  // =========================================================
 
   const mobileLinkClass = ({ isActive }) =>
     `flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition ${
       isActive
-        ? "bg-yellow-50 text-yellow-600"
-        : "text-gray-700 hover:bg-gray-100"
+        ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-400/10 dark:text-yellow-400"
+        : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-[#222]"
     }`;
-
 
   return (
     <>
       {/* =====================================================
           TOP ANNOUNCEMENT
-      ===================================================== */}
+      ====================================================== */}
 
-      <div className="bg-black px-4 py-2 text-center text-xs font-medium text-white">
+      <div className="bg-black px-4 py-2 text-center text-xs font-medium text-white dark:bg-[#0a0a0a]">
         Free delivery on orders over $50
       </div>
 
-
       {/* =====================================================
           MAIN NAVBAR
-      ===================================================== */}
+      ====================================================== */}
 
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
-
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur dark:border-[#2a2a2a] dark:bg-[#171717]/95">
         <div className="mx-auto max-w-[1400px] px-4">
 
           {/* =================================================
-              DESKTOP / MAIN ROW
+              MAIN ROW
           ================================================= */}
 
           <div className="flex min-h-[72px] items-center gap-4">
 
-            {/* ================= MOBILE MENU BUTTON ================= */}
+            {/* MOBILE MENU */}
 
             <button
               type="button"
               onClick={() =>
                 setIsMobileMenuOpen(true)
               }
-              className="rounded-xl p-2 transition hover:bg-gray-100 lg:hidden"
+              className="rounded-xl p-2 text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-[#252525] lg:hidden"
               aria-label="Open menu"
             >
               <FiMenu size={22} />
             </button>
 
-
-            {/* ================= LOGO ================= */}
+            {/* LOGO */}
 
             <Link
               to="/"
@@ -137,36 +179,34 @@ function Navbar() {
                 shop
               </span>
 
-              <span className="text-gray-900">
+              <span className="text-gray-900 dark:text-white">
                 ly
               </span>
             </Link>
 
-
-            {/* ================= LOCATION ================= */}
+            {/* LOCATION */}
 
             <button
               type="button"
-              className="hidden items-center gap-2 rounded-xl px-3 py-2 text-left transition hover:bg-gray-100 md:flex"
+              className="hidden items-center gap-2 rounded-xl px-3 py-2 text-left text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525] md:flex"
             >
               <FiMapPin
                 size={20}
-                className="text-gray-700"
+                className="text-gray-700 dark:text-gray-300"
               />
 
               <div>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">
                   Deliver to
                 </p>
 
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">
                   Egypt
                 </p>
               </div>
             </button>
 
-
-            {/* ================= DESKTOP SEARCH ================= */}
+            {/* SEARCH */}
 
             <div className="relative hidden flex-1 md:block">
 
@@ -178,13 +218,12 @@ function Navbar() {
               <input
                 type="text"
                 placeholder="Search for products, brands and more..."
-                className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
               />
 
             </div>
 
-
-            {/* ================= ACCOUNT ================= */}
+            {/* ACCOUNT */}
 
             {isLoggedIn && user ? (
 
@@ -192,20 +231,21 @@ function Navbar() {
 
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 transition hover:bg-gray-100"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525]"
                 >
 
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-100 text-yellow-600">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-400/10 dark:text-yellow-400">
                     <FiUser size={19} />
                   </div>
 
                   <div className="text-left">
 
-                    <p className="text-[11px] text-gray-500">
-                      Hello, {user.name.split(" ")[0]}
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                      Hello,{" "}
+                      {user.name.split(" ")[0]}
                     </p>
 
-                    <p className="max-w-[110px] truncate text-sm font-bold text-gray-900">
+                    <p className="max-w-[110px] truncate text-sm font-bold text-gray-900 dark:text-white">
                       {user.name}
                     </p>
 
@@ -213,33 +253,34 @@ function Navbar() {
 
                 </button>
 
-
-                {/* Desktop Account Dropdown */}
-
-                <div className="invisible absolute right-0 top-full mt-2 w-48 translate-y-2 rounded-2xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="invisible absolute right-0 top-full z-50 w-48 translate-y-2 rounded-2xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
                   <Link
                     to="/profile"
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:!text-white dark:hover:bg-[#252525]"
                   >
-                    <FiUser size={17} />
+                    <FiUser
+                      size={17}
+                      className="text-gray-700 dark:!text-white"
+                    />
                     My Account
                   </Link>
 
-
                   <Link
                     to="/orders"
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:!text-white dark:hover:bg-[#252525]"
                   >
-                    <FiPackage size={17} />
+                    <FiPackage
+                      size={17}
+                      className="text-gray-700 dark:!text-white"
+                    />
                     My Orders
                   </Link>
-
 
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-50"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
                   >
                     <FiLogOut size={17} />
                     Sign Out
@@ -253,18 +294,18 @@ function Navbar() {
 
               <Link
                 to="/login"
-                className="hidden items-center gap-2 rounded-xl px-3 py-2 transition hover:bg-gray-100 sm:flex"
+                className="hidden items-center gap-2 rounded-xl px-3 py-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525] sm:flex"
               >
 
                 <FiUser size={21} />
 
                 <div className="text-left">
 
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
                     Hello, sign in
                   </p>
 
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     Account
                   </p>
 
@@ -274,15 +315,45 @@ function Navbar() {
 
             )}
 
+            {/* THEME */}
 
-            {/* ================= WISHLIST ================= */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-yellow-300 hover:bg-yellow-50 hover:text-yellow-600 hover:shadow-md dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-yellow-400 dark:hover:bg-[#222] dark:hover:text-yellow-400"
+            >
+
+              <span
+                className={`absolute transition-all duration-500 ${
+                  theme === "light"
+                    ? "rotate-0 scale-100 opacity-100"
+                    : "rotate-90 scale-0 opacity-0"
+                }`}
+              >
+                <FiMoon size={20} />
+              </span>
+
+              <span
+                className={`absolute transition-all duration-500 ${
+                  theme === "dark"
+                    ? "rotate-0 scale-100 opacity-100"
+                    : "-rotate-90 scale-0 opacity-0"
+                }`}
+              >
+                <FiSun size={20} />
+              </span>
+
+            </button>
+
+            {/* WISHLIST */}
 
             <Link
               to="/wishlist"
-              className={`relative rounded-xl p-2 transition-all duration-200 hover:bg-gray-100 ${
+              className={`relative rounded-xl p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-[#252525] ${
                 totalWishlistItems > 0
-                  ? "text-red-500"
-                  : "text-gray-900"
+                  ? "text-red-500 dark:text-red-400"
+                  : "text-gray-900 dark:text-white"
               }`}
             >
 
@@ -290,8 +361,8 @@ function Navbar() {
                 size={23}
                 className={
                   totalWishlistItems > 0
-                    ? "fill-red-500"
-                    : ""
+                    ? "fill-red-500 dark:fill-red-400"
+                    : "text-gray-900 dark:text-white"
                 }
               />
 
@@ -303,15 +374,17 @@ function Navbar() {
 
             </Link>
 
-
-            {/* ================= CART ================= */}
+            {/* CART */}
 
             <Link
               to="/cart"
-              className="relative rounded-xl p-2 transition hover:bg-gray-100"
+              className="relative rounded-xl p-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525]"
             >
 
-              <FiShoppingCart size={24} />
+              <FiShoppingCart
+                size={24}
+                className="text-gray-900 dark:text-white"
+              />
 
               {totalItems > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-xs font-black text-gray-900">
@@ -323,10 +396,7 @@ function Navbar() {
 
           </div>
 
-
-          {/* =================================================
-              MOBILE SEARCH
-          ================================================= */}
+          {/* MOBILE SEARCH */}
 
           <div className="pb-3 md:hidden">
 
@@ -340,77 +410,48 @@ function Navbar() {
               <input
                 type="text"
                 placeholder="Search products, brands and more..."
-                className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100"
+                className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
               />
 
             </div>
 
           </div>
 
-
           {/* =================================================
-              DESKTOP CATEGORIES
+              DYNAMIC CATEGORIES
           ================================================= */}
 
-          <nav className="hidden h-12 items-center gap-7 overflow-x-auto border-t border-gray-100 lg:flex">
+          <nav className="hidden h-12 items-center gap-7 overflow-x-auto border-t border-gray-100 dark:border-[#2a2a2a] lg:flex">
 
             <NavLink
               to="/"
-              className="text-sm font-semibold transition hover:text-yellow-600"
+              className="text-sm font-semibold text-gray-900 transition hover:text-yellow-600 dark:!text-white dark:hover:!text-yellow-400"
             >
               Home
             </NavLink>
 
-
             <NavLink
               to="/products"
-              className="text-sm font-semibold transition hover:text-yellow-600"
+              className="text-sm font-semibold text-gray-900 transition hover:text-yellow-600 dark:!text-white dark:hover:!text-yellow-400"
             >
               All Products
             </NavLink>
 
+            {navCategories.map(
+              (category) => (
+                <NavLink
+                  key={category}
+                  to={`/products?category=${encodeURIComponent(
+                    category
+                  )}`}
+                  className="shrink-0 text-sm font-medium text-gray-600 transition hover:text-black dark:!text-white dark:hover:!text-white"
+                >
+                  {category}
+                </NavLink>
+              )
+            )}
 
-            <NavLink
-              to="/products"
-              className="text-sm font-medium text-gray-600 transition hover:text-black"
-            >
-              Electronics
-            </NavLink>
-
-
-            <NavLink
-              to="/products"
-              className="text-sm font-medium text-gray-600 transition hover:text-black"
-            >
-              Fashion
-            </NavLink>
-
-
-            <NavLink
-              to="/products"
-              className="text-sm font-medium text-gray-600 transition hover:text-black"
-            >
-              Home & Furniture
-            </NavLink>
-
-
-            <NavLink
-              to="/products"
-              className="text-sm font-medium text-gray-600 transition hover:text-black"
-            >
-              Beauty
-            </NavLink>
-
-
-            <NavLink
-              to="/products"
-              className="text-sm font-medium text-gray-600 transition hover:text-black"
-            >
-              Sports
-            </NavLink>
-
-
-            <span className="ml-auto rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600">
+            <span className="ml-auto shrink-0 rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600 dark:bg-red-500/10 dark:!text-red-400">
               SALE
             </span>
 
@@ -419,10 +460,9 @@ function Navbar() {
         </div>
       </header>
 
-
       {/* =====================================================
-          MOBILE SIDE MENU
-      ===================================================== */}
+          MOBILE DRAWER
+      ====================================================== */}
 
       <div
         className={`fixed inset-0 z-[100] lg:hidden ${
@@ -431,8 +471,6 @@ function Navbar() {
             : "pointer-events-none"
         }`}
       >
-
-        {/* ================= OVERLAY ================= */}
 
         <div
           onClick={closeMobileMenu}
@@ -443,20 +481,15 @@ function Navbar() {
           }`}
         />
 
-
-        {/* ================= DRAWER ================= */}
-
         <aside
-          className={`absolute left-0 top-0 h-full w-[88%] max-w-[380px] overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out ${
+          className={`absolute left-0 top-0 h-full w-[88%] max-w-[380px] overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out dark:bg-[#111111] ${
             isMobileMenuOpen
               ? "translate-x-0"
               : "-translate-x-full"
           }`}
         >
 
-          {/* Drawer Header */}
-
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-5">
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-5 dark:border-[#2a2a2a] dark:bg-[#111111]">
 
             <Link
               to="/"
@@ -467,30 +500,28 @@ function Navbar() {
                 shop
               </span>
 
-              <span className="text-gray-900">
+              <span className="text-gray-900 dark:text-white">
                 ly
               </span>
             </Link>
 
-
             <button
               type="button"
               onClick={closeMobileMenu}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200"
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200 dark:bg-[#222] dark:text-gray-300 dark:hover:bg-[#2a2a2a]"
             >
               <FiX size={21} />
             </button>
 
           </div>
 
+          {/* ACCOUNT */}
 
-          {/* ================= ACCOUNT AREA ================= */}
-
-          <div className="border-b border-gray-100 p-5">
+          <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
 
             {isLoggedIn && user ? (
 
-              <div className="rounded-2xl bg-gray-950 p-4">
+              <div className="rounded-2xl bg-gray-950 p-4 dark:bg-[#1c1c1c]">
 
                 <div className="flex items-center gap-3">
 
@@ -511,7 +542,6 @@ function Navbar() {
                   </div>
 
                 </div>
-
 
                 <div className="mt-4 grid grid-cols-2 gap-2">
 
@@ -540,7 +570,7 @@ function Navbar() {
               <Link
                 to="/login"
                 onClick={closeMobileMenu}
-                className="flex items-center justify-between rounded-2xl bg-gray-950 p-4 text-white transition hover:bg-gray-800"
+                className="flex items-center justify-between rounded-2xl bg-gray-950 p-4 text-white transition hover:bg-gray-800 dark:bg-[#1c1c1c] dark:hover:bg-[#252525]"
               >
 
                 <div className="flex items-center gap-3">
@@ -574,25 +604,85 @@ function Navbar() {
 
           </div>
 
+          {/* THEME */}
 
-          {/* ================= QUICK ACTIONS ================= */}
+          <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
 
-          <div className="border-b border-gray-100 p-5">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex w-full items-center justify-between rounded-2xl border border-gray-100 bg-gray-50 p-4 text-left transition-all duration-300 hover:border-yellow-200 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:hover:border-yellow-400 dark:hover:bg-[#222]"
+            >
+
+              <div className="flex items-center gap-3">
+
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm dark:bg-[#252525] dark:text-yellow-400">
+
+                  {theme === "light" ? (
+                    <FiMoon size={19} />
+                  ) : (
+                    <FiSun size={19} />
+                  )}
+
+                </div>
+
+                <div>
+
+                  <p className="text-sm font-black text-gray-900 dark:text-white">
+                    {theme === "light"
+                      ? "Dark Mode"
+                      : "Light Mode"}
+                  </p>
+
+                  <p className="text-xs text-gray-400">
+                    {theme === "light"
+                      ? "Switch to dark theme"
+                      : "Switch to light theme"}
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div
+                className={`relative h-6 w-11 rounded-full transition-colors duration-300 ${
+                  theme === "dark"
+                    ? "bg-yellow-400"
+                    : "bg-gray-300"
+                }`}
+              >
+
+                <span
+                  className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                    theme === "dark"
+                      ? "translate-x-6"
+                      : "translate-x-1"
+                  }`}
+                />
+
+              </div>
+
+            </button>
+
+          </div>
+
+          {/* QUICK ACTIONS */}
+
+          <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
 
             <p className="mb-3 px-1 text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
               Quick access
             </p>
-
 
             <div className="grid grid-cols-2 gap-3">
 
               <Link
                 to="/wishlist"
                 onClick={closeMobileMenu}
-                className="relative flex items-center gap-3 rounded-2xl border border-gray-100 p-4 transition hover:-translate-y-0.5 hover:border-red-100 hover:bg-red-50"
+                className="relative flex items-center gap-3 rounded-2xl border border-gray-100 p-4 transition hover:-translate-y-0.5 hover:border-red-100 hover:bg-red-50 dark:border-[#2a2a2a] dark:hover:border-red-500/20 dark:hover:bg-red-500/10"
               >
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-500 dark:bg-red-500/10">
 
                   <FiHeart
                     size={19}
@@ -607,7 +697,7 @@ function Navbar() {
 
                 <div>
 
-                  <p className="text-sm font-black text-gray-900">
+                  <p className="text-sm font-black text-gray-900 dark:text-white">
                     Wishlist
                   </p>
 
@@ -619,20 +709,19 @@ function Navbar() {
 
               </Link>
 
-
               <Link
                 to="/cart"
                 onClick={closeMobileMenu}
-                className="relative flex items-center gap-3 rounded-2xl border border-gray-100 p-4 transition hover:-translate-y-0.5 hover:border-yellow-200 hover:bg-yellow-50"
+                className="relative flex items-center gap-3 rounded-2xl border border-gray-100 p-4 transition hover:-translate-y-0.5 hover:border-yellow-200 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:hover:border-yellow-400/30 dark:hover:bg-yellow-400/10"
               >
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-50 text-gray-900">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-50 text-gray-900 dark:bg-yellow-400/10 dark:text-yellow-400">
                   <FiShoppingCart size={19} />
                 </div>
 
                 <div>
 
-                  <p className="text-sm font-black text-gray-900">
+                  <p className="text-sm font-black text-gray-900 dark:text-white">
                     Cart
                   </p>
 
@@ -648,15 +737,15 @@ function Navbar() {
 
           </div>
 
-
-          {/* ================= NAVIGATION ================= */}
+          {/* =================================================
+              MOBILE SHOP CATEGORIES
+          ================================================= */}
 
           <div className="p-5">
 
             <p className="mb-3 px-1 text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
               Shop
             </p>
-
 
             <nav className="space-y-1">
 
@@ -669,26 +758,40 @@ function Navbar() {
                 <FiChevronRight size={17} />
               </NavLink>
 
-
               <NavLink
-                to="/about"
+                to="/products"
                 onClick={closeMobileMenu}
                 className={mobileLinkClass}
               >
-                About Shoply
+                All Products
                 <FiChevronRight size={17} />
               </NavLink>
 
+              {navCategories.map(
+                (category) => (
+                  <NavLink
+                    key={category}
+                    to={`/products?category=${encodeURIComponent(
+                      category
+                    )}`}
+                    onClick={closeMobileMenu}
+                    className={mobileLinkClass}
+                  >
+                    {category}
+                    <FiChevronRight size={17} />
+                  </NavLink>
+                )
+              )}
+
             </nav>
 
+            {/* LOCATION */}
 
-            {/* ================= LOCATION ================= */}
-
-            <div className="mt-6 rounded-2xl bg-gray-50 p-4">
+            <div className="mt-6 rounded-2xl bg-gray-50 p-4 dark:bg-[#1a1a1a]">
 
               <div className="flex items-center gap-3">
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm dark:bg-[#252525] dark:text-gray-300">
                   <FiMapPin size={19} />
                 </div>
 
@@ -698,7 +801,7 @@ function Navbar() {
                     Deliver to
                   </p>
 
-                  <p className="text-sm font-black text-gray-900">
+                  <p className="text-sm font-black text-gray-900 dark:text-white">
                     Egypt
                   </p>
 
@@ -708,15 +811,14 @@ function Navbar() {
 
             </div>
 
-
-            {/* ================= LOGOUT ================= */}
+            {/* LOGOUT */}
 
             {isLoggedIn && user && (
 
               <button
                 type="button"
                 onClick={handleLogout}
-                className="mt-3 flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-red-500 transition hover:bg-red-50"
+                className="mt-3 flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
               >
 
                 <span className="flex items-center gap-3">
@@ -735,10 +837,7 @@ function Navbar() {
 
           </div>
 
-
-          {/* Footer */}
-
-          <div className="border-t border-gray-100 px-5 py-6">
+          <div className="border-t border-gray-100 px-5 py-6 dark:border-[#2a2a2a]">
 
             <p className="text-center text-xs text-gray-400">
               © 2026 Shoply. All rights reserved.

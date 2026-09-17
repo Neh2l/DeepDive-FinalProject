@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import {
@@ -61,8 +60,8 @@ function ProductImages({ product }) {
               duration-300
               ${
                 activeIndex === index
-                  ? "border-2 border-gray-950 shadow-[0_5px_18px_rgba(0,0,0,0.10)]"
-                  : "border border-gray-200 hover:border-gray-400 hover:shadow-sm"
+                  ? "border-2 border-gray-950 shadow-[0_5px_18px_rgba(0,0,0,0.10)] dark:border-white"
+                  : "border border-gray-200 hover:border-gray-400 hover:shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:hover:border-gray-500"
               }
             `}
           >
@@ -80,6 +79,7 @@ function ProductImages({ product }) {
             />
 
             {/* Active indicator */}
+
             {activeIndex === index && (
               <span
                 className="
@@ -117,6 +117,8 @@ function ProductImages({ product }) {
           border-gray-200
           bg-[#fafafa]
           lg:order-2
+          dark:border-[#2a2a2a]
+          dark:bg-[#1a1a1a]
         "
       >
 
@@ -128,6 +130,7 @@ function ProductImages({ product }) {
             absolute
             inset-0
             bg-[radial-gradient(circle_at_50%_45%,#ffffff_0%,#fafafa_50%,#f1f1f1_100%)]
+            dark:bg-[radial-gradient(circle_at_50%_45%,#2a2a2a_0%,#1a1a1a_50%,#151515_100%)]
           "
         />
 
@@ -188,6 +191,9 @@ function ProductImages({ product }) {
               text-gray-600
               shadow-sm
               backdrop-blur-md
+              dark:border-[#2a2a2a]
+              dark:bg-[#1a1a1a]/90
+              dark:text-gray-300
             "
           >
             {activeIndex + 1} / {images.length}
@@ -225,6 +231,11 @@ function ProductImages({ product }) {
             hover:bg-white
             hover:text-black
             group-hover/main:opacity-100
+            dark:border-[#2a2a2a]
+            dark:bg-[#1a1a1a]/90
+            dark:text-gray-300
+            dark:hover:bg-[#222]
+            dark:hover:text-white
           "
         >
           <FiMaximize2 size={15} />
@@ -265,6 +276,11 @@ function ProductImages({ product }) {
                 hover:bg-white
                 hover:text-black
                 group-hover/main:opacity-100
+                dark:border-[#2a2a2a]
+                dark:bg-[#1a1a1a]/90
+                dark:text-gray-300
+                dark:hover:bg-[#222]
+                dark:hover:text-white
               "
             >
               <FiChevronLeft size={18} />
@@ -303,6 +319,11 @@ function ProductImages({ product }) {
                 hover:bg-white
                 hover:text-black
                 group-hover/main:opacity-100
+                dark:border-[#2a2a2a]
+                dark:bg-[#1a1a1a]/90
+                dark:text-gray-300
+                dark:hover:bg-[#222]
+                dark:hover:text-white
               "
             >
               <FiChevronRight size={18} />

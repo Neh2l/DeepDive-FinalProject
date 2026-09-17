@@ -69,12 +69,12 @@ const categories = [
 
 function CategorySlider() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 sm:py-24">
+    <section className="relative overflow-hidden bg-white py-20 dark:bg-[#111111] sm:py-24">
 
       {/* ================= BACKGROUND DECOR ================= */}
       <div className="pointer-events-none absolute -left-40 top-20 h-72 w-72 rounded-full bg-[#ffd814]/10 blur-3xl" />
 
-      <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-gray-100 blur-3xl" />
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-gray-100 blur-3xl dark:bg-[#1a1a1a]" />
 
       <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12 xl:px-16">
 
@@ -100,7 +100,7 @@ function CategorySlider() {
             {/* Heading */}
             <div className="flex items-end gap-4">
 
-              <h2 className="text-[30px] font-black leading-none tracking-[-0.055em] text-gray-950 sm:text-[40px] lg:text-[46px]">
+              <h2 className="text-[30px] font-black leading-none tracking-[-0.055em] text-gray-950 dark:text-white sm:text-[40px] lg:text-[46px]">
                 Shop by
                 <span className="ml-2 text-gray-400">
                   category
@@ -234,6 +234,7 @@ function CategorySlider() {
                       ease-[cubic-bezier(.16,1,.3,1)]
                       group-hover/category:-translate-y-2
                       group-hover/category:shadow-[0_25px_60px_rgba(0,0,0,0.14)]
+                      dark:bg-[#1a1a1a]
                     "
                   >
 
@@ -395,6 +396,8 @@ function CategorySlider() {
               from-white
               via-white/70
               to-transparent
+              dark:from-[#111111]
+              dark:via-[#111111]/70
             "
           />
 
@@ -413,6 +416,8 @@ function CategorySlider() {
               from-white
               via-white/70
               to-transparent
+              dark:from-[#111111]
+              dark:via-[#111111]/70
             "
           />
 
@@ -446,6 +451,9 @@ function CategorySlider() {
               hover:bg-gray-950
               hover:text-white
               active:scale-95
+              dark:border-[#2a2a2a]
+              dark:bg-[#1a1a1a]
+              dark:text-white
             "
           >
             <FiChevronLeft size={19} />
@@ -481,6 +489,9 @@ function CategorySlider() {
               hover:bg-gray-950
               hover:text-white
               active:scale-95
+              dark:border-[#2a2a2a]
+              dark:bg-[#1a1a1a]
+              dark:text-white
             "
           >
             <FiChevronRight size={19} />
@@ -500,6 +511,7 @@ function CategorySlider() {
             text-xs
             font-black
             text-gray-950
+            dark:text-white
             sm:hidden
           "
         >

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { useSearchParams } from "react-router-dom";
+
 import {
   FiChevronDown,
   FiChevronLeft,
@@ -29,28 +31,38 @@ const sortOptions = [
 ];
 
 function Products() {
+  const [searchParams] = useSearchParams();
+
+  const categoryFromUrl =
+    searchParams.get("category");
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+
   const [selectedCategory, setSelectedCategory] =
-    useState("all");
+    useState(categoryFromUrl || "all");
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
   const [minRating, setMinRating] = useState(0);
+
   const [onlyDiscounted, setOnlyDiscounted] =
     useState(false);
 
-  const [sortBy, setSortBy] = useState("relevance");
+  const [sortBy, setSortBy] =
+    useState("relevance");
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] =
+    useState(1);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
 
-  const [sortOpen, setSortOpen] = useState(false);
+  const [sortOpen, setSortOpen] =
+    useState(false);
 
   const productsPerPage = 18;
 
@@ -69,12 +81,41 @@ function Products() {
 
     return [
       ...categories,
-      ...uniqueCategories.map((category) => ({
-        label: category,
-        value: category,
-      })),
+      ...uniqueCategories.map(
+        (category) => ({
+          label: category,
+          value: category,
+        })
+      ),
     ];
   }, [products]);
+
+  // =========================================================
+  // CATEGORY FROM NAVBAR
+  // =========================================================
+
+  useEffect(() => {
+    if (!categoryFromUrl) {
+      setSelectedCategory("all");
+      return;
+    }
+
+    const matchedCategory =
+      backendCategories.find(
+        (category) =>
+          category.value.toLowerCase() ===
+          categoryFromUrl.toLowerCase()
+      );
+
+    setSelectedCategory(
+      matchedCategory
+        ? matchedCategory.value
+        : "all"
+    );
+  }, [
+    categoryFromUrl,
+    backendCategories,
+  ]);
 
   // =========================================================
   // FETCH PRODUCTS FROM BACKEND
@@ -87,11 +128,18 @@ function Products() {
 
         const response = await getProducts();
 
-        console.log("Backend Products:", response);
+        console.log(
+          "Backend Products:",
+          response
+        );
 
         setProducts(response.data || []);
       } catch (error) {
-        console.error("Products error:", error);
+        console.error(
+          "Products error:",
+          error
+        );
+
         setProducts([]);
       } finally {
         setLoading(false);
@@ -113,20 +161,25 @@ function Products() {
     return Math.ceil(
       Math.max(
         ...products.map(
-          (product) => Number(product.price) || 0
+          (product) =>
+            Number(product.price) || 0
         )
       )
     );
   }, [products]);
 
-  // Set default max price after products load
+  // =========================================================
+  // DEFAULT MAX PRICE
+  // =========================================================
 
   useEffect(() => {
     if (
       products.length > 0 &&
       maxPrice === ""
     ) {
-      setMaxPrice(String(maxProductPrice));
+      setMaxPrice(
+        String(maxProductPrice)
+      );
     }
   }, [
     products,
@@ -141,51 +194,56 @@ function Products() {
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // -------------------------------------------------------
     // SEARCH
-    // -------------------------------------------------------
 
     const searchValue = search
       .trim()
       .toLowerCase();
 
     if (searchValue) {
-      result = result.filter((product) => {
-        const title =
-          String(product.title || "").toLowerCase();
+      result = result.filter(
+        (product) => {
+          const title =
+            String(
+              product.title || ""
+            ).toLowerCase();
 
-        const category =
-          String(product.category || "").toLowerCase();
+          const category =
+            String(
+              product.category || ""
+            ).toLowerCase();
 
-        const brand =
-          String(product.brand || "").toLowerCase();
+          const brand =
+            String(
+              product.brand || ""
+            ).toLowerCase();
 
-        const description =
-          String(product.description || "").toLowerCase();
+          const description =
+            String(
+              product.description || ""
+            ).toLowerCase();
 
-        return (
-          title.includes(searchValue) ||
-          category.includes(searchValue) ||
-          brand.includes(searchValue) ||
-          description.includes(searchValue)
-        );
-      });
+          return (
+            title.includes(searchValue) ||
+            category.includes(searchValue) ||
+            brand.includes(searchValue) ||
+            description.includes(searchValue)
+          );
+        }
+      );
     }
 
-    // -------------------------------------------------------
     // CATEGORY
-    // -------------------------------------------------------
 
     if (selectedCategory !== "all") {
       result = result.filter(
         (product) =>
-          product.category === selectedCategory
+          product.category ===
+          selectedCategory
       );
     }
 
-    // -------------------------------------------------------
     // PRICE
-    // -------------------------------------------------------
 
     const minimumPrice =
       minPrice === ""
@@ -197,45 +255,48 @@ function Products() {
         ? maxProductPrice
         : Number(maxPrice);
 
-    result = result.filter((product) => {
-      const productPrice =
-        Number(product.price) || 0;
+    result = result.filter(
+      (product) => {
+        const productPrice =
+          Number(product.price) || 0;
 
-      return (
-        productPrice >= minimumPrice &&
-        productPrice <= maximumPrice
-      );
-    });
+        return (
+          productPrice >= minimumPrice &&
+          productPrice <= maximumPrice
+        );
+      }
+    );
 
-    // -------------------------------------------------------
     // RATING
-    // -------------------------------------------------------
 
     if (minRating > 0) {
-      result = result.filter((product) => {
-        const rating =
-          Number(product.rating) || 4.5;
+      result = result.filter(
+        (product) => {
+          const rating =
+            Number(product.rating) ||
+            4.5;
 
-        return rating >= minRating;
-      });
+          return rating >= minRating;
+        }
+      );
     }
 
-    // -------------------------------------------------------
     // DISCOUNT
-    // -------------------------------------------------------
 
     if (onlyDiscounted) {
-      result = result.filter((product) => {
-        const discount =
-          Number(product.discountPercentage) || 0;
+      result = result.filter(
+        (product) => {
+          const discount =
+            Number(
+              product.discountPercentage
+            ) || 0;
 
-        return discount > 0;
-      });
+          return discount > 0;
+        }
+      );
     }
 
-    // -------------------------------------------------------
     // SORT
-    // -------------------------------------------------------
 
     if (sortBy === "price-low") {
       result.sort(
@@ -264,8 +325,12 @@ function Products() {
     if (sortBy === "discount") {
       result.sort(
         (a, b) =>
-          (Number(b.discountPercentage) || 0) -
-          (Number(a.discountPercentage) || 0)
+          (Number(
+            b.discountPercentage
+          ) || 0) -
+          (Number(
+            a.discountPercentage
+          ) || 0)
       );
     }
 
@@ -305,7 +370,9 @@ function Products() {
     currentPage,
   ]);
 
-  // Go back to page 1 whenever filters change
+  // =========================================================
+  // RESET PAGE WHEN FILTER CHANGES
+  // =========================================================
 
   useEffect(() => {
     setCurrentPage(1);
@@ -330,7 +397,9 @@ function Products() {
     )?.label || "Relevance";
 
   const activeFiltersCount =
-    (selectedCategory !== "all" ? 1 : 0) +
+    (selectedCategory !== "all"
+      ? 1
+      : 0) +
     (minPrice !== "" ? 1 : 0) +
     (maxPrice !== "" &&
     Number(maxPrice) < maxProductPrice
@@ -341,14 +410,21 @@ function Products() {
 
   const clearFilters = () => {
     setSearch("");
+
     setSelectedCategory("all");
+
     setMinPrice("");
+
     setMaxPrice(
       String(maxProductPrice)
     );
+
     setMinRating(0);
+
     setOnlyDiscounted(false);
+
     setSortBy("relevance");
+
     setCurrentPage(1);
   };
 
@@ -371,40 +447,48 @@ function Products() {
   // =========================================================
 
   return (
-    <main className="min-h-screen bg-[#f6f6f6]">
+    <main className="min-h-screen bg-[#f6f6f6] dark:bg-[#111111]">
 
       {/* =====================================================
           HEADER + SEARCH
       ====================================================== */}
 
-      <section className="border-b border-gray-200 bg-white">
+      <section className="border-b border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#111111]">
+
         <div className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8">
+
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
 
             <div>
+
               <span className="text-[11px] font-black uppercase tracking-[0.22em] text-gray-400">
                 Shoply Marketplace
               </span>
 
-              <h1 className="mt-2 text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-gray-950 dark:text-white sm:text-4xl">
+
                 Everything you want.
+
                 <span className="text-yellow-500">
                   {" "}
                   In one place.
                 </span>
+
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400">
                 Discover thousands of products,
                 compare your favorites, and find
                 the perfect deal for you.
               </p>
+
             </div>
 
             {/* SEARCH */}
 
             <div className="w-full lg:max-w-md">
-              <div className="group flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 transition-all duration-300 focus-within:border-yellow-400 focus-within:bg-white focus-within:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+
+              <div className="group flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 transition-all duration-300 focus-within:border-yellow-400 focus-within:bg-white focus-within:shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:focus-within:bg-[#222]">
 
                 <FiSearch
                   size={19}
@@ -415,10 +499,12 @@ function Products() {
                   type="text"
                   value={search}
                   onChange={(e) =>
-                    setSearch(e.target.value)
+                    setSearch(
+                      e.target.value
+                    )
                   }
                   placeholder="Search products, brands..."
-                  className="ml-3 w-full bg-transparent text-sm font-medium text-gray-900 outline-none placeholder:text-gray-400"
+                  className="ml-3 w-full bg-transparent text-sm font-medium text-gray-900 outline-none placeholder:text-gray-400 dark:text-white dark:placeholder:text-gray-500"
                 />
 
                 {search && (
@@ -427,27 +513,35 @@ function Products() {
                     onClick={() =>
                       setSearch("")
                     }
-                    className="rounded-full p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-900"
+                    className="rounded-full p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2a2a2a] dark:hover:text-white"
                   >
                     <FiX size={16} />
                   </button>
                 )}
+
               </div>
+
             </div>
+
           </div>
+
         </div>
+
       </section>
 
       {/* =====================================================
           CATEGORIES
       ====================================================== */}
 
-      <section className="border-b border-gray-200 bg-white">
+      <section className="border-b border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#111111]">
+
         <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
+
           <div className="flex gap-2 overflow-x-auto py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 
             {backendCategories.map(
               (category) => {
+
                 const active =
                   selectedCategory ===
                   category.value;
@@ -463,8 +557,8 @@ function Products() {
                     }
                     className={`shrink-0 rounded-full border px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
                       active
-                        ? "border-black bg-black text-white shadow-md"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-950"
+                        ? "border-black bg-black text-white shadow-md dark:border-white dark:bg-white dark:text-black"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-950 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-white"
                     }`}
                   >
                     {category.label}
@@ -472,8 +566,11 @@ function Products() {
                 );
               }
             )}
+
           </div>
+
         </div>
+
       </section>
 
       {/* =====================================================
@@ -489,10 +586,13 @@ function Products() {
           <button
             type="button"
             onClick={() =>
-              setMobileFiltersOpen(true)
+              setMobileFiltersOpen(
+                true
+              )
             }
-            className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-800 shadow-sm"
+            className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-800 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-200"
           >
+
             <FiSliders size={17} />
 
             Filters
@@ -502,6 +602,7 @@ function Products() {
                 {activeFiltersCount}
               </span>
             )}
+
           </button>
 
           <div className="relative flex-1">
@@ -509,10 +610,13 @@ function Products() {
             <button
               type="button"
               onClick={() =>
-                setSortOpen(!sortOpen)
+                setSortOpen(
+                  !sortOpen
+                )
               }
-              className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-800 shadow-sm"
+              className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-800 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-200"
             >
+
               <span className="flex items-center gap-2">
                 <FiRefreshCw size={16} />
                 Sort
@@ -525,10 +629,12 @@ function Products() {
                     : ""
                 }`}
               />
+
             </button>
 
             {sortOpen && (
-              <div className="absolute right-0 top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-xl">
+              <div className="absolute right-0 top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+
                 {sortOptions.map(
                   (option) => (
                     <button
@@ -538,13 +644,14 @@ function Products() {
                         setSortBy(
                           option.value
                         );
+
                         setSortOpen(false);
                       }}
                       className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs font-bold ${
                         sortBy ===
                         option.value
-                          ? "bg-yellow-50 text-gray-950"
-                          : "text-gray-600 hover:bg-gray-50"
+                          ? "bg-yellow-50 text-gray-950 dark:bg-[#302d13] dark:text-white"
+                          : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-[#222]"
                       }`}
                     >
                       {option.label}
@@ -559,61 +666,74 @@ function Products() {
                     </button>
                   )
                 )}
+
               </div>
             )}
+
           </div>
+
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[245px_minmax(0,1fr)]">
 
-          {/* =================================================
-              SIDEBAR
-          ================================================== */}
+          {/* SIDEBAR */}
 
           <aside className="hidden lg:block">
-            <div className="sticky top-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
 
-              <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+            <div className="sticky top-24 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+
+              <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-[#2a2a2a]">
 
                 <div className="flex items-center gap-2">
+
                   <FiFilter size={17} />
 
                   <h2 className="text-sm font-black">
                     Filters
                   </h2>
 
-                  {activeFiltersCount > 0 && (
+                  {activeFiltersCount >
+                    0 && (
                     <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-[10px] font-black">
                       {activeFiltersCount}
                     </span>
                   )}
+
                 </div>
 
-                {activeFiltersCount > 0 && (
+                {activeFiltersCount >
+                  0 && (
                   <button
                     type="button"
-                    onClick={clearFilters}
+                    onClick={
+                      clearFilters
+                    }
                     className="text-[10px] font-bold text-gray-400 hover:text-red-500"
                   >
                     Clear all
                   </button>
                 )}
+
               </div>
 
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-[#2a2a2a]">
 
                 {/* CATEGORY */}
 
                 <div className="p-5">
+
                   <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
                     Category
                   </h3>
 
                   <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
+
                     {backendCategories.map(
                       (category) => (
                         <button
-                          key={category.value}
+                          key={
+                            category.value
+                          }
                           type="button"
                           onClick={() =>
                             setSelectedCategory(
@@ -623,10 +743,11 @@ function Products() {
                           className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs font-semibold ${
                             selectedCategory ===
                             category.value
-                              ? "bg-yellow-50 text-gray-950"
-                              : "text-gray-500 hover:bg-gray-50"
+                              ? "bg-yellow-50 text-gray-950 dark:bg-[#302d13] dark:text-white"
+                              : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-[#222]"
                           }`}
                         >
+
                           {category.label}
 
                           {selectedCategory ===
@@ -636,22 +757,27 @@ function Products() {
                               className="text-yellow-600"
                             />
                           )}
+
                         </button>
                       )
                     )}
+
                   </div>
+
                 </div>
 
                 {/* PRICE */}
 
                 <div className="p-5">
+
                   <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
                     Price
                   </h3>
 
                   <div className="flex items-center gap-2">
 
-                    <div className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                    <div className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-[#2a2a2a] dark:bg-[#171717]">
+
                       <span className="block text-[9px] font-bold uppercase text-gray-400">
                         Min
                       </span>
@@ -666,15 +792,17 @@ function Products() {
                           )
                         }
                         placeholder="0"
-                        className="mt-0.5 w-full bg-transparent text-xs font-bold outline-none"
+                        className="mt-0.5 w-full bg-transparent text-xs font-bold outline-none dark:text-white"
                       />
+
                     </div>
 
-                    <span className="text-gray-300">
+                    <span className="text-gray-300 dark:text-gray-600">
                       —
                     </span>
 
-                    <div className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                    <div className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-[#2a2a2a] dark:bg-[#171717]">
+
                       <span className="block text-[9px] font-bold uppercase text-gray-400">
                         Max
                       </span>
@@ -691,21 +819,24 @@ function Products() {
                         placeholder={String(
                           maxProductPrice
                         )}
-                        className="mt-0.5 w-full bg-transparent text-xs font-bold outline-none"
+                        className="mt-0.5 w-full bg-transparent text-xs font-bold outline-none dark:text-white"
                       />
+
                     </div>
+
                   </div>
 
-                  {/* QUICK PRICE FILTERS */}
-
                   <div className="mt-4 flex flex-wrap gap-2">
+
                     <button
                       type="button"
                       onClick={() => {
                         setMinPrice("");
-                        setMaxPrice("50");
+                        setMaxPrice(
+                          "50"
+                        );
                       }}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50"
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
                     >
                       Under $50
                     </button>
@@ -713,10 +844,14 @@ function Products() {
                     <button
                       type="button"
                       onClick={() => {
-                        setMinPrice("50");
-                        setMaxPrice("200");
+                        setMinPrice(
+                          "50"
+                        );
+                        setMaxPrice(
+                          "200"
+                        );
                       }}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50"
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
                     >
                       $50 - $200
                     </button>
@@ -724,10 +859,14 @@ function Products() {
                     <button
                       type="button"
                       onClick={() => {
-                        setMinPrice("200");
-                        setMaxPrice("500");
+                        setMinPrice(
+                          "200"
+                        );
+                        setMaxPrice(
+                          "500"
+                        );
                       }}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50"
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
                     >
                       $200 - $500
                     </button>
@@ -735,28 +874,34 @@ function Products() {
                     <button
                       type="button"
                       onClick={() => {
-                        setMinPrice("500");
+                        setMinPrice(
+                          "500"
+                        );
                         setMaxPrice(
                           String(
                             maxProductPrice
                           )
                         );
                       }}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50"
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
                     >
                       $500+
                     </button>
+
                   </div>
+
                 </div>
 
                 {/* RATING */}
 
                 <div className="p-5">
+
                   <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
                     Customer Rating
                   </h3>
 
                   <div className="space-y-2">
+
                     {[4, 3, 2, 1].map(
                       (rating) => (
                         <button
@@ -771,12 +916,15 @@ function Products() {
                             )
                           }
                           className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 ${
-                            minRating === rating
-                              ? "bg-yellow-50"
-                              : "hover:bg-gray-50"
+                            minRating ===
+                            rating
+                              ? "bg-yellow-50 dark:bg-[#302d13]"
+                              : "hover:bg-gray-50 dark:hover:bg-[#222]"
                           }`}
                         >
+
                           <div className="flex">
+
                             {[1, 2, 3, 4, 5].map(
                               (star) => (
                                 <FiStar
@@ -786,14 +934,15 @@ function Products() {
                                     star <=
                                     rating
                                       ? "fill-yellow-400 text-yellow-400"
-                                      : "text-gray-300"
+                                      : "text-gray-300 dark:text-gray-600"
                                   }
                                 />
                               )
                             )}
+
                           </div>
 
-                          <span className="text-xs font-semibold text-gray-600">
+                          <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
                             & up
                           </span>
 
@@ -804,15 +953,19 @@ function Products() {
                               className="ml-auto text-yellow-600"
                             />
                           )}
+
                         </button>
                       )
                     )}
+
                   </div>
+
                 </div>
 
                 {/* DEALS */}
 
                 <div className="p-5">
+
                   <button
                     type="button"
                     onClick={() =>
@@ -822,7 +975,9 @@ function Products() {
                     }
                     className="flex w-full items-center justify-between"
                   >
+
                     <div className="text-left">
+
                       <h3 className="text-xs font-black uppercase tracking-wider">
                         Deals
                       </h3>
@@ -830,15 +985,17 @@ function Products() {
                       <p className="mt-1 text-[10px] text-gray-400">
                         Show discounted products
                       </p>
+
                     </div>
 
                     <div
                       className={`flex h-6 w-10 items-center rounded-full p-1 ${
                         onlyDiscounted
                           ? "bg-yellow-400"
-                          : "bg-gray-200"
+                          : "bg-gray-200 dark:bg-[#3a3a3a]"
                       }`}
                     >
+
                       <span
                         className={`h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
                           onlyDiscounted
@@ -846,25 +1003,30 @@ function Products() {
                             : ""
                         }`}
                       />
+
                     </div>
+
                   </button>
+
                 </div>
+
               </div>
+
             </div>
+
           </aside>
 
-          {/* =================================================
-              PRODUCTS
-          ================================================== */}
+          {/* PRODUCTS */}
 
           <div className="min-w-0">
 
             {/* TOOLBAR */}
 
-            <div className="mb-5 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-5 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
               <div>
-                <p className="text-sm font-black text-gray-950">
+
+                <p className="text-sm font-black text-gray-950 dark:text-white">
                   {loading
                     ? "Finding products..."
                     : `${filteredProducts.length} products`}
@@ -874,28 +1036,35 @@ function Products() {
                   search && (
                     <p className="mt-1 text-xs text-gray-400">
                       Search results for "
-                      <span className="font-bold text-gray-700">
+                      <span className="font-bold text-gray-700 dark:text-gray-200">
                         {search}
                       </span>
                       "
                     </p>
                   )}
+
               </div>
 
               {/* DESKTOP SORT */}
 
               <div className="relative hidden sm:block">
+
                 <button
                   type="button"
                   onClick={() =>
-                    setSortOpen(!sortOpen)
+                    setSortOpen(
+                      !sortOpen
+                    )
                   }
-                  className="flex min-w-[190px] items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-bold text-gray-700 hover:border-gray-400"
+                  className="flex min-w-[190px] items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-bold text-gray-700 hover:border-gray-400 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-gray-500"
                 >
+
                   <span>
                     Sort:{" "}
-                    <span className="text-gray-950">
-                      {selectedSortLabel}
+                    <span className="text-gray-950 dark:text-white">
+                      {
+                        selectedSortLabel
+                      }
                     </span>
                   </span>
 
@@ -906,28 +1075,36 @@ function Products() {
                         : ""
                     }`}
                   />
+
                 </button>
 
                 {sortOpen && (
-                  <div className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-2xl">
+                  <div className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-2xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+
                     {sortOptions.map(
                       (option) => (
                         <button
-                          key={option.value}
+                          key={
+                            option.value
+                          }
                           type="button"
                           onClick={() => {
                             setSortBy(
                               option.value
                             );
-                            setSortOpen(false);
+
+                            setSortOpen(
+                              false
+                            );
                           }}
                           className={`flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-xs font-bold ${
                             sortBy ===
                             option.value
-                              ? "bg-yellow-50"
-                              : "hover:bg-gray-50"
+                              ? "bg-yellow-50 dark:bg-[#302d13]"
+                              : "hover:bg-gray-50 dark:hover:bg-[#222]"
                           }`}
                         >
+
                           {option.label}
 
                           {sortBy ===
@@ -937,43 +1114,55 @@ function Products() {
                               className="text-yellow-600"
                             />
                           )}
+
                         </button>
                       )
                     )}
+
                   </div>
                 )}
+
               </div>
+
             </div>
 
             {/* PRODUCTS GRID */}
 
             <ProductGrid
-              products={paginatedProducts}
+              products={
+                paginatedProducts
+              }
               loading={loading}
             />
 
             {/* PAGINATION */}
 
             {!loading &&
-              filteredProducts.length > 0 &&
+              filteredProducts.length >
+                0 &&
               totalPages > 1 && (
                 <div className="mt-8 flex items-center justify-center gap-2">
 
                   <button
                     type="button"
-                    disabled={currentPage === 1}
+                    disabled={
+                      currentPage === 1
+                    }
                     onClick={() =>
                       goToPage(
                         currentPage - 1
                       )
                     }
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-30 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-gray-500"
                   >
                     <FiChevronLeft />
                   </button>
 
                   {Array.from(
-                    { length: totalPages },
+                    {
+                      length:
+                        totalPages,
+                    },
                     (_, index) =>
                       index + 1
                   )
@@ -987,23 +1176,28 @@ function Products() {
                         currentPage + 2
                       )
                     )
-                    .map((page) => (
-                      <button
-                        key={page}
-                        type="button"
-                        onClick={() =>
-                          goToPage(page)
-                        }
-                        className={`h-10 min-w-10 rounded-xl px-3 text-xs font-black ${
-                          currentPage === page
-                            ? "bg-black text-white"
-                            : "border border-gray-200 bg-white text-gray-600 hover:border-gray-400"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                  
+                    .map(
+                      (page) => (
+                        <button
+                          key={page}
+                          type="button"
+                          onClick={() =>
+                            goToPage(
+                              page
+                            )
+                          }
+                          className={`h-10 min-w-10 rounded-xl px-3 text-xs font-black ${
+                            currentPage ===
+                            page
+                              ? "bg-black text-white dark:bg-white dark:text-black"
+                              : "border border-gray-200 bg-white text-gray-600 hover:border-gray-400 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-gray-500"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
+
                   <button
                     type="button"
                     disabled={
@@ -1015,14 +1209,18 @@ function Products() {
                         currentPage + 1
                       )
                     }
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-30 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-gray-500"
                   >
                     <FiChevronRight />
                   </button>
+
                 </div>
               )}
+
           </div>
+
         </div>
+
       </section>
 
       {/* =====================================================
@@ -1035,15 +1233,17 @@ function Products() {
           <button
             type="button"
             onClick={() =>
-              setMobileFiltersOpen(false)
+              setMobileFiltersOpen(
+                false
+              )
             }
             className="absolute inset-0 bg-black/40"
             aria-label="Close filters"
           />
 
-          <div className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl">
+          <div className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl dark:bg-[#1a1a1a]">
 
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
               <div className="flex items-center gap-2">
                 <FiFilter />
@@ -1056,19 +1256,23 @@ function Products() {
               <button
                 type="button"
                 onClick={() =>
-                  setMobileFiltersOpen(false)
+                  setMobileFiltersOpen(
+                    false
+                  )
                 }
-                className="rounded-full bg-gray-100 p-2 text-gray-500"
+                className="rounded-full bg-gray-100 p-2 text-gray-500 dark:bg-[#2a2a2a] dark:text-gray-300"
               >
                 <FiX size={18} />
               </button>
+
             </div>
 
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 dark:divide-[#2a2a2a]">
 
               {/* MOBILE PRICE */}
 
               <div className="p-5">
+
                 <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
                   Price
                 </h3>
@@ -1085,7 +1289,7 @@ function Products() {
                       )
                     }
                     placeholder="Min price"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold outline-none focus:border-yellow-400"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold outline-none focus:border-yellow-400 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500"
                   />
 
                   <input
@@ -1098,19 +1302,23 @@ function Products() {
                       )
                     }
                     placeholder="Max price"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold outline-none focus:border-yellow-400"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold outline-none focus:border-yellow-400 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500"
                   />
+
                 </div>
+
               </div>
 
               {/* MOBILE RATING */}
 
               <div className="p-5">
+
                 <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
                   Rating
                 </h3>
 
                 <div className="flex gap-2">
+
                   {[4, 3, 2, 1].map(
                     (rating) => (
                       <button
@@ -1125,11 +1333,13 @@ function Products() {
                           )
                         }
                         className={`flex flex-1 items-center justify-center gap-1 rounded-xl border px-2 py-3 text-xs font-bold ${
-                          minRating === rating
-                            ? "border-yellow-400 bg-yellow-50"
-                            : "border-gray-200"
+                          minRating ===
+                          rating
+                            ? "border-yellow-400 bg-yellow-50 dark:bg-[#302d13]"
+                            : "border-gray-200 dark:border-[#2a2a2a]"
                         }`}
                       >
+
                         {rating}
 
                         <FiStar
@@ -1138,15 +1348,19 @@ function Products() {
                         />
 
                         +
+
                       </button>
                     )
                   )}
+
                 </div>
+
               </div>
 
               {/* MOBILE DEAL */}
 
               <div className="p-5">
+
                 <button
                   type="button"
                   onClick={() =>
@@ -1156,7 +1370,9 @@ function Products() {
                   }
                   className="flex w-full items-center justify-between"
                 >
+
                   <div className="text-left">
+
                     <h3 className="text-xs font-black uppercase tracking-wider">
                       Discounted products
                     </h3>
@@ -1164,15 +1380,17 @@ function Products() {
                     <p className="mt-1 text-[10px] text-gray-400">
                       Show products with deals
                     </p>
+
                   </div>
 
                   <div
                     className={`flex h-6 w-10 items-center rounded-full p-1 ${
                       onlyDiscounted
                         ? "bg-yellow-400"
-                        : "bg-gray-200"
+                        : "bg-gray-200 dark:bg-[#3a3a3a]"
                     }`}
                   >
+
                     <span
                       className={`h-4 w-4 rounded-full bg-white shadow transition-transform ${
                         onlyDiscounted
@@ -1180,17 +1398,21 @@ function Products() {
                           : ""
                       }`}
                     />
+
                   </div>
+
                 </button>
+
               </div>
+
             </div>
 
-            <div className="sticky bottom-0 flex gap-3 border-t border-gray-100 bg-white p-4">
+            <div className="sticky bottom-0 flex gap-3 border-t border-gray-100 bg-white p-4 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
               <button
                 type="button"
                 onClick={clearFilters}
-                className="flex-1 rounded-xl border border-gray-200 py-3 text-xs font-black text-gray-700"
+                className="flex-1 rounded-xl border border-gray-200 py-3 text-xs font-black text-gray-700 dark:border-[#2a2a2a] dark:text-gray-300"
               >
                 Clear
               </button>
@@ -1198,17 +1420,26 @@ function Products() {
               <button
                 type="button"
                 onClick={() =>
-                  setMobileFiltersOpen(false)
+                  setMobileFiltersOpen(
+                    false
+                  )
                 }
-                className="flex-[2] rounded-xl bg-black py-3 text-xs font-black text-white"
+                className="flex-[2] rounded-xl bg-black py-3 text-xs font-black text-white dark:bg-white dark:text-black"
               >
                 Show{" "}
-                {filteredProducts.length} products
+                {
+                  filteredProducts.length
+                }{" "}
+                products
               </button>
+
             </div>
+
           </div>
+
         </div>
       )}
+
     </main>
   );
 }

@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white text-gray-800">
+    <footer className="border-t border-gray-200 bg-white text-gray-800 dark:border-[#2a2a2a] dark:bg-[#111111] dark:text-gray-200">
 
       {/* ================= MAIN FOOTER ================= */}
       <div className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10">
@@ -30,7 +30,7 @@ function Footer() {
               <span className="text-yellow-400">shop</span>ly
             </Link>
 
-            <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
+            <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500 dark:text-gray-400">
               Your everyday marketplace for products,
               great deals and everything you need in one place.
             </p>
@@ -146,7 +146,7 @@ function Footer() {
         </div>
 
         {/* ================= CONTACT ================= */}
-        <div className="mt-12 border-t border-gray-100 pt-8">
+        <div className="mt-12 border-t border-gray-100 pt-8 dark:border-[#2a2a2a]">
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
@@ -172,7 +172,7 @@ function Footer() {
       </div>
 
       {/* ================= BOTTOM BAR ================= */}
-      <div className="border-t border-gray-200 bg-[#fafafa]">
+      <div className="border-t border-gray-200 bg-[#fafafa] dark:border-[#2a2a2a] dark:bg-[#171717]">
 
         <div className="mx-auto flex max-w-[1400px] flex-col gap-5 px-6 py-5 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between lg:px-10">
 
@@ -186,14 +186,14 @@ function Footer() {
 
             <Link
               to="/privacy"
-              className="transition-colors duration-200 hover:text-gray-900"
+              className="transition-colors duration-200 hover:text-gray-900 dark:hover:text-white"
             >
               Privacy Policy
             </Link>
 
             <Link
               to="/terms"
-              className="transition-colors duration-200 hover:text-gray-900"
+              className="transition-colors duration-200 hover:text-gray-900 dark:hover:text-white"
             >
               Terms & Conditions
             </Link>
@@ -203,17 +203,17 @@ function Footer() {
           {/* Cash On Delivery */}
           <div className="flex items-center gap-3">
 
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
               Payment:
             </span>
 
-            <div className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 shadow-sm">
+            <div className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
               <span className="text-sm">
                 💵
               </span>
 
-              <span className="text-xs font-semibold text-gray-700">
+              <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                 Cash on Delivery
               </span>
 
@@ -238,7 +238,7 @@ function FooterColumn({ title, links }) {
   return (
     <div>
 
-      <h3 className="mb-5 text-sm font-bold text-gray-900">
+      <h3 className="mb-5 text-sm font-bold text-gray-900 dark:text-white">
         {title}
       </h3>
 
@@ -258,6 +258,8 @@ function FooterColumn({ title, links }) {
                 transition-colors
                 duration-200
                 hover:text-gray-900
+                dark:text-gray-400
+                dark:hover:text-white
               "
             >
 
@@ -333,7 +335,7 @@ function Contact({ icon, text }) {
         {icon}
       </div>
 
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-gray-600 dark:text-gray-400">
         {text}
       </span>
 

@@ -45,6 +45,7 @@ function PromoCard({ promo }) {
         h-[470px]
         overflow-hidden
         bg-[#eeeeeb]
+        dark:bg-[#1a1a1a]
 
         sm:h-[520px]
         lg:h-[580px]
@@ -281,6 +282,7 @@ function PromoMosaic() {
         -translate-x-[50%]
 
         bg-white
+        dark:bg-[#111111]
       "
     >
       {/* HEADER */}
@@ -329,6 +331,7 @@ function PromoMosaic() {
                 tracking-[-0.045em]
 
                 text-[#111111]
+                dark:text-white
 
                 sm:text-[42px]
                 lg:text-[50px]
@@ -350,6 +353,7 @@ function PromoMosaic() {
 
               border-b
               border-gray-900
+              dark:border-white
               pb-1.5
 
               text-[9px]
@@ -358,6 +362,7 @@ function PromoMosaic() {
               tracking-[0.2em]
 
               text-gray-900
+              dark:text-white
 
               transition-all
               duration-300

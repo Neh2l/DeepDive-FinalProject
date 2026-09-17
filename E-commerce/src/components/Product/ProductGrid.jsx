@@ -1,4 +1,3 @@
-
 import ProductCard from "./ProductCard";
 
 function ProductGrid({ products, loading = false }) {
@@ -37,24 +36,26 @@ function ProductGrid({ products, loading = false }) {
               border-gray-200
               bg-white
               shadow-[0_5px_20px_rgba(0,0,0,0.04)]
+              dark:border-[#2a2a2a]
+              dark:bg-[#1a1a1a]
             "
           >
             {/* Image */}
 
-            <div className="h-[250px] animate-pulse bg-gray-100" />
+            <div className="h-[250px] animate-pulse bg-gray-100 dark:bg-[#222]" />
 
             {/* Content */}
 
             <div className="space-y-3 p-4">
-              <div className="h-3 w-1/3 animate-pulse rounded-full bg-gray-200" />
+              <div className="h-3 w-1/3 animate-pulse rounded-full bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-4 w-4/5 animate-pulse rounded bg-gray-200" />
+              <div className="h-4 w-4/5 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-4 w-3/5 animate-pulse rounded bg-gray-200" />
+              <div className="h-4 w-3/5 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="mt-4 h-7 w-1/3 animate-pulse rounded bg-gray-200" />
+              <div className="mt-4 h-7 w-1/3 animate-pulse rounded bg-gray-200 dark:bg-[#2a2a2a]" />
 
-              <div className="h-10 animate-pulse rounded-xl bg-gray-200" />
+              <div className="h-10 animate-pulse rounded-xl bg-gray-200 dark:bg-[#2a2a2a]" />
             </div>
           </div>
         ))}
@@ -79,14 +80,16 @@ function ProductGrid({ products, loading = false }) {
           border-dashed
           border-gray-300
           bg-gray-50
+          dark:border-[#3a3a3a]
+          dark:bg-[#1a1a1a]
         "
       >
         <div className="px-6 text-center">
-          <h3 className="text-xl font-black text-gray-900">
+          <h3 className="text-xl font-black text-gray-900 dark:text-white">
             No products found
           </h3>
 
-          <p className="mt-2 text-sm leading-6 text-gray-500">
+          <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
             Try changing your filters or search term.
           </p>
         </div>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import {
@@ -136,10 +135,13 @@ function ProductCard({ product, index = 0 }) {
           border
           border-gray-200
           bg-white
+          dark:border-[#2a2a2a]
+          dark:bg-[#1a1a1a]
           transition-all
           duration-500
           hover:-translate-y-1
           hover:border-gray-300
+          dark:hover:border-[#3a3a3a]
           hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)]
         "
       >
@@ -153,6 +155,7 @@ function ProductCard({ product, index = 0 }) {
             h-[250px]
             overflow-hidden
             bg-[#f8f8f8]
+            dark:bg-[#202020]
           "
         >
           {/* Background */}
@@ -163,6 +166,7 @@ function ProductCard({ product, index = 0 }) {
               absolute
               inset-0
               bg-[radial-gradient(circle_at_50%_40%,#ffffff_0%,#f8f8f8_65%,#eeeeee_100%)]
+              dark:bg-[radial-gradient(circle_at_50%_40%,#292929_0%,#202020_65%,#1a1a1a_100%)]
             "
           />
 
@@ -228,26 +232,26 @@ function ProductCard({ product, index = 0 }) {
             type="button"
             onClick={handleWishlist}
             aria-label="Add to wishlist"
-            className={`
-              absolute
-              right-3
-              top-3
-              z-30
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-full
-              border
-              transition-all
-              duration-300
-              hover:scale-110
+            className={` 
+              absolute 
+              right-3 
+              top-3 
+              z-30 
+              flex 
+              h-9 
+              w-9 
+              items-center 
+              justify-center 
+              rounded-full 
+              border 
+              transition-all 
+              duration-300 
+              hover:scale-110 
               ${
                 isWishlisted
                   ? "border-red-100 bg-red-50 text-red-500"
-                  : "border-gray-200 bg-white/90 text-gray-600 hover:border-gray-300 hover:text-red-500"
-              }
+                  : "border-gray-200 bg-white/90 text-gray-600 hover:border-gray-300 hover:text-red-500 dark:border-[#3a3a3a] dark:bg-[#252525]/90 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-red-400"
+              } 
             `}
           >
             <FiHeart
@@ -319,6 +323,9 @@ function ProductCard({ product, index = 0 }) {
               duration-300
               group-hover:translate-y-0
               group-hover:opacity-100
+              dark:border-[#3a3a3a]
+              dark:bg-[#252525]
+              dark:text-white
             "
           >
             <FiEye size={12} />
@@ -357,6 +364,7 @@ function ProductCard({ product, index = 0 }) {
                 text-[9px]
                 font-bold
                 text-emerald-600
+                dark:text-emerald-400
               "
             >
               <FiCheck size={10} />
@@ -376,9 +384,11 @@ function ProductCard({ product, index = 0 }) {
                 font-extrabold
                 leading-[1.45]
                 text-gray-950
+                dark:text-white
                 transition-colors
                 duration-300
                 group-hover:text-gray-700
+                dark:group-hover:text-gray-300
               "
             >
               {product.title}
@@ -426,6 +436,7 @@ function ProductCard({ product, index = 0 }) {
                 font-black
                 tracking-[-0.02em]
                 text-gray-950
+                dark:text-white
               "
             >
               ${Number(product.price).toFixed(2)}
@@ -456,6 +467,7 @@ function ProductCard({ product, index = 0 }) {
               gap-2
               border-t
               border-gray-100
+              dark:border-[#2a2a2a]
               pt-3
             "
           >
@@ -464,7 +476,7 @@ function ProductCard({ product, index = 0 }) {
               className="shrink-0 text-gray-500"
             />
 
-            <p className="text-[10px] font-semibold text-gray-500">
+            <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400">
               Free delivery on eligible orders
             </p>
           </div>
@@ -494,6 +506,7 @@ function ProductCard({ product, index = 0 }) {
               transition-all
               duration-300
               hover:bg-black
+              dark:hover:bg-[#2a2a2a]
               hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)]
               active:scale-[0.98]
             "
