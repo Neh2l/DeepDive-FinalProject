@@ -114,20 +114,17 @@ const createOrder = async (req, res) => {
 const getMyOrders = async (req, res) => {
     try {
         const userId = req.user.id;
-
+        const total=await Order.countDocuments({
+            user: userId
+        })
         const orders = await Order.find({
             user: userId
         })
-            .select(
-                "items status total shippingAddress paymentMethod createdAt"
-            )
-            .populate(
-                "items.product",
-                "name price images thumbnail"
-            )
+            .select("items status total shippingAddress createdAt")
             .sort({ createdAt: -1 });
 
         return res.status(200).json({
+            total,
             orders
         });
 
@@ -216,6 +213,7 @@ const getAllOrders = async (req, res) => {
             search
         } = req.query;
 
+        const total =await Order.countDocuments();
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
 
@@ -253,6 +251,7 @@ const getAllOrders = async (req, res) => {
             .limit(limitNumber);
 
         return res.status(200).json({
+            total,
             page: pageNumber,
             limit: limitNumber,
             orders
