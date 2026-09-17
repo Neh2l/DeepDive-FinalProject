@@ -112,13 +112,15 @@ function Register() {
           name: formData.name.trim(),
           email: normalizedEmail,
           password: formData.password,
-        })
+        }),
       ).unwrap();
 
       setSuccess(true);
 
       setTimeout(() => {
-        navigate("/");
+        navigate("/verify-email", {
+          state: { email: normalizedEmail },
+        });
       }, 900);
     } catch (err) {
       console.error("Registration error:", err);
@@ -130,12 +132,8 @@ function Register() {
       <div className="w-full max-w-[480px]">
 
         {/* LOGO */}
-
         <div className="flex justify-center mb-7">
-          <Link
-            to="/"
-            className="flex items-center gap-2.5 group"
-          >
+          <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-11 h-11 rounded-xl bg-[#ffd800] flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-105">
               <FiShoppingBag className="text-gray-950 text-xl" />
             </div>
@@ -147,11 +145,9 @@ function Register() {
         </div>
 
         {/* CARD */}
-
         <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] px-6 py-8 sm:px-9 sm:py-9 dark:bg-[#1a1a1a] dark:border-[#2a2a2a]">
 
           {/* HEADER */}
-
           <div className="mb-7">
             <h1 className="text-2xl font-black text-gray-900 dark:text-white">
               Create your Shoply account
@@ -163,34 +159,24 @@ function Register() {
           </div>
 
           {/* ERROR */}
-
           {error && (
             <div className="mb-5 flex items-start gap-3 rounded-lg bg-red-50 border border-red-100 p-3.5 text-red-600 text-sm font-medium dark:bg-red-950/30 dark:border-red-900/40 dark:text-red-400">
               <FiAlertCircle className="shrink-0 mt-0.5" />
-
               <span>{error}</span>
             </div>
           )}
 
           {/* SUCCESS */}
-
           {success && (
             <div className="mb-5 flex items-center gap-3 rounded-lg bg-green-50 border border-green-100 p-3.5 text-green-600 text-sm font-medium dark:bg-green-950/30 dark:border-green-900/40 dark:text-green-400">
               <FiCheck className="shrink-0" />
-
-              <span>
-                Account created successfully!
-              </span>
+              <span>Account created successfully!</span>
             </div>
           )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="space-y-5">
 
             {/* NAME */}
-
             <div>
               <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Full name
@@ -221,7 +207,6 @@ function Register() {
             </div>
 
             {/* EMAIL */}
-
             <div>
               <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Email address
@@ -252,7 +237,6 @@ function Register() {
             </div>
 
             {/* PASSWORD */}
-
             <div>
               <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Password
@@ -276,16 +260,10 @@ function Register() {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowPassword((prev) => !prev)
-                  }
+                  onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors dark:hover:text-white"
                 >
-                  {showPassword ? (
-                    <FiEyeOff />
-                  ) : (
-                    <FiEye />
-                  )}
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
 
@@ -297,7 +275,6 @@ function Register() {
             </div>
 
             {/* CONFIRM PASSWORD */}
-
             <div>
               <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
                 Confirm password
@@ -326,11 +303,7 @@ function Register() {
                   }
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors dark:hover:text-white"
                 >
-                  {showConfirmPassword ? (
-                    <FiEyeOff />
-                  ) : (
-                    <FiEye />
-                  )}
+                  {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
 
@@ -342,10 +315,8 @@ function Register() {
             </div>
 
             {/* TERMS */}
-
             <div>
               <label className="flex items-start gap-2.5 cursor-pointer">
-
                 <input
                   type="checkbox"
                   checked={acceptedTerms}
@@ -365,7 +336,6 @@ function Register() {
                     Privacy Policy
                   </span>
                 </span>
-
               </label>
 
               {errors.terms && (
@@ -376,7 +346,6 @@ function Register() {
             </div>
 
             {/* BUTTON */}
-
             <button
               type="submit"
               disabled={loading}
@@ -385,58 +354,41 @@ function Register() {
               {loading ? (
                 <>
                   <span className="w-4 h-4 border-2 border-gray-950 border-t-transparent rounded-full animate-spin" />
-
                   Creating account...
                 </>
               ) : (
                 <>
                   Create account
-
                   <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                 </>
               )}
             </button>
-
           </form>
 
           {/* LOGIN */}
-
           <div className="mt-7 pt-6 border-t border-gray-100 text-center dark:border-[#2a2a2a]">
-
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Already have an account?{" "}
-
               <Link
                 to="/login"
                 className="font-bold text-gray-900 hover:underline dark:text-white"
               >
                 Sign in
               </Link>
-
             </p>
-
           </div>
 
           {/* SECURITY */}
-
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
-
             <FiShield />
-
-            <span>
-              Your information is protected and secure
-            </span>
-
+            <span>Your information is protected and secure</span>
           </div>
-
         </div>
 
         {/* FOOTER */}
-
         <p className="text-center text-xs text-gray-400 mt-5">
           © 2026 Shoply. All rights reserved.
         </p>
-
       </div>
     </div>
   );

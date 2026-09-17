@@ -6,6 +6,7 @@ import MainLayout from "./Layout/MainLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Wishlist from "./pages/Wishlist";
@@ -43,6 +44,11 @@ function App() {
 
             <Route path="/signup" element={<Register />} />
 
+            <Route
+              path="/verify-email"
+              element={<VerifyEmail />}
+            />
+
             <Route path="/cart" element={<Cart />} />
 
             <Route path="/profile" element={<Profile />} />
@@ -60,16 +66,21 @@ function App() {
               path="about"
               element={<About />}
             />
+
             <Route
               path="checkout"
-              element={<Checkout />} />
-               <Route
+              element={<Checkout />}
+            />
+
+            <Route
               path="orders"
-              element={<Orders />} />
-               <Route
+              element={<Orders />}
+            />
+
+            <Route
               path="orders/:id"
-              element={<OrderDetails />} />
-          
+              element={<OrderDetails />}
+            />
 
             <Route
               path="*"
