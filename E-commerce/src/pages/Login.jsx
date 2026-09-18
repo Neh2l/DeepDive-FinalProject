@@ -349,9 +349,7 @@ function Login() {
         </div>
 
 
-        <p className="text-center text-xs text-gray-400 mt-5">
-          © 2026 Shoply. All rights reserved.
-        </p>
+       
 
       </div>
     </div>
