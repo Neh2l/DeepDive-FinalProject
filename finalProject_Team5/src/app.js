@@ -28,6 +28,8 @@ const userRoutes = require("./routes/user.routes");
 
 const footerSettingsRoutes = require("./routes/footerSettings.routes");
 
+const paymobRoutes = require("./routes/paymob.route");
+
 app.use("/api/wishlist", wishlistRoutes);
 
 app.use("/api/orders", orderRoutes);
@@ -43,6 +45,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 app.use("/api/footer-settings", footerSettingsRoutes);
+
+app.use("/api/paymob", paymobRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
