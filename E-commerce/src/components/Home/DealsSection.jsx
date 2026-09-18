@@ -128,13 +128,13 @@ function DealsSection({ products = [], loading = false }) {
         <div className="mt-8 flex justify-center">
 
           <Link
-            to="/products"
-            className="group inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition-all duration-300 hover:border-gray-950 hover:bg-gray-950 hover:text-white dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-gray-950"
-          >
-            View all deals
+  to="/products"
+  className="group inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition-all duration-300 hover:border-gray-950 hover:bg-gray-950 hover:!text-white dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-white dark:hover:border-white dark:hover:bg-white dark:hover:!text-gray-950"
+>
+  View all deals
 
-            <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
+  <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+</Link>
 
         </div>
 
