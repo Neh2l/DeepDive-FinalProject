@@ -1172,7 +1172,7 @@ const handleOrderStatusChange = async (orderId, status) => {
       </div>
     );
   };
-  const renderOrders = () => {
+const renderOrders = () => {
   const pendingCount = orders.filter(
     (order) => order.status === "Pending"
   ).length;
@@ -1622,17 +1622,49 @@ const handleOrderStatusChange = async (orderId, status) => {
                         {order.items?.map((item, index) => {
                           const product = item.product;
 
+                          const productImage =
+                            typeof product?.images?.[0] === "string"
+                              ? product.images[0]
+                              : product?.images?.[0]?.url || "";
+
+                          console.log("ORDER PRODUCT:", product);
+                          console.log(
+                            "ORDER PRODUCT IMAGES:",
+                            product?.images
+                          );
+                          console.log(
+                            "ORDER FIRST IMAGE:",
+                            product?.images?.[0]
+                          );
+                          console.log(
+                            "ORDER IMAGE URL:",
+                            productImage
+                          );
+
                           return (
                             <div
-                              key={`${order._id}-${product?._id || index}`}
+                              key={`${order._id}-${
+                                product?._id || index
+                              }`}
                               className="flex min-w-[280px] items-center gap-3"
                             >
                               <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                                {product?.images?.[0] ? (
+                                {productImage ? (
                                   <img
-                                    src={product.images[0]}
-                                    alt={product.name || "Product"}
+                                    src={productImage}
+                                    alt={
+                                      product?.name || "Product"
+                                    }
                                     className="h-full w-full object-cover"
+                                    onError={(e) => {
+                                      console.log(
+                                        "IMAGE FAILED:",
+                                        productImage
+                                      );
+
+                                      e.currentTarget.style.display =
+                                        "none";
+                                    }}
                                   />
                                 ) : (
                                   <div className="flex h-full w-full items-center justify-center text-gray-300">
@@ -1643,7 +1675,8 @@ const handleOrderStatusChange = async (orderId, status) => {
 
                               <div className="min-w-0">
                                 <p className="max-w-[220px] truncate text-sm font-bold text-gray-800">
-                                  {product?.name || "Product unavailable"}
+                                  {product?.name ||
+                                    "Product unavailable"}
                                 </p>
 
                                 <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
@@ -1657,7 +1690,10 @@ const handleOrderStatusChange = async (orderId, status) => {
                                   <span>•</span>
 
                                   <span>
-                                    {Number(item.price || 0).toFixed(2)} EGP
+                                    {Number(
+                                      item.price || 0
+                                    ).toFixed(2)}{" "}
+                                    EGP
                                   </span>
                                 </div>
                               </div>
@@ -1733,16 +1769,16 @@ const handleOrderStatusChange = async (orderId, status) => {
                                 focus:ring-yellow-100
                               "
                             >
-                              {getNextStatusOptions(order.status).map(
-                                (status) => (
-                                  <option
-                                    key={status}
-                                    value={status}
-                                  >
-                                    {status}
-                                  </option>
-                                )
-                              )}
+                              {getNextStatusOptions(
+                                order.status
+                              ).map((status) => (
+                                <option
+                                  key={status}
+                                  value={status}
+                                >
+                                  {status}
+                                </option>
+                              ))}
                             </select>
                           )}
                       </div>
@@ -1801,7 +1837,9 @@ const handleOrderStatusChange = async (orderId, status) => {
               <button
                 type="button"
                 disabled={ordersPage === 1}
-                onClick={() => setOrdersPage((prev) => prev - 1)}
+                onClick={() =>
+                  setOrdersPage((prev) => prev - 1)
+                }
                 className="
                   flex
                   h-10
@@ -1832,7 +1870,9 @@ const handleOrderStatusChange = async (orderId, status) => {
               <button
                 type="button"
                 disabled={ordersPage * 10 >= ordersTotal}
-                onClick={() => setOrdersPage((prev) => prev + 1)}
+                onClick={() =>
+                  setOrdersPage((prev) => prev + 1)
+                }
                 className="
                   flex
                   h-10
@@ -1863,6 +1903,7 @@ const handleOrderStatusChange = async (orderId, status) => {
           <p className="text-xs font-bold text-gray-400">
             Pending
           </p>
+
           <p className="mt-1 text-lg font-black text-yellow-600">
             {pendingCount}
           </p>
@@ -1872,6 +1913,7 @@ const handleOrderStatusChange = async (orderId, status) => {
           <p className="text-xs font-bold text-gray-400">
             Shipped
           </p>
+
           <p className="mt-1 text-lg font-black text-blue-600">
             {shippedCount}
           </p>
@@ -1881,6 +1923,7 @@ const handleOrderStatusChange = async (orderId, status) => {
           <p className="text-xs font-bold text-gray-400">
             Delivered
           </p>
+
           <p className="mt-1 text-lg font-black text-green-600">
             {deliveredCount}
           </p>
@@ -1890,6 +1933,7 @@ const handleOrderStatusChange = async (orderId, status) => {
           <p className="text-xs font-bold text-gray-400">
             Page Sales
           </p>
+
           <p className="mt-1 text-lg font-black text-gray-900">
             {pageSales.toFixed(2)} EGP
           </p>

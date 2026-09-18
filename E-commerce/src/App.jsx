@@ -22,6 +22,7 @@ import SplashScreen from "./components/SplashScreen";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
+import Contact from "./pages/Contact";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -84,6 +85,10 @@ function App() {
             <Route
               path="orders"
               element={<Orders />}
+            />
+             <Route
+              path="contact"
+              element={<Contact/>}
             />
 
             <Route

@@ -17,6 +17,7 @@ import {
 
 import ProductGrid from "../components/Product/ProductGrid";
 import { getProducts } from "../Apis/productsApi";
+import { useCategories } from "../context/CategoryContext";
 
 const categories = [
   { label: "All", value: "all" },
@@ -38,6 +39,14 @@ function Products() {
 
   const searchFromUrl =
     searchParams.get("search") || "";
+
+  // =========================================================
+  // CATEGORIES CONTEXT
+  // =========================================================
+
+  const {
+    categories: contextCategories,
+  } = useCategories();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,27 +84,17 @@ function Products() {
   // =========================================================
 
   const backendCategories = useMemo(() => {
-    const uniqueCategories = [
-      ...new Set(
-        products
-          .map((product) => product.category)
-          .filter(Boolean)
-      ),
-    ];
-
     return [
       ...categories,
-      ...uniqueCategories.map(
-        (category) => ({
-          label: category,
-          value: category,
-        })
-      ),
+      ...contextCategories.map((category) => ({
+        label: category.name,
+        value: category._id,
+      })),
     ];
-  }, [products]);
+  }, [contextCategories]);
 
   // =========================================================
-  // CATEGORY FROM NAVBAR
+  // CATEGORY FROM NAVBAR / URL
   // =========================================================
 
   useEffect(() => {
@@ -107,8 +106,8 @@ function Products() {
     const matchedCategory =
       backendCategories.find(
         (category) =>
-          category.value.toLowerCase() ===
-          categoryFromUrl.toLowerCase()
+          String(category.value) ===
+          String(categoryFromUrl)
       );
 
     setSelectedCategory(
@@ -141,8 +140,13 @@ function Products() {
         const response = await getProducts();
 
         console.log(
-          "Backend Products:",
-          response
+          "PRODUCT CATEGORY:",
+          response?.data?.[0]?.category
+        );
+
+        console.log(
+          "FIRST PRODUCT:",
+          response?.data?.[0]
         );
 
         setProducts(response.data || []);
@@ -206,7 +210,9 @@ function Products() {
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
+    // =======================================================
     // SEARCH
+    // =======================================================
 
     const searchValue = search
       .trim()
@@ -245,17 +251,21 @@ function Products() {
       );
     }
 
+    // =======================================================
     // CATEGORY
+    // =======================================================
 
     if (selectedCategory !== "all") {
       result = result.filter(
         (product) =>
-          product.category ===
-          selectedCategory
+          String(product.category) ===
+          String(selectedCategory)
       );
     }
 
+    // =======================================================
     // PRICE
+    // =======================================================
 
     const minimumPrice =
       minPrice === ""
@@ -279,7 +289,9 @@ function Products() {
       }
     );
 
+    // =======================================================
     // RATING
+    // =======================================================
 
     if (minRating > 0) {
       result = result.filter(
@@ -293,7 +305,9 @@ function Products() {
       );
     }
 
+    // =======================================================
     // DISCOUNT
+    // =======================================================
 
     if (onlyDiscounted) {
       result = result.filter(
@@ -308,7 +322,9 @@ function Products() {
       );
     }
 
+    // =======================================================
     // SORT
+    // =======================================================
 
     if (sortBy === "price-low") {
       result.sort(
@@ -878,7 +894,7 @@ function Products() {
                           "500"
                         );
                       }}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-500 hover:border-yellow-400 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:text-gray-400 dark:hover:bg-[#302d13]"
                     >
                       $200 - $500
                     </button>
@@ -1258,11 +1274,13 @@ function Products() {
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
 
               <div className="flex items-center gap-2">
+
                 <FiFilter />
 
                 <h2 className="text-sm font-black">
                   Filters
                 </h2>
+
               </div>
 
               <button

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import {
@@ -51,24 +50,40 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] =
     useState(false);
 
+  // =========================================================
   // SEARCH
+  // =========================================================
+
   const [searchQuery, setSearchQuery] =
     useState("");
+
+  // =========================================================
+  // AUTH
+  // =========================================================
 
   const { user, isLoggedIn } = useSelector(
     (state) => state.auth
   );
 
+  // =========================================================
+  // CART
+  // =========================================================
+
   const cartItems = useSelector(
     (state) => state.cart.items
   );
+
+  // =========================================================
+  // WISHLIST
+  // =========================================================
 
   const wishlistItems = useSelector(
     (state) => state.wishlist.items
   );
 
   const totalItems = cartItems.reduce(
-    (total, item) => total + item.quantity,
+    (total, item) =>
+      total + item.quantity,
     0
   );
 
@@ -90,7 +105,9 @@ function Navbar() {
     }
 
     navigate(
-      `/products?search=${encodeURIComponent(query)}`
+      `/products?search=${encodeURIComponent(
+        query
+      )}`
     );
   }
 
@@ -112,6 +129,7 @@ function Navbar() {
     dispatch(logoutUser());
 
     closeMobileMenu();
+
     navigate("/");
   }
 
@@ -119,7 +137,9 @@ function Navbar() {
   // MOBILE LINK CLASS
   // =========================================================
 
-  const mobileLinkClass = ({ isActive }) =>
+  const mobileLinkClass = ({
+    isActive,
+  }) =>
     `flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition ${
       isActive
         ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-400/10 dark:!text-yellow-400"
@@ -218,7 +238,9 @@ function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(event) =>
-                  setSearchQuery(event.target.value)
+                  setSearchQuery(
+                    event.target.value
+                  )
                 }
                 placeholder="Search for products, brands and more..."
                 className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
@@ -241,7 +263,8 @@ function Navbar() {
                   <div className="text-left">
                     <p className="text-[11px] text-gray-500 dark:text-gray-400">
                       Hello,{" "}
-                      {user.name.split(" ")[0]}
+                      {user.name
+                        .split(" ")[0]}
                     </p>
 
                     <p className="max-w-[110px] truncate text-sm font-bold text-gray-900 dark:text-white">
@@ -287,6 +310,7 @@ function Navbar() {
                   </button>
 
                 </div>
+
               </div>
             ) : (
               <Link
@@ -401,7 +425,9 @@ function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(event) =>
-                  setSearchQuery(event.target.value)
+                  setSearchQuery(
+                    event.target.value
+                  )
                 }
                 placeholder="Search products, brands and more..."
                 className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
@@ -430,17 +456,19 @@ function Navbar() {
               All Products
             </NavLink>
 
-            {navCategories.map((category) => (
-              <NavLink
-                key={category._id}
-                to={`/products?category=${encodeURIComponent(
-                  category.name
-                )}`}
-                className="shrink-0 text-sm font-medium text-gray-600 transition hover:text-black dark:!text-white dark:hover:!text-white"
-              >
-                {category.name}
-              </NavLink>
-            ))}
+            {navCategories.map(
+              (category) => (
+                <NavLink
+                  key={category._id}
+                  to={`/products?category=${encodeURIComponent(
+                    category._id
+                  )}`}
+                  className="shrink-0 text-sm font-medium text-gray-600 transition hover:text-black dark:!text-white dark:hover:!text-white"
+                >
+                  {category.name}
+                </NavLink>
+              )
+            )}
 
             <span className="ml-auto shrink-0 rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600 dark:bg-red-500/10 dark:!text-red-400">
               SALE
@@ -764,23 +792,25 @@ function Navbar() {
                 />
               </NavLink>
 
-              {navCategories.map((category) => (
-                <NavLink
-                  key={category._id}
-                  to={`/products?category=${encodeURIComponent(
-                    category.name
-                  )}`}
-                  onClick={closeMobileMenu}
-                  className={mobileLinkClass}
-                >
-                  {category.name}
+              {navCategories.map(
+                (category) => (
+                  <NavLink
+                    key={category._id}
+                    to={`/products?category=${encodeURIComponent(
+                      category._id
+                    )}`}
+                    onClick={closeMobileMenu}
+                    className={mobileLinkClass}
+                  >
+                    {category.name}
 
-                  <FiChevronRight
-                    size={17}
-                    className="shrink-0 dark:text-white"
-                  />
-                </NavLink>
-              ))}
+                    <FiChevronRight
+                      size={17}
+                      className="shrink-0 dark:text-white"
+                    />
+                  </NavLink>
+                )
+              )}
 
             </nav>
 
