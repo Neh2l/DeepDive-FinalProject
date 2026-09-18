@@ -1,6 +1,6 @@
-const Offer = require('../models/offerModel'); // على حسب مسار الـ model عندك
+const Offer = require('../models/offerModel'); 
 
-// 1. إضافة عرض جديد
+
 const createOffer = async (req, res) => {
     try {
         const { title, discountPercentage, code, expiryDate } = req.body;
@@ -19,7 +19,6 @@ const createOffer = async (req, res) => {
     }
 };
 
-// 2. جلب كل العروض المتاحة
 const getOffers = async (req, res) => {
     try {
         const offers = await Offer.find({ isActive: true });
