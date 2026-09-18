@@ -1,37 +1,54 @@
 const express = require("express");
+
 const cors = require("cors");
 
 const app = express();
 
 app.use(
-    cors({
-        origin: "*",
-    })
+  cors({
+    origin: "*",
+  })
 );
 
 app.use(express.json());
 
 const wishlistRoutes = require("./routes/wishlist.route");
+
 const orderRoutes = require("./routes/order.route");
-const categoryRouter=require('./routes/categories.routes');
+
+const categoryRouter = require("./routes/categories.routes");
+
 const productRoutes = require("./routes/productRoutes");
+
 const contactRoutes = require("./routes/contactRoutes");
+
 const authRoutes = require("./routes/auth.routes");
+
 const userRoutes = require("./routes/user.routes");
 
+const footerSettingsRoutes = require("./routes/footerSettings.routes");
+
 app.use("/api/wishlist", wishlistRoutes);
+
 app.use("/api/orders", orderRoutes);
-app.use('/api/categories',categoryRouter);
+
+app.use("/api/categories", categoryRouter);
+
 app.use("/api/products", productRoutes);
+
 app.use("/api/contact", contactRoutes);
+
 app.use("/api/auth", authRoutes);
+
 app.use("/api/users", userRoutes);
 
+app.use("/api/footer-settings", footerSettingsRoutes);
+
 app.use((req, res) => {
-    res.status(404).json({
-        status: "error",
-        message: "Route not found"
-    });
+  res.status(404).json({
+    status: "error",
+    message: "Route not found",
+  });
 });
 
 module.exports = app;
