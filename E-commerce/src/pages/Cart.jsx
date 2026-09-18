@@ -151,28 +151,132 @@ function Cart() {
             MAIN CART
         ====================================================== */}
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+        <div
+          className={
+            cartItems.length === 0
+              ? "grid grid-cols-1"
+              : "grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start"
+          }
+        >
 
           {/* ===================================================
               CART ITEMS
           ==================================================== */}
 
-          <section className="rounded-3xl border border-gray-200 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:border-[#2a2a2a] dark:bg-[#1a1a1a] sm:p-6">
+          <section
+            className={
+              cartItems.length === 0
+                ? "min-h-[520px] rounded-[28px] border border-gray-200 bg-white p-5 shadow-[0_12px_45px_rgba(0,0,0,0.05)] dark:border-[#2a2a2a] dark:bg-[#1a1a1a] sm:p-10"
+                : "rounded-3xl border border-gray-200 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:border-[#2a2a2a] dark:bg-[#1a1a1a] sm:p-6"
+            }
+          >
 
-            <CartList />
+            {cartItems.length === 0 ? (
+
+              /* =================================================
+                  PREMIUM EMPTY CART
+              ================================================== */
+
+              <div className="flex min-h-[450px] flex-col items-center justify-center px-4 text-center">
+
+
+                <div className="relative mb-7">
+
+                  <div className="absolute inset-0 scale-150 rounded-full bg-[#ffd600]/10 blur-2xl" />
+
+                  <div className="relative flex h-24 w-24 items-center justify-center rounded-[30px] border border-gray-100 bg-[#fafafa] shadow-[0_12px_35px_rgba(0,0,0,0.06)] dark:border-[#333] dark:bg-[#222]">
+
+                    <FiShoppingBag
+                      size={38}
+                      strokeWidth={1.5}
+                      className="text-[#171717] dark:text-white"
+                    />
+
+                  </div>
+
+
+                  <span className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full border-4 border-white bg-[#ffd600] text-[10px] font-black text-black dark:border-[#1a1a1a]">
+                    0
+                  </span>
+
+                </div>
+
+
+
+                <p className="mb-2 text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">
+                  Your Shopping Bag
+                </p>
+
+
+
+                <h2 className="text-2xl font-black tracking-tight text-gray-950 dark:text-white sm:text-3xl">
+                  Your cart is empty
+                </h2>
+
+
+
+                <p className="mt-3 max-w-md text-sm leading-6 text-gray-500 dark:text-gray-400">
+                  Discover something you love and add it to your cart.
+                  Your selected items will appear here.
+                </p>
+
+
+
+                <Link
+                  to="/products"
+                  className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-[#ffd600] px-7 py-3.5 text-sm font-black text-black shadow-[0_8px_20px_rgba(255,214,0,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f5ca00] hover:shadow-[0_12px_25px_rgba(255,214,0,0.3)]"
+                >
+
+                  <FiShoppingBag size={17} />
+
+                  Continue Shopping
+
+                  <FiArrowLeft
+                    size={16}
+                    className="rotate-180"
+                  />
+
+                </Link>
+
+
+                {/* TRUST TEXT */}
+
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+
+                  <span>Secure Checkout</span>
+
+                  <span className="h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600" />
+
+                  <span>Easy Returns</span>
+
+                  <span className="h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600" />
+
+                  <span>Quality Products</span>
+
+                </div>
+
+              </div>
+
+            ) : (
+
+              <CartList />
+
+            )}
 
           </section>
 
 
-          {/* ===================================================
-              ORDER SUMMARY
-          ==================================================== */}
+          
 
-          <aside className="lg:sticky lg:top-6">
+          {cartItems.length > 0 && (
 
-            <CartSummary />
+            <aside className="lg:sticky lg:top-6">
 
-          </aside>
+              <CartSummary />
+
+            </aside>
+
+          )}
 
         </div>
 

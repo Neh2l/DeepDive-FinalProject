@@ -716,7 +716,9 @@ function Products() {
 
                   <FiFilter size={17} />
 
-                  <h2 className="text-sm font-black">
+                  {/* TITLE - DARK MODE WHITE */}
+
+                  <h2 className="text-sm font-black text-gray-950 dark:text-white">
                     Filters
                   </h2>
 
@@ -736,7 +738,7 @@ function Products() {
                     onClick={
                       clearFilters
                     }
-                    className="text-[10px] font-bold text-gray-400 hover:text-red-500"
+                    className="text-[10px] font-bold text-gray-400 hover:text-red-500 dark:text-gray-400"
                   >
                     Clear all
                   </button>
@@ -750,7 +752,9 @@ function Products() {
 
                 <div className="p-5">
 
-                  <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
+                  {/* TITLE - DARK MODE WHITE */}
+
+                  <h3 className="mb-4 text-xs font-black uppercase tracking-wider text-gray-950 dark:text-white">
                     Category
                   </h3>
 
@@ -772,7 +776,7 @@ function Products() {
                             selectedCategory ===
                             category.value
                               ? "bg-yellow-50 text-gray-950 dark:bg-[#302d13] dark:text-white"
-                              : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-[#222]"
+                              : "text-gray-500 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-[#222]"
                           }`}
                         >
 
@@ -798,7 +802,9 @@ function Products() {
 
                 <div className="p-5">
 
-                  <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
+                  {/* TITLE - DARK MODE WHITE */}
+
+                  <h3 className="mb-4 text-xs font-black uppercase tracking-wider text-gray-950 dark:text-white">
                     Price
                   </h3>
 
@@ -806,7 +812,7 @@ function Products() {
 
                     <div className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-[#2a2a2a] dark:bg-[#171717]">
 
-                      <span className="block text-[9px] font-bold uppercase text-gray-400">
+                      <span className="block text-[9px] font-bold uppercase text-gray-400 dark:text-gray-500">
                         Min
                       </span>
 
@@ -831,7 +837,7 @@ function Products() {
 
                     <div className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-[#2a2a2a] dark:bg-[#171717]">
 
-                      <span className="block text-[9px] font-bold uppercase text-gray-400">
+                      <span className="block text-[9px] font-bold uppercase text-gray-400 dark:text-gray-500">
                         Max
                       </span>
 
@@ -924,7 +930,9 @@ function Products() {
 
                 <div className="p-5">
 
-                  <h3 className="mb-4 text-xs font-black uppercase tracking-wider">
+                  {/* TITLE - DARK MODE WHITE */}
+
+                  <h3 className="mb-4 text-xs font-black uppercase tracking-wider text-gray-950 dark:text-white">
                     Customer Rating
                   </h3>
 
@@ -970,7 +978,7 @@ function Products() {
 
                           </div>
 
-                          <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+                          <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
                             & up
                           </span>
 
@@ -1006,11 +1014,15 @@ function Products() {
 
                     <div className="text-left">
 
-                      <h3 className="text-xs font-black uppercase tracking-wider">
+                      {/* TITLE - DARK MODE WHITE */}
+
+                      <h3 className="text-xs font-black uppercase tracking-wider text-gray-950 dark:text-white">
                         Deals
                       </h3>
 
-                      <p className="mt-1 text-[10px] text-gray-400">
+                      {/* NORMAL TEXT - DARK MODE SOFT WHITE */}
+
+                      <p className="mt-1 text-[10px] text-gray-400 dark:text-gray-300">
                         Show discounted products
                       </p>
 

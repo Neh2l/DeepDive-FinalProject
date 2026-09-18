@@ -35,29 +35,36 @@ function WelcomeCard() {
   return (
     <div
       className={`
-        fixed 
-        bottom-6 
-        right-6 
-        z-[100] 
-        w-[365px] 
-        overflow-hidden 
-        rounded-[28px] 
-        border 
-        border-black/[0.06] 
-        bg-white/[0.97] 
-        backdrop-blur-xl 
-        shadow-[0_30px_100px_rgba(0,0,0,0.18)] 
-        transition-all 
-        duration-[950ms] 
+        fixed
+        bottom-6
+        left-1/2
+        z-[100]
+        w-[calc(100vw-32px)]
+        max-w-[365px]
+        -translate-x-1/2
+        overflow-hidden
+        rounded-[28px]
+        border
+        border-black/[0.06]
+        bg-white/[0.97]
+        backdrop-blur-xl
+        shadow-[0_30px_100px_rgba(0,0,0,0.18)]
+        transition-all
+        duration-[950ms]
         ease-[cubic-bezier(.16,1,.3,1)]
 
-        ${ 
-          visible 
-            ? "translate-x-0 translate-y-0 opacity-100" 
-            : "translate-x-[18%] translate-y-[150%] opacity-0" 
-        } 
+        ${
+          visible
+            ? "translate-y-0 opacity-100"
+            : "translate-y-[150%] opacity-0"
+        }
 
         ${attention ? "animate-[welcomeAttention_0.75s_ease-out]" : ""}
+
+        sm:left-auto
+        sm:right-6
+        sm:translate-x-0
+        sm:w-[365px]
 
         dark:border-[#2a2a2a]
         dark:bg-[#1a1a1a]
@@ -161,7 +168,9 @@ function WelcomeCard() {
             <h3 className="mt-2 text-[21px] font-medium leading-[0.98] tracking-[-0.05em] text-[#111] dark:text-white">
               Wait...
               <br />
-              <span className="font-semibold">you found us.</span>
+              <span className="font-semibold">
+                you found us.
+              </span>
             </h3>
 
             <p className="mt-2.5 max-w-[175px] text-[11px] font-normal leading-[1.55] text-gray-500 dark:text-gray-400">
@@ -203,7 +212,7 @@ function WelcomeCard() {
                 duration-300
                 hover:-translate-y-0.5
                 hover:bg-[#ffd814]
-                hover:text-black
+                hover:!text-black
                 hover:shadow-[0_8px_25px_rgba(255,216,20,0.3)]
               "
             >

@@ -91,7 +91,7 @@ function Navbar() {
     wishlistItems.length;
 
   // =========================================================
-  // SEARCH
+  // SEARCH BY PRODUCT NAME
   // =========================================================
 
   function handleSearch(event) {
@@ -105,9 +105,7 @@ function Navbar() {
     }
 
     navigate(
-      `/products?search=${encodeURIComponent(
-        query
-      )}`
+      `/products?search=${encodeURIComponent(query)}`
     );
   }
 
@@ -242,7 +240,7 @@ function Navbar() {
                     event.target.value
                   )
                 }
-                placeholder="Search for products, brands and more..."
+                placeholder="Search by product name..."
                 className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
               />
             </form>
@@ -429,7 +427,7 @@ function Navbar() {
                     event.target.value
                   )
                 }
-                placeholder="Search products, brands and more..."
+                placeholder="Search by product name..."
                 className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
               />
 

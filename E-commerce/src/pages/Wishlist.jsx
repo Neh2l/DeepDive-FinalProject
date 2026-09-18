@@ -31,9 +31,9 @@ function Wishlist() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f7f7f7] text-gray-900 dark:bg-[#111111] dark:text-white">
+    <main className="min-h-screen bg-[#f5f5f5] text-gray-900 dark:bg-[#101010] dark:text-white">
       {/* ================= HEADER ================= */}
-      <section className="border-b border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#111111]">
+      <section className="border-b border-gray-200 bg-white dark:border-[#292929] dark:bg-[#111111]">
         <div className="mx-auto max-w-[1440px] px-4 py-7 sm:px-6 lg:px-8">
           <Link
             to="/products"
@@ -43,6 +43,7 @@ function Wishlist() {
               size={15}
               className="transition-transform duration-200 group-hover:-translate-x-1"
             />
+
             Continue Shopping
           </Link>
 
@@ -118,6 +119,7 @@ function Wishlist() {
                 className="group flex w-fit items-center gap-2 rounded-lg px-3 py-2 text-xs font-bold text-gray-600 transition-colors duration-200 hover:bg-white hover:text-gray-950 dark:text-gray-300 dark:hover:bg-[#1a1a1a] dark:hover:text-white"
               >
                 Discover more
+
                 <FiArrowRight
                   size={14}
                   className="transition-transform duration-200 group-hover:translate-x-1"
@@ -300,43 +302,100 @@ function WishlistCard({
 
 function EmptyWishlist() {
   return (
-    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-      <div className="relative flex min-h-[560px] flex-col items-center justify-center px-6 py-20 text-center">
-        {/* BACKGROUND DECORATION */}
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-50 blur-3xl dark:bg-red-950/20" />
+    <div className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)] dark:border-[#2a2a2a] dark:bg-[#181818] dark:shadow-none">
+      <div className="relative min-h-[570px] overflow-hidden">
+        
+        {/* TOP ACCENT */}
+        <div className="absolute left-0 right-0 top-0 h-1 bg-[#ffd814]" />
 
-        {/* ICON */}
-        <div className="relative flex h-24 w-24 items-center justify-center rounded-[28px] border border-red-100 bg-red-50 text-red-500 shadow-sm dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-400">
-          <FiHeart
-            size={38}
-            className="fill-red-100"
-          />
+        {/* SUBTLE DECORATION */}
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#fff8d6]" />
+        <div className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-[#fafafa]" />
+
+        {/* CONTENT */}
+        <div className="relative flex min-h-[570px] flex-col items-center justify-center px-6 py-20 text-center">
+          
+          {/* ICON */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 rounded-full bg-[#ffd814]/30 blur-2xl" />
+
+            <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-[#fff8d6]">
+              <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full bg-white shadow-sm dark:bg-[#222]">
+                <FiHeart
+                  size={34}
+                  strokeWidth={1.8}
+                  className="text-[#e5aa00]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* EYEBROW */}
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+            Saved for later
+          </span>
+
+          {/* TITLE */}
+          <h2 className="mt-3 text-3xl font-black tracking-[-0.03em] text-gray-950 dark:text-white sm:text-4xl">
+            Your wishlist is waiting
+          </h2>
+
+          {/* DESCRIPTION */}
+          <p className="mt-4 max-w-lg text-sm leading-7 text-gray-500 dark:text-gray-400">
+            Save the products you love and keep them
+            <br className="hidden sm:block" />
+            ready for your next shopping trip.
+          </p>
+
+          {/* CTA */}
+          <Link
+            to="/products"
+            className="group mt-8 inline-flex items-center gap-3 rounded-xl bg-[#ffd814] px-8 py-4 text-xs font-black text-gray-950 shadow-[0_8px_24px_rgba(255,216,20,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f7ca00] hover:shadow-[0_12px_30px_rgba(255,216,20,0.3)] active:translate-y-0"
+          >
+            <FiShoppingBag
+              size={16}
+              className="transition-transform duration-300 group-hover:scale-110"
+            />
+
+            Start Shopping
+
+            <FiArrowRight
+              size={16}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
+
+          {/* BOTTOM INFO */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-gray-100 pt-6 text-[10px] font-bold text-gray-400 dark:border-[#292929]">
+            <span className="flex items-center gap-2">
+              <FiHeart
+                size={13}
+                className="text-red-400"
+              />
+              Save favorites
+            </span>
+
+            <span className="hidden h-1 w-1 rounded-full bg-gray-300 sm:block" />
+
+            <span className="flex items-center gap-2">
+              <FiTruck
+                size={13}
+                className="text-gray-500"
+              />
+              Fast delivery
+            </span>
+
+            <span className="hidden h-1 w-1 rounded-full bg-gray-300 sm:block" />
+
+            <span className="flex items-center gap-2">
+              <FiShield
+                size={13}
+                className="text-gray-500"
+              />
+              Secure shopping
+            </span>
+          </div>
         </div>
-
-        <span className="relative mt-8 text-[10px] font-black uppercase tracking-[0.22em] text-gray-400">
-          Your wishlist is empty
-        </span>
-
-        <h2 className="relative mt-3 text-3xl font-black tracking-[-0.03em] text-gray-950 dark:text-white sm:text-4xl">
-          Nothing saved yet.
-        </h2>
-
-        <p className="relative mt-4 max-w-lg text-sm leading-7 text-gray-500 dark:text-gray-400">
-          When you find something you love, tap the heart icon
-          and we'll keep it here for you.
-        </p>
-
-        <Link
-          to="/products"
-          className="group relative mt-8 inline-flex items-center gap-3 rounded-xl bg-gray-950 px-7 py-4 text-xs font-black text-white transition-all duration-300 hover:-translate-y-1 hover:bg-black hover:shadow-xl"
-        >
-          Explore Products
-
-          <FiArrowRight
-            size={16}
-            className="transition-transform duration-200 group-hover:translate-x-1"
-          />
-        </Link>
       </div>
     </div>
   );
@@ -352,8 +411,8 @@ function ServiceFeature({
   text,
 }) {
   return (
-    <div className="flex items-center gap-4 border-b border-gray-100 px-6 py-6 last:border-b-0 dark:border-[#2a2a2a] sm:border-b-0 sm:border-r sm:last:border-r-0">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff8d6] text-gray-950 dark:bg-[#2a2500] dark:text-white">
+    <div className="group flex items-center gap-4 border-b border-gray-100 px-6 py-7 transition-colors duration-200 last:border-b-0 hover:bg-[#fafafa] dark:border-[#2a2a2a] dark:hover:bg-[#202020] sm:border-b-0 sm:border-r sm:last:border-r-0">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#fff8d6] text-gray-950 transition-transform duration-200 group-hover:scale-105 dark:bg-[#2a2500] dark:text-white">
         {icon}
       </div>
 

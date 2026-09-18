@@ -365,17 +365,17 @@ function OrderCard({ order }) {
 
         {/* View Order */}
 
-        <Link
-          to={`/orders/${order._id}`}
-          className="group mt-6 flex items-center justify-center gap-2 rounded-2xl border border-gray-200 py-3.5 text-sm font-black text-gray-800 transition hover:border-gray-900 hover:bg-gray-900 hover:text-white dark:border-[#2a2a2a] dark:text-gray-200 dark:hover:border-white dark:hover:bg-white dark:hover:text-black"
-        >
-          View Order
+      <Link
+  to={`/orders/${order._id}`}
+  className="group mt-6 flex items-center justify-center gap-2 rounded-2xl border border-gray-200 py-3.5 text-sm font-black text-gray-800 transition hover:border-gray-900 hover:bg-gray-900 hover:!text-white dark:border-[#2a2a2a] dark:text-gray-200 dark:hover:border-white dark:hover:bg-white dark:hover:!text-black"
+>
+  View Order
 
-          <FiChevronRight
-            size={17}
-            className="transition-transform group-hover:translate-x-1"
-          />
-        </Link>
+  <FiChevronRight
+    size={17}
+    className="text-gray-800 transition-transform group-hover:translate-x-1 group-hover:!text-white dark:text-gray-200 dark:group-hover:!text-black"
+  />
+</Link>
       </div>
     </article>
   );
