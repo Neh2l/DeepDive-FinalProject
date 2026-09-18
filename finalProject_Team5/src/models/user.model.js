@@ -35,10 +35,24 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+
     verificationCode: {
       type: String
     },
+
     verificationCodeExpires: {
+      type: Date
+    },
+
+    // ==========================================
+    // FORGOT PASSWORD
+    // ==========================================
+
+    resetPasswordToken: {
+      type: String
+    },
+
+    resetPasswordExpires: {
       type: Date
     }
   },
