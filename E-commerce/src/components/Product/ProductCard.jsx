@@ -14,6 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 import { addToCart } from "../../redux/cartSlice";
 import { toggleWishlist } from "../../redux/wishlistSlice";
@@ -68,7 +69,10 @@ function ProductCard({ product, index = 0 }) {
     ? Math.round(product.discountPercentage)
     : 0;
 
-  const oldPrice = discount > 0 ? product.price / (1 - discount / 100) : null;
+  const oldPrice =
+    discount > 0
+      ? product.price / (1 - discount / 100)
+      : null;
 
   // ========================================
   // LOGIN MODAL
@@ -98,6 +102,10 @@ function ProductCard({ product, index = 0 }) {
         quantity: 1,
       }),
     );
+
+    toast.success("Added to cart", {
+      description: `${product.title} has been added to your cart.`,
+    });
   };
 
   // ========================================
@@ -114,6 +122,16 @@ function ProductCard({ product, index = 0 }) {
     }
 
     dispatch(toggleWishlist(normalizedProduct));
+
+    if (isWishlisted) {
+      toast("Removed from wishlist", {
+        description: `${product.title} has been removed from your wishlist.`,
+      });
+    } else {
+      toast.success("Added to wishlist", {
+        description: `${product.title} has been added to your wishlist.`,
+      });
+    }
   };
 
   return (
@@ -222,29 +240,32 @@ function ProductCard({ product, index = 0 }) {
             type="button"
             onClick={handleWishlist}
             aria-label="Add to wishlist"
-            className={`
-              absolute
-              right-3
-              top-3
-              z-30
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-full
-              border
-              transition-all
-              duration-300
-              hover:scale-110
+            className={` 
+              absolute 
+              right-3 
+              top-3 
+              z-30 
+              flex 
+              h-9 
+              w-9 
+              items-center 
+              justify-center 
+              rounded-full 
+              border 
+              transition-all 
+              duration-300 
+              hover:scale-110 
               ${
                 isWishlisted
                   ? "border-red-100 bg-red-50 text-red-500"
                   : "border-gray-200 bg-white/90 text-gray-600 hover:border-gray-300 hover:text-red-500 dark:border-[#3a3a3a] dark:bg-[#252525]/90 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-red-400"
-              }
+              } 
             `}
           >
-            <FiHeart size={16} className={isWishlisted ? "fill-current" : ""} />
+            <FiHeart
+              size={16}
+              className={isWishlisted ? "fill-current" : ""}
+            />
           </button>
 
           {/* Product Image */}
@@ -393,12 +414,19 @@ function ProductCard({ product, index = 0 }) {
                 text-gray-900
               "
             >
-              {product.rating ? Number(product.rating).toFixed(1) : "4.8"}
+              {product.rating
+                ? Number(product.rating).toFixed(1)
+                : "4.8"}
 
-              <FiStar size={10} className="fill-[#f5b800] text-[#f5b800]" />
+              <FiStar
+                size={10}
+                className="fill-[#f5b800] text-[#f5b800]"
+              />
             </div>
 
-            <span className="text-[10px] text-gray-400">Excellent</span>
+            <span className="text-[10px] text-gray-400">
+              Excellent
+            </span>
           </div>
 
           {/* Price */}
@@ -445,7 +473,10 @@ function ProductCard({ product, index = 0 }) {
               pt-3
             "
           >
-            <FiTruck size={14} className="shrink-0 text-gray-500" />
+            <FiTruck
+              size={14}
+              className="shrink-0 text-gray-500"
+            />
 
             <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400">
               Free delivery on eligible orders
@@ -510,7 +541,9 @@ function ProductCard({ product, index = 0 }) {
               "
             />
 
-            <span className="relative z-10">Add to Cart</span>
+            <span className="relative z-10">
+              Add to Cart
+            </span>
 
             <FiArrowUpRight
               size={13}
