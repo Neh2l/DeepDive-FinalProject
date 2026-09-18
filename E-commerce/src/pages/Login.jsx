@@ -89,7 +89,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("🔥 LOGIN BUTTON CLICKED");
+    console.log(" LOGIN BUTTON CLICKED");
 
     setSuccess(false);
 
@@ -152,11 +152,9 @@ function Login() {
           </Link>
         </div>
 
-        {/* CARD */}
 
         <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] px-6 py-8 sm:px-9 sm:py-9 dark:bg-[#1a1a1a] dark:border-[#2a2a2a]">
 
-          {/* HEADER */}
 
           <div className="mb-7">
             <h1 className="text-2xl font-black text-gray-900 dark:text-white">
@@ -168,7 +166,6 @@ function Login() {
             </p>
           </div>
 
-          {/* ERROR */}
 
           {error && (
             <div className="mb-5 flex items-start gap-3 rounded-lg bg-red-50 border border-red-100 p-3.5 text-red-600 text-sm font-medium dark:bg-red-950/30 dark:border-red-900/40 dark:text-red-400">
@@ -178,7 +175,6 @@ function Login() {
             </div>
           )}
 
-          {/* SUCCESS */}
 
           {success && (
             <div className="mb-5 flex items-center gap-3 rounded-lg bg-green-50 border border-green-100 p-3.5 text-green-600 text-sm font-medium dark:bg-green-950/30 dark:border-green-900/40 dark:text-green-400">
@@ -190,14 +186,12 @@ function Login() {
             </div>
           )}
 
-          {/* FORM */}
 
           <form
             onSubmit={handleSubmit}
             className="space-y-5"
           >
 
-            {/* EMAIL */}
 
             <div>
               <label className="block text-sm font-bold text-gray-800 mb-2 dark:text-gray-200">
@@ -228,7 +222,6 @@ function Login() {
               )}
             </div>
 
-            {/* PASSWORD */}
 
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -237,17 +230,17 @@ function Login() {
                   Password
                 </label>
 
-                <button
-                  type="button"
+
+                <Link
+                  to="/forgot-password"
                   className="text-xs font-bold text-gray-600 hover:text-gray-950 hover:underline transition dark:text-gray-400 dark:hover:text-white"
                 >
                   Forgot password?
-                </button>
+                </Link>
 
               </div>
 
               <div className="relative">
-
                 <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
 
                 <input
@@ -276,7 +269,6 @@ function Login() {
                     <FiEye />
                   )}
                 </button>
-
               </div>
 
               {errors.password && (
@@ -286,10 +278,8 @@ function Login() {
               )}
             </div>
 
-            {/* REMEMBER ME */}
 
             <div className="flex items-center">
-
               <label className="flex items-center gap-2.5 cursor-pointer">
 
                 <input
@@ -306,10 +296,8 @@ function Login() {
                 </span>
 
               </label>
-
             </div>
 
-            {/* LOGIN BUTTON */}
 
             <button
               type="submit"
@@ -333,7 +321,6 @@ function Login() {
 
           </form>
 
-          {/* REGISTER */}
 
           <div className="mt-7 pt-6 border-t border-gray-100 text-center dark:border-[#2a2a2a]">
 
@@ -346,26 +333,21 @@ function Login() {
               >
                 Create your account
               </Link>
-
             </p>
 
           </div>
 
-          {/* SECURITY */}
 
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
-
             <FiShield />
 
             <span>
               Secure login powered by Shoply
             </span>
-
           </div>
 
         </div>
 
-        {/* FOOTER */}
 
         <p className="text-center text-xs text-gray-400 mt-5">
           © 2026 Shoply. All rights reserved.

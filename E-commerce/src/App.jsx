@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -9,6 +8,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Wishlist from "./pages/Wishlist";
@@ -30,12 +31,12 @@ function App() {
 
   return (
     <>
-      {/* Premium Splash Screen */}
+
       {showSplash && (
         <SplashScreen onFinish={() => setShowSplash(false)} />
       )}
 
-      {/* Global Toast Notifications */}
+
       <Toaster
         position="top-right"
         richColors
@@ -45,10 +46,10 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          {/* Main Layout - wraps ALL routes */}
+
           <Route element={<MainLayout />}>
 
-            {/* Public Routes */}
+
             <Route path="/" element={<Home />} />
 
             <Route path="/login" element={<Login />} />
@@ -58,6 +59,16 @@ function App() {
             <Route
               path="/verify-email"
               element={<VerifyEmail />}
+            />
+
+            <Route
+              path="/forgot-password"
+              element={<ForgotPassword />}
+            />
+
+            <Route
+              path="/reset-password/:token"
+              element={<ResetPassword />}
             />
 
             <Route path="/cart" element={<Cart />} />
@@ -74,30 +85,32 @@ function App() {
             />
 
             <Route
-              path="about"
+              path="/about"
               element={<About />}
             />
 
             <Route
-              path="checkout"
+              path="/checkout"
               element={<Checkout />}
             />
 
             <Route
-              path="orders"
+              path="/orders"
               element={<Orders />}
-            />
-             <Route
-              path="contact"
-              element={<Contact/>}
-            />
-             <Route
-              path="payment-result"
-              element={<PaymentResult/>}
             />
 
             <Route
-              path="orders/:id"
+              path="/contact"
+              element={<Contact />}
+            />
+
+            <Route
+              path="/payment-result"
+              element={<PaymentResult />}
+            />
+
+            <Route
+              path="/orders/:id"
               element={<OrderDetails />}
             />
 
@@ -108,7 +121,7 @@ function App() {
 
           </Route>
 
-          {/* Protected Admin Route */}
+
           <Route element={<ProtectedAdminRoute />}>
             <Route
               path="/dashboard"
