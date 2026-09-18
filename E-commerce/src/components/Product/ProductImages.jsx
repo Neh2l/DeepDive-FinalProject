@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 import {
@@ -8,9 +9,17 @@ import {
 
 function ProductImages({ product }) {
   const images =
-    product.images?.length > 0
+    product?.images?.length > 0
       ? product.images
-      : [product.thumbnail || product.image];
+          .map((image) => {
+            if (typeof image === "string") {
+              return image;
+            }
+
+            return image?.url || "";
+          })
+          .filter(Boolean)
+      : [product?.thumbnail || product?.image].filter(Boolean);
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -30,13 +39,9 @@ function ProductImages({ product }) {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[88px_minmax(0,1fr)]">
-
-      {/* =====================================================
-          THUMBNAILS
-      ====================================================== */}
+      {/* THUMBNAILS */}
 
       <div className="order-2 flex gap-3 overflow-x-auto pb-1 lg:order-1 lg:flex-col lg:overflow-visible">
-
         {images.map((image, index) => (
           <button
             key={`${image}-${index}`}
@@ -67,7 +72,7 @@ function ProductImages({ product }) {
           >
             <img
               src={image}
-              alt={`${product.title} ${index + 1}`}
+              alt={`${product?.title || "Product"} ${index + 1}`}
               className="
                 h-full
                 w-full
@@ -77,8 +82,6 @@ function ProductImages({ product }) {
                 group-hover/thumb:scale-105
               "
             />
-
-            {/* Active indicator */}
 
             {activeIndex === index && (
               <span
@@ -98,9 +101,7 @@ function ProductImages({ product }) {
         ))}
       </div>
 
-      {/* =====================================================
-          MAIN IMAGE
-      ====================================================== */}
+      {/* MAIN IMAGE */}
 
       <div
         className="
@@ -121,8 +122,7 @@ function ProductImages({ product }) {
           dark:bg-[#1a1a1a]
         "
       >
-
-        {/* Soft premium background */}
+        {/* Background */}
 
         <div
           className="
@@ -134,7 +134,7 @@ function ProductImages({ product }) {
           "
         />
 
-        {/* Yellow glow */}
+        {/* Yellow Glow */}
 
         <div
           className="
@@ -150,28 +150,32 @@ function ProductImages({ product }) {
           "
         />
 
-        {/* Product image */}
+        {/* Product Image */}
 
-        <img
-          src={activeImage}
-          alt={product.title}
-          className="
-            relative
-            z-10
-            max-h-[460px]
-            w-full
-            object-contain
-            p-8
-            transition-transform
-            duration-700
-            ease-out
-            group-hover/main:scale-[1.035]
-          "
-        />
+        {activeImage ? (
+          <img
+            src={activeImage}
+            alt={product?.title || "Product"}
+            className="
+              relative
+              z-10
+              max-h-[460px]
+              w-full
+              object-contain
+              p-8
+              transition-transform
+              duration-700
+              ease-out
+              group-hover/main:scale-[1.035]
+            "
+          />
+        ) : (
+          <div className="relative z-10 text-sm text-gray-400">
+            No image available
+          </div>
+        )}
 
-        {/* =================================================
-            IMAGE COUNTER
-        ================================================== */}
+        {/* IMAGE COUNTER */}
 
         {images.length > 1 && (
           <div
@@ -200,9 +204,7 @@ function ProductImages({ product }) {
           </div>
         )}
 
-        {/* =================================================
-            FULLSCREEN BUTTON
-        ================================================== */}
+        {/* FULLSCREEN */}
 
         <button
           type="button"
@@ -241,9 +243,7 @@ function ProductImages({ product }) {
           <FiMaximize2 size={15} />
         </button>
 
-        {/* =================================================
-            PREVIOUS
-        ================================================== */}
+        {/* PREVIOUS / NEXT */}
 
         {images.length > 1 && (
           <>
@@ -285,10 +285,6 @@ function ProductImages({ product }) {
             >
               <FiChevronLeft size={18} />
             </button>
-
-            {/* =================================================
-                NEXT
-            ================================================== */}
 
             <button
               type="button"

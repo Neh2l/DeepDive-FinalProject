@@ -1,13 +1,41 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
+import {
+  FiFacebook,
+  FiInstagram,
+  FiTwitter,
+  FiYoutube,
+  FiPhone,
+  FiMail,
+  FiMapPin,
+  FiSave,
+} from "react-icons/fi";
+
+import {
+  getFooterSettings,
+  updateFooterSettings,
+} from "../Apis/footerSettingsApi";
 import {
   getProducts,
   createProduct,
   updateProductApi,
   deleteProductApi,
 } from "../Apis/productsApi";
+import {
+  getAllOrders,
+  updateOrderStatus,
+} from "../Apis/ordersApi";
+import {
+  getCategories,
+  createCategory,
+  updateCategoryApi,
+  deleteCategoryApi,
+} from "../Apis/categoriesApi";
+
+import { getAllUsers } from "../Apis/usersApi";
 
 import { logoutUser } from "../redux/authSlice";
 
@@ -30,6 +58,7 @@ import {
   FiShoppingBag,
   FiShoppingCart,
   FiStar,
+  FiTag,
   FiTrash2,
   FiTrendingUp,
   FiUsers,
@@ -37,13 +66,27 @@ import {
 } from "react-icons/fi";
 
 function AdminDashboard() {
+  const [orders, setOrders] = useState([]);
+const [ordersLoading, setOrdersLoading] = useState(false);
+
+const [ordersPage, setOrdersPage] = useState(1);
+const [ordersTotal, setOrdersTotal] = useState(0);
+
+const [orderStatusFilter, setOrderStatusFilter] = useState("");
+const [orderSearch, setOrderSearch] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+const [footerSettings, setFooterSettings] = useState({
+  phone: "",
+  email: "",
+  location: "",
+  facebook: "",
+  instagram: "",
+  twitter: "",
+  youtube: "",
+});
 
-  const users = useSelector(
-    (state) => state.auth.users || []
-  );
-
+const [footerSaving, setFooterSaving] = useState(false);
   const currentUser = useSelector(
     (state) => state.auth.user
   );
@@ -51,6 +94,16 @@ function AdminDashboard() {
   const cartItems = useSelector(
     (state) => state.cart.items || []
   );
+
+  /*
+  ========================================
+  USERS FROM BACKEND
+  ========================================
+  */
+
+  const [users, setUsers] = useState([]);
+  const [usersLoading, setUsersLoading] =
+    useState(true);
 
   /*
   ========================================
@@ -63,6 +116,74 @@ function AdminDashboard() {
     useState(true);
   const [productError, setProductError] =
     useState("");
+
+  /*
+  ========================================
+  CATEGORIES FROM BACKEND
+  ========================================
+  */
+
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] =
+    useState(true);
+
+  /*
+  ========================================
+  CATEGORY MODAL
+  ========================================
+  */
+
+  const [showCategoryModal, setShowCategoryModal] =
+    useState(false);
+
+  const [editingCategory, setEditingCategory] =
+    useState(null);
+
+  const [categoryName, setCategoryName] =
+    useState("");
+
+  const [categorySearch, setCategorySearch] =
+    useState("");
+
+  /*
+  ========================================
+  LOAD USERS
+  ========================================
+  */
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        setUsersLoading(true);
+
+        const response = await getAllUsers();
+
+        setUsers(response.users || []);
+      } catch (error) {
+        console.error(
+          "Failed to load customers:",
+          error
+        );
+
+        toast.error(
+          error.response?.data?.message ||
+            "Failed to load customers"
+        );
+
+        setUsers([]);
+      } finally {
+        setUsersLoading(false);
+      }
+    };
+
+    loadUsers();
+  }, []);
+
+  /*
+  ========================================
+  LOAD PRODUCTS
+  ========================================
+  */
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -91,8 +212,117 @@ function AdminDashboard() {
     loadProducts();
   }, []);
 
+  /*
+  ========================================
+  LOAD CATEGORIES
+  ========================================
+  */
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+
+        const response = await getCategories();
+
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load categories:",
+          error
+        );
+
+        setCategories([]);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
   const [activePage, setActivePage] =
     useState("Dashboard");
+    useEffect(() => {
+  if (activePage !== "Orders") return;
+
+  const fetchOrders = async () => {
+    try {
+      setOrdersLoading(true);
+
+      const response = await getAllOrders({
+        page: ordersPage,
+        limit: 10,
+        status: orderStatusFilter || undefined,
+        search: orderSearch || undefined,
+      });
+
+      setOrders(response.orders || []);
+      setOrdersTotal(response.total || 0);
+    } catch (error) {
+      console.error("Orders error:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to load orders"
+      );
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
+  fetchOrders();
+}, [
+  activePage,
+  ordersPage,
+  orderStatusFilter,
+  orderSearch,
+]);
+const handleOrderStatusChange = async (orderId, status) => {
+  try {
+    await updateOrderStatus(orderId, status);
+
+    toast.success("Order status updated successfully");
+
+    const response = await getAllOrders({
+      page: ordersPage,
+      limit: 10,
+      status: orderStatusFilter || undefined,
+      search: orderSearch || undefined,
+    });
+
+    setOrders(response.orders || []);
+    setOrdersTotal(response.total || 0);
+  } catch (error) {
+    console.error("Update order status error:", error);
+
+    toast.error(
+      error?.response?.data?.message ||
+        "Failed to update order status"
+    );
+  }
+};
+    useEffect(() => {
+  if (activePage !== "Settings") return;
+
+  const fetchFooterSettings = async () => {
+    try {
+      const response = await getFooterSettings();
+
+      setFooterSettings(response.data);
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Failed to load footer settings");
+    }
+  };
+
+  fetchFooterSettings();
+}, [activePage]);
 
   const [sidebarOpen, setSidebarOpen] =
     useState(false);
@@ -111,7 +341,7 @@ function AdminDashboard() {
     category: "",
     price: "",
     stock: "",
-    image: "",
+    image: null,
     description: "",
   });
 
@@ -126,7 +356,9 @@ function AdminDashboard() {
 
   const totalProducts = products.length;
 
-  const totalCustomers = users.length;
+  const totalCustomers = users.filter(
+    (user) => user.role === "Buyer"
+  ).length;
 
   const lowStockProducts = products.filter(
     (product) =>
@@ -144,6 +376,35 @@ function AdminDashboard() {
 
   const averageRating = "4.5";
 
+  /*
+  ========================================
+  CATEGORY NAME HELPER
+  ========================================
+  */
+
+  const getCategoryName = (category) => {
+    const categoryId =
+      typeof category === "object"
+        ? category?._id
+        : category;
+
+    return (
+      categories.find(
+        (item) => item._id === categoryId
+      )?.name ||
+      (typeof category === "object"
+        ? category?.name
+        : category) ||
+      "Uncategorized"
+    );
+  };
+
+  /*
+  ========================================
+  FILTERED PRODUCTS
+  ========================================
+  */
+
   const filteredProducts = useMemo(() => {
     const search =
       searchTerm.trim().toLowerCase();
@@ -153,11 +414,14 @@ function AdminDashboard() {
     }
 
     return products.filter((product) => {
+      const categoryName =
+        getCategoryName(product.category);
+
       return (
         product.title
           ?.toLowerCase()
           .includes(search) ||
-        product.category
+        categoryName
           ?.toLowerCase()
           .includes(search) ||
         product.description
@@ -165,7 +429,28 @@ function AdminDashboard() {
           .includes(search)
       );
     });
-  }, [products, searchTerm]);
+  }, [products, searchTerm, categories]);
+
+  /*
+  ========================================
+  FILTERED CATEGORIES
+  ========================================
+  */
+
+  const filteredCategories = useMemo(() => {
+    const search =
+      categorySearch.trim().toLowerCase();
+
+    if (!search) {
+      return categories;
+    }
+
+    return categories.filter((category) =>
+      category.name
+        ?.toLowerCase()
+        .includes(search)
+    );
+  }, [categories, categorySearch]);
 
   /*
   ========================================
@@ -202,7 +487,7 @@ function AdminDashboard() {
       category: "",
       price: "",
       stock: "",
-      image: "",
+      image: null,
       description: "",
     });
 
@@ -214,10 +499,13 @@ function AdminDashboard() {
 
     setProductForm({
       title: product.title || "",
-      category: product.category || "",
+      category:
+        typeof product.category === "object"
+          ? product.category?._id || ""
+          : product.category || "",
       price: product.price || "",
       stock: product.stock || "",
-      image: product.images?.[0] || "",
+      image: null,
       description:
         product.description || "",
     });
@@ -248,34 +536,143 @@ function AdminDashboard() {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
 
-    if (!productForm.title.trim()) {
+    const productTitle =
+      productForm.title.trim();
+
+    const productDescription =
+      productForm.description.trim();
+
+    const price = Number(productForm.price);
+
+    const stock = Number(productForm.stock);
+
+    /*
+    ========================================
+    PRODUCT VALIDATION
+    ========================================
+    */
+
+    if (!productTitle) {
+      toast.error("Please enter product name");
       return;
     }
 
-    if (!productForm.category.trim()) {
+    if (productTitle.length < 3) {
+      toast.error(
+        "Product name must be at least 3 characters"
+      );
       return;
     }
 
-    if (!productForm.price) {
+    if (productTitle.length > 100) {
+      toast.error(
+        "Product name must not exceed 100 characters"
+      );
       return;
     }
 
-    if (!productForm.stock) {
+    if (!productForm.category) {
+      toast.error("Please select a category");
       return;
     }
+
+    if (
+      productForm.price === "" ||
+      productForm.price === null
+    ) {
+      toast.error("Please enter product price");
+      return;
+    }
+
+    if (
+      !Number.isFinite(price) ||
+      price <= 0
+    ) {
+      toast.error(
+        "Product price must be greater than 0"
+      );
+      return;
+    }
+
+    if (
+      productForm.stock === "" ||
+      productForm.stock === null
+    ) {
+      toast.error("Please enter product stock");
+      return;
+    }
+
+    if (
+      !Number.isInteger(stock) ||
+      stock < 0
+    ) {
+      toast.error(
+        "Stock must be a whole number greater than or equal to 0"
+      );
+      return;
+    }
+
+    if (!productDescription) {
+      toast.error(
+        "Please enter product description"
+      );
+      return;
+    }
+
+    if (productDescription.length < 10) {
+      toast.error(
+        "Product description must be at least 10 characters"
+      );
+      return;
+    }
+
+    if (productDescription.length > 1000) {
+      toast.error(
+        "Product description must not exceed 1000 characters"
+      );
+      return;
+    }
+
+    const toastId = toast.loading(
+      editingProduct
+        ? "Updating product, please wait..."
+        : "Adding product, please wait..."
+    );
 
     try {
-      const productData = {
-        title: productForm.title.trim(),
-        category: productForm.category.trim(),
-        price: Number(productForm.price),
-        stock: Number(productForm.stock),
-        description:
-          productForm.description.trim(),
-        images: productForm.image.trim()
-          ? [productForm.image.trim()]
-          : [],
-      };
+      const formData = new FormData();
+
+      formData.append(
+        "title",
+        productTitle
+      );
+
+      formData.append(
+        "category",
+        productForm.category
+      );
+
+      formData.append(
+        "price",
+        price
+      );
+
+      formData.append(
+        "stock",
+        stock
+      );
+
+      formData.append(
+        "description",
+        productDescription
+      );
+
+      if (productForm.image) {
+        formData.append(
+          "images",
+          productForm.image
+        );
+      }
 
       /*
       ========================================
@@ -287,7 +684,7 @@ function AdminDashboard() {
         const response =
           await updateProductApi(
             editingProduct._id,
-            productData
+            formData
           );
 
         const updatedProduct =
@@ -301,6 +698,13 @@ function AdminDashboard() {
               : product
           )
         );
+
+        toast.success(
+          "Product updated successfully!",
+          {
+            id: toastId,
+          }
+        );
       }
 
       /*
@@ -311,7 +715,7 @@ function AdminDashboard() {
 
       else {
         const response =
-          await createProduct(productData);
+          await createProduct(formData);
 
         const newProduct = response.data;
 
@@ -319,6 +723,13 @@ function AdminDashboard() {
           newProduct,
           ...prevProducts,
         ]);
+
+        toast.success(
+          "Product added successfully!",
+          {
+            id: toastId,
+          }
+        );
       }
 
       closeProductModal();
@@ -328,9 +739,12 @@ function AdminDashboard() {
         error
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
-          "Something went wrong"
+          "Something went wrong while saving the product",
+        {
+          id: toastId,
+        }
       );
     }
   };
@@ -342,33 +756,323 @@ function AdminDashboard() {
   */
 
   const handleDeleteProduct = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
+    toast.warning(
+      "Are you sure you want to delete this product?",
+      {
+        duration: 8000,
 
-    if (!confirmed) {
+        action: {
+          label: "Delete",
+
+          onClick: async () => {
+            const toastId =
+              toast.loading(
+                "Deleting product, please wait..."
+              );
+
+            try {
+              await deleteProductApi(id);
+
+              setProducts((prevProducts) =>
+                prevProducts.filter(
+                  (product) =>
+                    product._id !== id
+                )
+              );
+
+              toast.success(
+                "Product deleted successfully!",
+                {
+                  id: toastId,
+                }
+              );
+            } catch (error) {
+              console.error(
+                "Delete product failed:",
+                error
+              );
+
+              toast.error(
+                error.response?.data?.message ||
+                  "Failed to delete product",
+                {
+                  id: toastId,
+                }
+              );
+            }
+          },
+        },
+
+        cancel: {
+          label: "Cancel",
+        },
+      }
+    );
+  };
+
+  /*
+  ========================================
+  CATEGORY MODAL
+  ========================================
+  */
+
+  const openAddCategory = () => {
+    setEditingCategory(null);
+    setCategoryName("");
+    setShowCategoryModal(true);
+  };
+
+  const openEditCategory = (category) => {
+    setEditingCategory(category);
+    setCategoryName(category.name || "");
+    setShowCategoryModal(true);
+  };
+
+  const closeCategoryModal = () => {
+    setShowCategoryModal(false);
+    setEditingCategory(null);
+    setCategoryName("");
+  };
+
+  /*
+  ========================================
+  CATEGORY VALIDATION
+  ========================================
+  */
+
+  const validateCategoryName = (name) => {
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      return "Category name is required";
+    }
+
+    if (trimmedName.length < 3) {
+      return "Category name must be at least 3 characters";
+    }
+
+    if (trimmedName.length > 30) {
+      return "Category name must not exceed 30 characters";
+    }
+
+    const validNameRegex =
+      /^[A-Za-z\u0600-\u06FF]+(?:\s+[A-Za-z\u0600-\u06FF]+)*$/u;
+
+    if (!validNameRegex.test(trimmedName)) {
+      return "Category name can only contain letters and spaces";
+    }
+
+    if (/(.)\1{3,}/u.test(trimmedName)) {
+      return "Please enter a valid category name";
+    }
+
+    const lettersOnly =
+      trimmedName
+        .replace(/\s/g, "")
+        .toLowerCase();
+
+    if (
+      lettersOnly.length >= 3 &&
+      new Set(lettersOnly).size === 1
+    ) {
+      return "Please enter a meaningful category name";
+    }
+
+    return "";
+  };
+
+  /*
+  ========================================
+  ADD / EDIT CATEGORY
+  ========================================
+  */
+
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+
+    const trimmedName =
+      categoryName.trim();
+
+    const validationError =
+      validateCategoryName(trimmedName);
+
+    if (validationError) {
+      toast.error(validationError);
       return;
     }
 
-    try {
-      await deleteProductApi(id);
-
-      setProducts((prevProducts) =>
-        prevProducts.filter(
-          (product) => product._id !== id
-        )
+    const duplicateCategory =
+      categories.some(
+        (category) =>
+          category.name
+            ?.trim()
+            .toLowerCase() ===
+            trimmedName.toLowerCase() &&
+          category._id !==
+            editingCategory?._id
       );
+
+    if (duplicateCategory) {
+      toast.error(
+        "This category already exists"
+      );
+      return;
+    }
+
+    const toastId = toast.loading(
+      editingCategory
+        ? "Updating category, please wait..."
+        : "Adding category, please wait..."
+    );
+
+    try {
+      if (editingCategory) {
+        const response =
+          await updateCategoryApi(
+            editingCategory._id,
+            {
+              name: trimmedName,
+            }
+          );
+
+        const updatedCategory =
+          response.data;
+
+        setCategories((prevCategories) =>
+          prevCategories.map((category) =>
+            category._id ===
+            editingCategory._id
+              ? updatedCategory
+              : category
+          )
+        );
+
+        toast.success(
+          "Category updated successfully!",
+          {
+            id: toastId,
+          }
+        );
+      } else {
+        const response =
+          await createCategory({
+            name: trimmedName,
+          });
+
+        const newCategory =
+          response.data;
+
+        setCategories((prevCategories) => [
+          ...prevCategories,
+          newCategory,
+        ]);
+
+        setProductForm((prev) => ({
+          ...prev,
+          category: newCategory._id,
+        }));
+
+        toast.success(
+          "Category added successfully!",
+          {
+            id: toastId,
+          }
+        );
+      }
+
+      closeCategoryModal();
     } catch (error) {
       console.error(
-        "Delete product failed:",
+        "Category operation failed:",
         error
       );
 
-      alert(
+      console.error(
+        "Backend response:",
+        error.response?.data
+      );
+
+      toast.error(
         error.response?.data?.message ||
-          "Failed to delete product"
+          "Something went wrong while saving the category",
+        {
+          id: toastId,
+        }
       );
     }
+  };
+
+  /*
+  ========================================
+  DELETE CATEGORY
+  ========================================
+  */
+
+  const handleDeleteCategory = (id) => {
+    toast.warning(
+      "Are you sure you want to delete this category?",
+      {
+        description:
+          "Categories containing products cannot be deleted.",
+        duration: 8000,
+
+        action: {
+          label: "Delete",
+
+          onClick: async () => {
+            const toastId =
+              toast.loading(
+                "Deleting category, please wait..."
+              );
+
+            try {
+              await deleteCategoryApi(id);
+
+              setCategories(
+                (prevCategories) =>
+                  prevCategories.filter(
+                    (category) =>
+                      category._id !== id
+                  )
+              );
+
+              setProductForm((prev) =>
+                prev.category === id
+                  ? {
+                      ...prev,
+                      category: "",
+                    }
+                  : prev
+              );
+
+              toast.success(
+                "Category deleted successfully!",
+                {
+                  id: toastId,
+                }
+              );
+            } catch (error) {
+              console.error(
+                "Delete category failed:",
+                error
+              );
+
+              toast.error(
+                error.response?.data?.message ||
+                  "Failed to delete category",
+                {
+                  id: toastId,
+                }
+              );
+            }
+          },
+        },
+
+        cancel: {
+          label: "Cancel",
+        },
+      }
+    );
   };
 
   /*
@@ -388,36 +1092,32 @@ function AdminDashboard() {
   ========================================
   */
 
-  const menuItems = [
-    {
-      name: "Dashboard",
-      icon: FiHome,
-    },
-    {
-      name: "Products",
-      icon: FiBox,
-    },
-    // {
-    //   name: "Orders",
-    //   icon: FiShoppingCart,
-    // },
-    {
-      name: "Customers",
-      icon: FiUsers,
-    },
-    // {
-    //   name: "Analytics",
-    //   icon: FiBarChart2,
-    // },
-    // {
-    //   name: "Payments",
-    //   icon: FiDollarSign,
-    // },
-    {
-      name: "Settings",
-      icon: FiSettings,
-    },
-  ];
+ const menuItems = [
+  {
+    name: "Dashboard",
+    icon: FiHome,
+  },
+  {
+    name: "Products",
+    icon: FiBox,
+  },
+  {
+    name: "Categories",
+    icon: FiTag,
+  },
+  {
+    name: "Customers",
+    icon: FiUsers,
+  },
+  {
+    name: "Orders",
+    icon: FiShoppingBag,
+  },
+  {
+    name: "Settings",
+    icon: FiSettings,
+  },
+];
 
   const handleMenuClick = (name) => {
     setActivePage(name);
@@ -472,7 +1172,1021 @@ function AdminDashboard() {
       </div>
     );
   };
+  const renderOrders = () => {
+  const pendingCount = orders.filter(
+    (order) => order.status === "Pending"
+  ).length;
 
+  const shippedCount = orders.filter(
+    (order) => order.status === "Shipped"
+  ).length;
+
+  const deliveredCount = orders.filter(
+    (order) => order.status === "Delivered"
+  ).length;
+
+  const canceledCount = orders.filter(
+    (order) => order.status === "Canceled"
+  ).length;
+
+  const pageSales = orders.reduce(
+    (sum, order) => sum + Number(order.total || 0),
+    0
+  );
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-50 text-yellow-700 border-yellow-200";
+
+      case "Shipped":
+        return "bg-blue-50 text-blue-700 border-blue-200";
+
+      case "Delivered":
+        return "bg-green-50 text-green-700 border-green-200";
+
+      case "Canceled":
+        return "bg-red-50 text-red-700 border-red-200";
+
+      default:
+        return "bg-gray-50 text-gray-600 border-gray-200";
+    }
+  };
+
+  const getNextStatusOptions = (status) => {
+    if (status === "Pending") {
+      return ["Pending", "Shipped", "Canceled"];
+    }
+
+    if (status === "Shipped") {
+      return ["Shipped", "Delivered"];
+    }
+
+    return [status];
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* ================= HEADER ================= */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400 text-black shadow-sm">
+              <FiShoppingBag size={21} />
+            </div>
+
+            <div>
+              <h1 className="text-2xl font-black tracking-tight text-gray-900">
+                Orders
+              </h1>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Manage and track all customer orders.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const response = await getAllOrders({
+                page: ordersPage,
+                limit: 10,
+                status: orderStatusFilter || undefined,
+                search: orderSearch || undefined,
+              });
+
+              setOrders(response.orders || []);
+              setOrdersTotal(response.total || 0);
+
+              toast.success("Orders refreshed");
+            } catch (error) {
+              console.error("Refresh orders error:", error);
+
+              toast.error(
+                error?.response?.data?.message ||
+                  "Failed to refresh orders"
+              );
+            }
+          }}
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            border
+            border-gray-200
+            bg-white
+            px-5
+            py-3
+            text-sm
+            font-bold
+            text-gray-700
+            shadow-sm
+            transition-all
+            duration-200
+            hover:border-gray-300
+            hover:bg-gray-50
+            hover:shadow-md
+          "
+        >
+          <FiActivity size={17} />
+          Refresh
+        </button>
+      </div>
+
+      {/* ================= STATS ================= */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {/* Total Orders */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Total Orders
+              </p>
+
+              <h3 className="mt-2 text-2xl font-black text-gray-900">
+                {ordersTotal}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                All customer orders
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+              <FiShoppingCart size={19} />
+            </div>
+          </div>
+        </div>
+
+        {/* Pending */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Pending
+              </p>
+
+              <h3 className="mt-2 text-2xl font-black text-gray-900">
+                {pendingCount}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Waiting for processing
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600">
+              <FiClock size={19} />
+            </div>
+          </div>
+        </div>
+
+        {/* Shipped */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Shipped
+              </p>
+
+              <h3 className="mt-2 text-2xl font-black text-gray-900">
+                {shippedCount}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                On the way to customers
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <FiPackage size={19} />
+            </div>
+          </div>
+        </div>
+
+        {/* Delivered */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Delivered
+              </p>
+
+              <h3 className="mt-2 text-2xl font-black text-gray-900">
+                {deliveredCount}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Successfully completed
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
+              <FiCheckCircle size={19} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= FILTER BAR ================= */}
+      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          {/* Search */}
+          <div className="relative w-full xl:max-w-md">
+            <FiSearch
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+
+            <input
+              type="text"
+              value={orderSearch}
+              onChange={(e) => {
+                setOrderSearch(e.target.value);
+                setOrdersPage(1);
+              }}
+              placeholder="Search by customer or order ID..."
+              className="
+                h-12
+                w-full
+                rounded-xl
+                border
+                border-gray-200
+                bg-gray-50
+                pl-11
+                pr-4
+                text-sm
+                font-medium
+                text-gray-800
+                outline-none
+                transition-all
+                placeholder:text-gray-400
+                focus:border-yellow-400
+                focus:bg-white
+                focus:ring-4
+                focus:ring-yellow-100
+              "
+            />
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            {/* Status Filter */}
+            <div className="relative">
+              <select
+                value={orderStatusFilter}
+                onChange={(e) => {
+                  setOrderStatusFilter(e.target.value);
+                  setOrdersPage(1);
+                }}
+                className="
+                  h-12
+                  min-w-[170px]
+                  appearance-none
+                  rounded-xl
+                  border
+                  border-gray-200
+                  bg-gray-50
+                  px-4
+                  pr-10
+                  text-sm
+                  font-bold
+                  text-gray-700
+                  outline-none
+                  transition-all
+                  focus:border-yellow-400
+                  focus:bg-white
+                  focus:ring-4
+                  focus:ring-yellow-100
+                "
+              >
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Canceled">Canceled</option>
+              </select>
+
+              <FiChevronRight
+                size={16}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-gray-400"
+              />
+            </div>
+
+            {/* Clear */}
+            {(orderSearch || orderStatusFilter) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setOrderSearch("");
+                  setOrderStatusFilter("");
+                  setOrdersPage(1);
+                }}
+                className="
+                  inline-flex
+                  h-12
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-gray-200
+                  bg-white
+                  px-5
+                  text-sm
+                  font-bold
+                  text-gray-600
+                  transition-all
+                  hover:border-gray-300
+                  hover:bg-gray-50
+                "
+              >
+                <FiX size={16} />
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ================= ORDERS TABLE ================= */}
+      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+        {/* Table Header */}
+        <div className="border-b border-gray-100 px-6 py-5">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-black text-gray-900">
+                All Orders
+              </h2>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Review products, customers, payment and order status.
+              </p>
+            </div>
+
+            <div className="rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500">
+              {orders.length} orders on this page
+            </div>
+          </div>
+        </div>
+
+        {orders.length === 0 ? (
+          <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
+              <FiShoppingBag size={28} />
+            </div>
+
+            <h3 className="mt-5 text-lg font-black text-gray-800">
+              No orders found
+            </h3>
+
+            <p className="mt-2 max-w-sm text-sm leading-6 text-gray-400">
+              There are no orders matching your current search or filter.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1100px]">
+              <thead>
+                <tr className="border-b border-gray-100 bg-[#fafafa]">
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Order
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Customer
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Products
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Total
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Payment
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Status
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Date
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+                {orders.map((order) => (
+                  <tr
+                    key={order._id}
+                    className="group transition-colors duration-200 hover:bg-[#fffdf5]"
+                  >
+                    {/* ORDER */}
+                    <td className="px-6 py-5 align-top">
+                      <div>
+                        <p className="font-mono text-xs font-black text-gray-900">
+                          #{order._id?.slice(-8).toUpperCase()}
+                        </p>
+
+                        <p className="mt-1 text-[11px] text-gray-400">
+                          {order.items?.length || 0} product
+                          {(order.items?.length || 0) !== 1 ? "s" : ""}
+                        </p>
+                      </div>
+                    </td>
+
+                    {/* CUSTOMER */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="max-w-[180px]">
+                        <p className="truncate text-sm font-black text-gray-800">
+                          {order.user?.name || "Unknown Customer"}
+                        </p>
+
+                        <p className="mt-1 truncate text-xs text-gray-400">
+                          {order.user?.email || "No email"}
+                        </p>
+                      </div>
+                    </td>
+
+                    {/* PRODUCTS */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="space-y-3">
+                        {order.items?.map((item, index) => {
+                          const product = item.product;
+
+                          return (
+                            <div
+                              key={`${order._id}-${product?._id || index}`}
+                              className="flex min-w-[280px] items-center gap-3"
+                            >
+                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                                {product?.images?.[0] ? (
+                                  <img
+                                    src={product.images[0]}
+                                    alt={product.name || "Product"}
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="flex h-full w-full items-center justify-center text-gray-300">
+                                    <FiPackage size={18} />
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="min-w-0">
+                                <p className="max-w-[220px] truncate text-sm font-bold text-gray-800">
+                                  {product?.name || "Product unavailable"}
+                                </p>
+
+                                <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                                  <span>
+                                    Qty:{" "}
+                                    <span className="font-bold text-gray-600">
+                                      {item.quantity}
+                                    </span>
+                                  </span>
+
+                                  <span>•</span>
+
+                                  <span>
+                                    {Number(item.price || 0).toFixed(2)} EGP
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </td>
+
+                    {/* TOTAL */}
+                    <td className="px-6 py-5 align-top">
+                      <p className="whitespace-nowrap text-sm font-black text-gray-900">
+                        {Number(order.total || 0).toFixed(2)} EGP
+                      </p>
+                    </td>
+
+                    {/* PAYMENT */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                        <span className="text-sm">💵</span>
+
+                        <span className="text-xs font-bold text-gray-600">
+                          {order.paymentMethod === "COD"
+                            ? "Cash on Delivery"
+                            : order.paymentMethod || "N/A"}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* STATUS */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="flex flex-col items-start gap-2">
+                        <span
+                          className={`
+                            inline-flex
+                            items-center
+                            rounded-full
+                            border
+                            px-3
+                            py-1.5
+                            text-[11px]
+                            font-black
+                            ${getStatusStyle(order.status)}
+                          `}
+                        >
+                          {order.status}
+                        </span>
+
+                        {order.status !== "Delivered" &&
+                          order.status !== "Canceled" && (
+                            <select
+                              value={order.status}
+                              onChange={(e) =>
+                                handleOrderStatusChange(
+                                  order._id,
+                                  e.target.value
+                                )
+                              }
+                              className="
+                                rounded-lg
+                                border
+                                border-gray-200
+                                bg-white
+                                px-2.5
+                                py-2
+                                text-xs
+                                font-bold
+                                text-gray-600
+                                outline-none
+                                transition-all
+                                focus:border-yellow-400
+                                focus:ring-2
+                                focus:ring-yellow-100
+                              "
+                            >
+                              {getNextStatusOptions(order.status).map(
+                                (status) => (
+                                  <option
+                                    key={status}
+                                    value={status}
+                                  >
+                                    {status}
+                                  </option>
+                                )
+                              )}
+                            </select>
+                          )}
+                      </div>
+                    </td>
+
+                    {/* DATE */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="whitespace-nowrap">
+                        <p className="text-sm font-bold text-gray-700">
+                          {order.createdAt
+                            ? new Date(
+                                order.createdAt
+                              ).toLocaleDateString("en-GB")
+                            : "—"}
+                        </p>
+
+                        <p className="mt-1 text-xs text-gray-400">
+                          {order.createdAt
+                            ? new Date(
+                                order.createdAt
+                              ).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                            : ""}
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* ================= PAGINATION ================= */}
+        {ordersTotal > 10 && (
+          <div className="flex flex-col gap-4 border-t border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs font-medium text-gray-400">
+              Showing{" "}
+              <span className="font-bold text-gray-700">
+                {(ordersPage - 1) * 10 + 1}
+              </span>{" "}
+              -{" "}
+              <span className="font-bold text-gray-700">
+                {Math.min(ordersPage * 10, ordersTotal)}
+              </span>{" "}
+              of{" "}
+              <span className="font-bold text-gray-700">
+                {ordersTotal}
+              </span>{" "}
+              orders
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={ordersPage === 1}
+                onClick={() => setOrdersPage((prev) => prev - 1)}
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-lg
+                  border
+                  border-gray-200
+                  bg-white
+                  text-gray-600
+                  transition-all
+                  hover:bg-gray-50
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
+              >
+                <FiChevronRight
+                  size={17}
+                  className="rotate-180"
+                />
+              </button>
+
+              <div className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-yellow-400 px-3 text-sm font-black text-black">
+                {ordersPage}
+              </div>
+
+              <button
+                type="button"
+                disabled={ordersPage * 10 >= ordersTotal}
+                onClick={() => setOrdersPage((prev) => prev + 1)}
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-lg
+                  border
+                  border-gray-200
+                  bg-white
+                  text-gray-600
+                  transition-all
+                  hover:bg-gray-50
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
+              >
+                <FiChevronRight size={17} />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ================= SMALL SUMMARY ================= */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+          <p className="text-xs font-bold text-gray-400">
+            Pending
+          </p>
+          <p className="mt-1 text-lg font-black text-yellow-600">
+            {pendingCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+          <p className="text-xs font-bold text-gray-400">
+            Shipped
+          </p>
+          <p className="mt-1 text-lg font-black text-blue-600">
+            {shippedCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+          <p className="text-xs font-bold text-gray-400">
+            Delivered
+          </p>
+          <p className="mt-1 text-lg font-black text-green-600">
+            {deliveredCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+          <p className="text-xs font-bold text-gray-400">
+            Page Sales
+          </p>
+          <p className="mt-1 text-lg font-black text-gray-900">
+            {pageSales.toFixed(2)} EGP
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+const renderSettings = () => {
+  const handleFooterChange = (e) => {
+    const { name, value } = e.target;
+
+    setFooterSettings((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFooterSave = async (e) => {
+    e.preventDefault();
+
+    try {
+      setFooterSaving(true);
+
+      const response = await updateFooterSettings(footerSettings);
+
+      setFooterSettings(response.data);
+
+      toast.success("settings saved successfully");
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to save footer settings"
+      );
+    } finally {
+      setFooterSaving(false);
+    }
+  };
+
+  return (
+    <div className="min-h-full bg-[#f7f7f7] p-4 sm:p-6 lg:p-8">
+      {/* Page Header */}
+      <div className="mb-7">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[#ffcf00]" />
+
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500">
+                Store Configuration
+              </span>
+            </div>
+
+            <h1 className="text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
+               Settings
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+              Manage the contact information and social media links
+              displayed in your Shoply footer.
+            </p>
+          </div>
+
+          <div className="hidden rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:block">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              Status
+            </p>
+
+            <p className="mt-1 flex items-center gap-2 text-sm font-bold text-gray-900">
+              <span className="h-2 w-2 rounded-full bg-green-500" />
+              Active
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Card */}
+      <form onSubmit={handleFooterSave}>
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          {/* Card Header */}
+          <div className="border-b border-gray-100 px-5 py-5 sm:px-7">
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
+                <FiSettings className="text-xl" />
+              </div>
+
+              <div>
+                <h2 className="text-base font-extrabold text-gray-900">
+                  Contact Information
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Update the information your customers see in the
+                  website footer.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="p-5 sm:p-7">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+              {/* Phone */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  Phone Number
+                </label>
+
+                <div className="group relative">
+                  <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={footerSettings.phone}
+                    onChange={handleFooterChange}
+                    placeholder="01092362189"
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  Email Address
+                </label>
+
+                <div className="group relative">
+                  <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="email"
+                    name="email"
+                    value={footerSettings.email}
+                    onChange={handleFooterChange}
+                    placeholder="support@shoply.com"
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  Location
+                </label>
+
+                <div className="group relative">
+                  <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="text"
+                    name="location"
+                    value={footerSettings.location}
+                    onChange={handleFooterChange}
+                    placeholder="Egypt"
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Media */}
+          <div className="border-t border-gray-100">
+            <div className="px-5 py-5 sm:px-7">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
+                  <FiInstagram className="text-xl" />
+                </div>
+
+                <div>
+                  <h2 className="text-base font-extrabold text-gray-900">
+                    Social Media
+                  </h2>
+
+                  <p className="mt-1 text-sm text-gray-500">
+                    Add or update the social media links displayed in
+                    the footer.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 border-t border-gray-100 p-5 sm:grid-cols-2 sm:p-7">
+              {/* Facebook */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  Facebook
+                </label>
+
+                <div className="group relative">
+                  <FiFacebook className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="url"
+                    name="facebook"
+                    value={footerSettings.facebook}
+                    onChange={handleFooterChange}
+                    placeholder="https://facebook.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* Instagram */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  Instagram
+                </label>
+
+                <div className="group relative">
+                  <FiInstagram className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="url"
+                    name="instagram"
+                    value={footerSettings.instagram}
+                    onChange={handleFooterChange}
+                    placeholder="https://instagram.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* Twitter */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  X / Twitter
+                </label>
+
+                <div className="group relative">
+                  <FiTwitter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="url"
+                    name="twitter"
+                    value={footerSettings.twitter}
+                    onChange={handleFooterChange}
+                    placeholder="https://x.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* YouTube */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                  YouTube
+                </label>
+
+                <div className="group relative">
+                  <FiYoutube className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                  <input
+                    type="url"
+                    name="youtube"
+                    value={footerSettings.youtube}
+                    onChange={handleFooterChange}
+                    placeholder="https://youtube.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Action */}
+          <div className="flex flex-col gap-4 border-t border-gray-100 bg-[#fafafa] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+            <div>
+              <p className="text-sm font-bold text-gray-900">
+                Save your changes
+              </p>
+
+              <p className="mt-1 text-xs text-gray-500">
+                These settings will appear on the storefront footer.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={footerSaving}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#ffcf00] px-7 py-3.5 text-sm font-extrabold text-gray-950 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#f5c500] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+            >
+              <FiSave className="text-base" />
+
+              {footerSaving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
   /*
   ========================================
   DASHBOARD PAGE
@@ -503,7 +2217,7 @@ function AdminDashboard() {
               </p>
 
               <h1 className="text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
-                Good morning, {adminName} 
+                Good morning, {adminName}
               </h1>
 
               <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
@@ -522,8 +2236,6 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* Stats */}
-
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Total Products"
@@ -538,8 +2250,24 @@ function AdminDashboard() {
           />
 
           <StatCard
+            title="Categories"
+            value={
+              categoriesLoading
+                ? "..."
+                : categories.length
+            }
+            icon={FiTag}
+            trend="+2"
+            description="available"
+          />
+
+          <StatCard
             title="Customers"
-            value={totalCustomers}
+            value={
+              usersLoading
+                ? "..."
+                : totalCustomers
+            }
             icon={FiUsers}
             trend="+8.2%"
             description="registered"
@@ -552,17 +2280,7 @@ function AdminDashboard() {
             trend="+12.4%"
             description="total stock"
           />
-
-          <StatCard
-            title="Average Rating"
-            value={averageRating}
-            icon={FiStar}
-            trend="+0.3"
-            description="store rating"
-          />
         </div>
-
-        {/* Charts */}
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.7fr_1fr]">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
@@ -610,8 +2328,6 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* Store Health */}
-
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-slate-950 dark:text-white">
@@ -637,6 +2353,22 @@ function AdminDashboard() {
 
                 <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
                   <div className="h-full w-[82%] rounded-full bg-slate-900" />
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-gray-400">
+                    Categories
+                  </span>
+
+                  <span className="text-sm font-bold text-slate-900 dark:text-white">
+                    {categories.length}
+                  </span>
+                </div>
+
+                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
+                  <div className="h-full w-[76%] rounded-full bg-emerald-500" />
                 </div>
               </div>
 
@@ -701,8 +2433,6 @@ function AdminDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Recent Products */}
 
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
           <div className="flex flex-col justify-between gap-4 border-b border-slate-100 p-6 sm:flex-row sm:items-center dark:border-[#2a2a2a]">
@@ -784,7 +2514,7 @@ function AdminDashboard() {
                           <div className="flex items-center gap-3">
                             <img
                               src={
-                                product.images?.[0] ||
+                                product.images?.[0]?.url ||
                                 product.thumbnail ||
                                 product.image ||
                                 "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
@@ -800,7 +2530,9 @@ function AdminDashboard() {
                         </td>
 
                         <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
-                          {product.category}
+                          {getCategoryName(
+                            product.category
+                          )}
                         </td>
 
                         <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
@@ -827,7 +2559,7 @@ function AdminDashboard() {
                         <td className="px-6 py-4">
                           <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
                             <FiStar className="fill-yellow-400 text-yellow-400" />
-                            4.5
+                            {averageRating}
                           </span>
                         </td>
                       </tr>
@@ -965,7 +2697,7 @@ function AdminDashboard() {
                           <div className="flex items-center gap-3">
                             <img
                               src={
-                                product.images?.[0] ||
+                                product.images?.[0]?.url ||
                                 product.thumbnail ||
                                 product.image ||
                                 "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
@@ -988,7 +2720,9 @@ function AdminDashboard() {
                         </td>
 
                         <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
-                          {product.category}
+                          {getCategoryName(
+                            product.category
+                          )}
                         </td>
 
                         <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
@@ -1015,7 +2749,7 @@ function AdminDashboard() {
                         <td className="px-6 py-4">
                           <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
                             <FiStar className="fill-yellow-400 text-yellow-400" />
-                            4.5
+                            {averageRating}
                           </span>
                         </td>
 
@@ -1083,11 +2817,258 @@ function AdminDashboard() {
 
   /*
   ========================================
+  CATEGORIES PAGE
+  ========================================
+  */
+
+  const renderCategories = () => {
+    return (
+      <>
+        <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
+              Store Management
+            </p>
+
+            <h1 className="mt-1 text-3xl font-bold text-slate-950 dark:text-white">
+              Categories
+            </h1>
+
+            <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
+              Organize your products into clear categories.
+            </p>
+          </div>
+
+          <button
+            onClick={openAddCategory}
+            className="flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800"
+          >
+            <FiPlus size={18} />
+            Add Category
+          </button>
+        </div>
+
+        <div className="mb-6 grid gap-5 sm:grid-cols-2">
+          <StatCard
+            title="Total Categories"
+            value={
+              categoriesLoading
+                ? "..."
+                : categories.length
+            }
+            icon={FiTag}
+            description="available"
+          />
+
+          <StatCard
+            title="Total Products"
+            value={
+              productsLoading
+                ? "..."
+                : totalProducts
+            }
+            icon={FiBox}
+            description="across all categories"
+          />
+        </div>
+
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row">
+          <div className="relative flex-1">
+            <FiSearch
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              size={18}
+            />
+
+            <input
+              type="text"
+              value={categorySearch}
+              onChange={(e) =>
+                setCategorySearch(
+                  e.target.value
+                )
+              }
+              placeholder="Search categories..."
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
+            />
+          </div>
+
+          <div className="flex items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300">
+            {filteredCategories.length} categories
+          </div>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px]">
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
+                  <th className="px-6 py-4">
+                    Category
+                  </th>
+
+                  <th className="px-6 py-4">
+                    Products
+                  </th>
+
+                  <th className="px-6 py-4">
+                    Status
+                  </th>
+
+                  <th className="px-6 py-4 text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {categoriesLoading ? (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-6 py-16 text-center"
+                    >
+                      <FiTag
+                        className="mx-auto animate-pulse text-slate-300"
+                        size={40}
+                      />
+
+                      <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                        Loading categories...
+                      </p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredCategories.map(
+                    (category) => {
+                      const categoryProducts =
+                        products.filter(
+                          (product) => {
+                            const productCategory =
+                              typeof product.category ===
+                              "object"
+                                ? product.category?._id
+                                : product.category;
+
+                            return (
+                              productCategory ===
+                              category._id
+                            );
+                          }
+                        );
+
+                      return (
+                        <tr
+                          key={category._id}
+                          className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
+                        >
+                          <td className="px-6 py-5">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-sm dark:bg-[#252525]">
+                                <FiTag size={18} />
+                              </div>
+
+                              <div>
+                                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                                  {category.name}
+                                </p>
+
+                                <p className="mt-1 text-xs text-slate-400">
+                                  Category
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
+                              {
+                                categoryProducts.length
+                              }{" "}
+                              products
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
+                              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                              Active
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <div className="flex justify-end gap-2">
+                              <button
+                                onClick={() =>
+                                  openEditCategory(
+                                    category
+                                  )
+                                }
+                                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-300 dark:hover:bg-white dark:hover:text-slate-950"
+                              >
+                                <FiEdit3 size={15} />
+                              </button>
+
+                              <button
+                                onClick={() =>
+                                  handleDeleteCategory(
+                                    category._id
+                                  )
+                                }
+                                className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white dark:bg-red-950/30 dark:text-red-400"
+                              >
+                                <FiTrash2 size={15} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )
+                )}
+
+                {!categoriesLoading &&
+                  filteredCategories.length ===
+                    0 && (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="px-6 py-16 text-center"
+                      >
+                        <FiTag
+                          className="mx-auto text-slate-300 dark:text-gray-600"
+                          size={40}
+                        />
+
+                        <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                          No categories found
+                        </p>
+
+                        <p className="mt-1 text-xs text-slate-400">
+                          Add a new category to organize
+                          your products.
+                        </p>
+                      </td>
+                    </tr>
+                  )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  /*
+  ========================================
   CUSTOMERS PAGE
   ========================================
   */
 
   const renderCustomers = () => {
+    const customerUsers = users.filter(
+      (user) => user.role === "Buyer"
+    );
+
     return (
       <>
         <div className="mb-7">
@@ -1100,15 +3081,18 @@ function AdminDashboard() {
           </h1>
 
           <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
-            All registered customers appear here
-            automatically.
+            Manage your registered customers and their account information.
           </p>
         </div>
 
         <div className="mb-6 grid gap-5 sm:grid-cols-3">
           <StatCard
             title="Total Customers"
-            value={totalCustomers}
+            value={
+              usersLoading
+                ? "..."
+                : totalCustomers
+            }
             icon={FiUsers}
             description="registered"
           />
@@ -1129,8 +3113,32 @@ function AdminDashboard() {
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+          <div className="border-b border-slate-100 bg-white px-6 py-5 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+              <div>
+                <h2 className="text-base font-bold text-slate-950 dark:text-white">
+                  Customer Directory
+                </h2>
+
+                <p className="mt-1 text-xs text-slate-400">
+                  {usersLoading
+                    ? "Loading customer accounts..."
+                    : `${customerUsers.length} customer accounts`}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-[#171717]">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+
+                <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
+                  Live data
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
+            <table className="w-full min-w-[850px]">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
                   <th className="px-6 py-4">
@@ -1146,66 +3154,140 @@ function AdminDashboard() {
                   </th>
 
                   <th className="px-6 py-4">
+                    Joined
+                  </th>
+
+                  <th className="px-6 py-4">
                     Status
                   </th>
                 </tr>
               </thead>
 
               <tbody>
-                {users.map((user, index) => (
-                  <tr
-                    key={`${user.email}-${index}`}
-                    className="border-b border-slate-50 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white dark:bg-[#252525]">
-                          {user.name
-                            ?.charAt(0)
-                            ?.toUpperCase() ||
-                            "U"}
-                        </div>
+                {usersLoading ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-16 text-center"
+                    >
+                      <FiUsers
+                        className="mx-auto animate-pulse text-slate-300 dark:text-gray-600"
+                        size={42}
+                      />
 
-                        <span className="text-sm font-semibold text-slate-900 dark:text-white">
-                          {user.name}
-                        </span>
-                      </div>
-                    </td>
+                      <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                        Loading customers...
+                      </p>
 
-                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
-                      {user.email}
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
-                        Customer
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                        Active
-                      </span>
+                      <p className="mt-1 text-xs text-slate-400">
+                        Getting customer data from the server
+                      </p>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  customerUsers.map(
+                    (user, index) => {
+                      const joinedDate =
+                        user.createdAt
+                          ? new Date(
+                              user.createdAt
+                            ).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              }
+                            )
+                          : "—";
+
+                      const initials =
+                        user.name
+                          ?.split(" ")
+                          .filter(Boolean)
+                          .slice(0, 2)
+                          .map((part) =>
+                            part
+                              .charAt(0)
+                              .toUpperCase()
+                          )
+                          .join("") || "U";
+
+                      return (
+                        <tr
+                          key={`${user._id || user.email}-${index}`}
+                          className="group border-b border-slate-50 transition-all duration-200 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
+                        >
+                          <td className="px-6 py-5">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white shadow-sm transition-transform duration-200 group-hover:scale-105 dark:bg-[#252525]">
+                                {initials}
+                              </div>
+
+                              <div className="min-w-0">
+                                <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
+                                  {user.name ||
+                                    "Unnamed Customer"}
+                                </p>
+
+                                <p className="mt-1 text-xs text-slate-400">
+                                  Customer account
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <span className="text-sm text-slate-600 dark:text-gray-400">
+                              {user.email}
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
+                              {user.role === "Buyer"
+                                ? "Customer"
+                                : user.role}
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <span className="text-sm text-slate-500 dark:text-gray-400">
+                              {joinedDate}
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400">
+                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              Active
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )
+                )}
               </tbody>
             </table>
           </div>
 
-          {users.length === 0 && (
-            <div className="px-6 py-16 text-center">
-              <FiUsers
-                className="mx-auto text-slate-300 dark:text-gray-600"
-                size={42}
-              />
+          {!usersLoading &&
+            customerUsers.length === 0 && (
+              <div className="px-6 py-16 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 dark:bg-[#252525] dark:text-gray-500">
+                  <FiUsers size={28} />
+                </div>
 
-              <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
-                No customers yet
-              </p>
-            </div>
-          )}
+                <p className="mt-4 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                  No customers yet
+                </p>
+
+                <p className="mt-1 text-xs text-slate-400">
+                  Registered customers will appear here automatically.
+                </p>
+              </div>
+            )}
         </div>
       </>
     );
@@ -1217,140 +3299,7 @@ function AdminDashboard() {
   ========================================
   */
 
-  const renderOrders = () => {
-    const orders = [
-      {
-        id: "#ORD-1048",
-        customer: "Sarah Ahmed",
-        amount: "$249.00",
-        status: "Delivered",
-      },
-      {
-        id: "#ORD-1047",
-        customer: "Omar Hassan",
-        amount: "$129.00",
-        status: "Processing",
-      },
-      {
-        id: "#ORD-1046",
-        customer: "Mariam Ali",
-        amount: "$599.00",
-        status: "Shipped",
-      },
-      {
-        id: "#ORD-1045",
-        customer: "Youssef Mohamed",
-        amount: "$89.00",
-        status: "Delivered",
-      },
-    ];
 
-    return (
-      <>
-        <div className="mb-7">
-          <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
-            Sales Management
-          </p>
-
-          <h1 className="mt-1 text-3xl font-bold text-slate-950 dark:text-white">
-            Orders
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
-            Monitor recent orders and their status.
-          </p>
-        </div>
-
-        <div className="grid gap-5 sm:grid-cols-3">
-          <StatCard
-            title="Total Orders"
-            value="1,248"
-            icon={FiShoppingCart}
-            trend="+12.6%"
-            description="this month"
-          />
-
-          <StatCard
-            title="Processing"
-            value="86"
-            icon={FiClock}
-            description="needs attention"
-          />
-
-          <StatCard
-            title="Delivered"
-            value="1,042"
-            icon={FiCheckCircle}
-            trend="+9.4%"
-            description="completed"
-          />
-        </div>
-
-        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
-                  <th className="px-6 py-4">
-                    Order
-                  </th>
-
-                  <th className="px-6 py-4">
-                    Customer
-                  </th>
-
-                  <th className="px-6 py-4">
-                    Amount
-                  </th>
-
-                  <th className="px-6 py-4">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {orders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="border-b border-slate-50 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
-                  >
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
-                      {order.id}
-                    </td>
-
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-gray-400">
-                      {order.customer}
-                    </td>
-
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
-                      {order.amount}
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          order.status ===
-                          "Delivered"
-                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
-                            : order.status ===
-                              "Processing"
-                            ? "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400"
-                            : "bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400"
-                        }`}
-                      >
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </>
-    );
-  };
 
   /*
   ========================================
@@ -1401,6 +3350,9 @@ function AdminDashboard() {
       case "Products":
         return renderProducts();
 
+      case "Categories":
+        return renderCategories();
+
       case "Orders":
         return renderOrders();
 
@@ -1422,11 +3374,7 @@ function AdminDashboard() {
         );
 
       case "Settings":
-        return renderPlaceholder(
-          "Settings",
-          "Store settings, admin preferences and platform configuration will live here.",
-          FiSettings
-        );
+        return renderSettings();
 
       default:
         return renderDashboard();
@@ -1520,6 +3468,13 @@ function AdminDashboard() {
                         {lowStockProducts.length}
                       </span>
                     )}
+
+                  {item.name === "Categories" &&
+                    categories.length > 0 && (
+                      <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-[10px] font-bold text-slate-950">
+                        {categories.length}
+                      </span>
+                    )}
                 </button>
               );
             })}
@@ -1583,24 +3538,6 @@ function AdminDashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Search */}
-
-            {/* <div className="relative hidden md:block"> 
-              <FiSearch 
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" 
-                size={16} 
-              /> 
- 
-              <input 
-                type="text" 
-                placeholder="Quick search..." 
-                onChange={(e) => 
-                  setSearchTerm(e.target.value) 
-                } 
-                className="w-52 rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-xs outline-none transition focus:border-slate-400 focus:bg-white" 
-              /> 
-            </div> */}
-
             <div className="hidden h-8 w-px bg-slate-200 dark:bg-[#2a2a2a] sm:block" />
 
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white dark:bg-[#252525]">
@@ -1670,13 +3607,39 @@ function AdminDashboard() {
                     Category
                   </label>
 
-                  <input
+                  <select
                     name="category"
                     value={productForm.category}
                     onChange={handleProductChange}
-                    placeholder="Electronics"
+                    disabled={categoriesLoading}
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
-                  />
+                  >
+                    <option value="">
+                      {categoriesLoading
+                        ? "Loading categories..."
+                        : "Select category"}
+                    </option>
+
+                    {categories.map(
+                      (category) => (
+                        <option
+                          key={category._id}
+                          value={category._id}
+                        >
+                          {category.name}
+                        </option>
+                      )
+                    )}
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={openAddCategory}
+                    className="mt-2 flex items-center gap-1 text-xs font-semibold text-slate-500 transition hover:text-emerald-600 dark:text-gray-400"
+                  >
+                    <FiPlus size={13} />
+                    Add new category
+                  </button>
                 </div>
 
                 <div>
@@ -1688,6 +3651,7 @@ function AdminDashboard() {
                     name="price"
                     type="number"
                     min="0"
+                    step="0.01"
                     value={productForm.price}
                     onChange={handleProductChange}
                     placeholder="99"
@@ -1704,6 +3668,7 @@ function AdminDashboard() {
                     name="stock"
                     type="number"
                     min="0"
+                    step="1"
                     value={productForm.stock}
                     onChange={handleProductChange}
                     placeholder="20"
@@ -1730,16 +3695,29 @@ function AdminDashboard() {
 
                 <div className="sm:col-span-2">
                   <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
-                    Image URL
+                    Product Image
                   </label>
 
                   <input
                     name="image"
-                    value={productForm.image}
-                    onChange={handleProductChange}
-                    placeholder="https://..."
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      setProductForm((prev) => ({
+                        ...prev,
+                        image:
+                          e.target.files?.[0] ||
+                          null,
+                      }));
+                    }}
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
                   />
+
+                  {editingProduct && (
+                    <p className="mt-2 text-xs text-slate-400">
+                      Leave empty to keep the current image.
+                    </p>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -1774,6 +3752,101 @@ function AdminDashboard() {
                   {editingProduct
                     ? "Save Changes"
                     : "Add Product"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Category Modal */}
+
+      {showCategoryModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#1a1a1a]">
+            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5 dark:border-[#2a2a2a]">
+              <div>
+                <h2 className="text-xl font-bold text-slate-950 dark:text-white">
+                  {editingCategory
+                    ? "Edit Category"
+                    : "Add New Category"}
+                </h2>
+
+                <p className="mt-1 text-xs text-slate-500 dark:text-gray-400">
+                  {editingCategory
+                    ? "Update category information"
+                    : "Create a new category for your products"}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={closeCategoryModal}
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-400 dark:hover:bg-white dark:hover:text-slate-950"
+              >
+                <FiX />
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleCategorySubmit}
+              className="p-6"
+            >
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
+                  Category Name
+                </label>
+
+                <div className="relative">
+                  <FiTag
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    size={18}
+                  />
+
+                  <input
+                    type="text"
+                    value={categoryName}
+                    onChange={(e) =>
+                      setCategoryName(
+                        e.target.value
+                      )
+                    }
+                    placeholder="e.g. Electronics"
+                    autoFocus
+                    maxLength={30}
+                    className="w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
+                  />
+                </div>
+
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-xs text-slate-400">
+                    Letters and spaces only, 3–30 characters.
+                  </p>
+
+                  <span className="text-[11px] text-slate-400">
+                    {categoryName.length}/30
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={closeCategoryModal}
+                  className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:text-gray-300 dark:hover:bg-[#222]"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-slate-800"
+                >
+                  <FiCheckCircle size={16} />
+
+                  {editingCategory
+                    ? "Save Changes"
+                    : "Add Category"}
                 </button>
               </div>
             </form>

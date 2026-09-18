@@ -6,6 +6,7 @@ import App from "./App";
 import store from "./redux/store";
 
 import { ThemeProvider } from "./context/ThemeContext";
+import { CategoryProvider } from "./context/CategoryContext";
 
 import "./index.css";
 
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <ThemeProvider>
-        <App />
+        <CategoryProvider>
+          <App />
+        </CategoryProvider>
       </ThemeProvider>
     </Provider>
   </StrictMode>

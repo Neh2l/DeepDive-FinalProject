@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import {
@@ -6,43 +7,59 @@ import {
   FiTwitter,
   FiYoutube,
   FiMail,
-  FiPhone,
+  FiPhone, 
   FiMapPin,
   FiChevronRight,
 } from "react-icons/fi";
 
 import { Link, useLocation } from "react-router-dom";
 
-import { getProducts } from "../../Apis/productsApi";
+import { getFooterSettings } from "../../Apis/footerSettingsApi";
+
+import { useCategories } from "../../context/CategoryContext";
 
 function Footer() {
-  const [footerCategories, setFooterCategories] = useState([]);
+  const {
+    categories: footerCategories,
+  } = useCategories();
+
+  const [footerSettings, setFooterSettings] =
+    useState({
+      phone: "",
+      email: "",
+      location: "",
+      facebook: "",
+      instagram: "",
+      twitter: "",
+      youtube: "",
+    });
 
   const location = useLocation();
 
+  /* =========================================================
+     FETCH FOOTER SETTINGS
+  ========================================================= */
+
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchFooterSettings = async () => {
       try {
-        const response = await getProducts();
-        const products = response.data || [];
+        const response = await getFooterSettings();
 
-        const uniqueCategories = [
-          ...new Set(
-            products
-              .map((product) => product.category)
-              .filter(Boolean)
-          ),
-        ];
-
-        setFooterCategories(uniqueCategories);
+        setFooterSettings(response.data);
       } catch (error) {
-        console.error("Footer categories error:", error);
-        setFooterCategories([]);
+        console.error(
+          "Footer settings error:",
+          error
+        );
       }
     };
 
-    fetchCategories();
+    fetchFooterSettings();
   }, []);
+
+  /* =========================================================
+     SCROLL TO TOP
+  ========================================================= */
 
   useEffect(() => {
     window.scrollTo({
@@ -55,18 +72,23 @@ function Footer() {
     <footer className="border-t border-gray-200 bg-white text-gray-800 dark:border-[#2a2a2a] dark:bg-[#111111] dark:text-gray-200">
 
       {/* ================= MAIN FOOTER ================= */}
+
       <div className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10">
 
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.2fr_1.8fr_1fr_1fr]">
 
           {/* ================= BRAND ================= */}
+
           <div className="max-w-sm">
 
             <Link
               to="/"
               className="inline-block text-3xl font-black tracking-tight"
             >
-              <span className="text-yellow-400">shop</span>ly
+              <span className="text-yellow-400">
+                shop
+              </span>
+              ly
             </Link>
 
             <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500 dark:text-gray-400">
@@ -75,26 +97,31 @@ function Footer() {
             </p>
 
             {/* Social Media */}
+
             <div className="mt-6 flex items-center gap-3">
 
               <Social
                 icon={<FiFacebook size={17} />}
                 label="Facebook"
+                href={footerSettings.facebook}
               />
 
               <Social
                 icon={<FiInstagram size={17} />}
                 label="Instagram"
+                href={footerSettings.instagram}
               />
 
               <Social
                 icon={<FiTwitter size={17} />}
                 label="Twitter"
+                href={footerSettings.twitter}
               />
 
               <Social
                 icon={<FiYoutube size={17} />}
                 label="YouTube"
+                href={footerSettings.youtube}
               />
 
             </div>
@@ -102,6 +129,7 @@ function Footer() {
           </div>
 
           {/* ================= SHOP ================= */}
+
           <div>
 
             <h3 className="mb-5 text-sm font-bold text-gray-900 dark:text-white">
@@ -111,6 +139,7 @@ function Footer() {
             <div className="grid grid-cols-2 gap-x-8 gap-y-3">
 
               {/* All Products */}
+
               <Link
                 to="/products"
                 className="
@@ -142,10 +171,13 @@ function Footer() {
               </Link>
 
               {/* Dynamic Categories */}
+
               {footerCategories.map((category) => (
                 <Link
-                  key={category}
-                  to={`/products?category=${encodeURIComponent(category)}`}
+                  key={category._id}
+                  to={`/products?category=${encodeURIComponent(
+                    category.name
+                  )}`}
                   className="
                     group
                     inline-flex
@@ -159,7 +191,7 @@ function Footer() {
                     dark:hover:text-white
                   "
                 >
-                  {category}
+                  {category.name}
 
                   <FiChevronRight
                     size={13}
@@ -180,6 +212,7 @@ function Footer() {
           </div>
 
           {/* ================= HELP ================= */}
+
           <FooterColumn
             title="Help & Support"
             links={[
@@ -211,6 +244,7 @@ function Footer() {
           />
 
           {/* ================= ABOUT ================= */}
+
           <FooterColumn
             title="About Shoply"
             links={[
@@ -236,23 +270,24 @@ function Footer() {
         </div>
 
         {/* ================= CONTACT ================= */}
+
         <div className="mt-12 border-t border-gray-100 pt-8 dark:border-[#2a2a2a]">
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
             <Contact
               icon={<FiPhone size={17} />}
-              text="+20 100 000 0000"
+              text={footerSettings.phone}
             />
 
             <Contact
               icon={<FiMail size={17} />}
-              text="support@shoply.com"
+              text={footerSettings.email}
             />
 
             <Contact
               icon={<FiMapPin size={17} />}
-              text="Egypt"
+              text={footerSettings.location}
             />
 
           </div>
@@ -262,16 +297,19 @@ function Footer() {
       </div>
 
       {/* ================= BOTTOM BAR ================= */}
+
       <div className="border-t border-gray-200 bg-[#fafafa] dark:border-[#2a2a2a] dark:bg-[#171717]">
 
         <div className="mx-auto flex max-w-[1400px] flex-col gap-5 px-6 py-5 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between lg:px-10">
 
           {/* Copyright */}
+
           <p>
             © 2026 Shoply. All rights reserved.
           </p>
 
           {/* Legal Links */}
+
           <div className="flex items-center gap-5">
 
             <Link
@@ -291,6 +329,7 @@ function Footer() {
           </div>
 
           {/* Cash On Delivery */}
+
           <div className="flex items-center gap-3">
 
             <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -383,10 +422,12 @@ function FooterColumn({ title, links }) {
    SOCIAL MEDIA
 ========================================================= */
 
-function Social({ icon, label }) {
+function Social({ icon, label, href }) {
   return (
-    <button
-      type="button"
+    <a
+      href={href || "#"}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label={label}
       className="
         flex
@@ -408,7 +449,7 @@ function Social({ icon, label }) {
       "
     >
       {icon}
-    </button>
+    </a>
   );
 }
 

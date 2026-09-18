@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 
 import {
   FiSearch,
@@ -29,19 +30,26 @@ import {
 import { logoutUser } from "../../redux/authSlice";
 import { clearCart } from "../../redux/cartSlice";
 import { clearWishlist } from "../../redux/wishlistSlice";
+
 import { useTheme } from "../../context/ThemeContext";
-import { getProducts } from "../../Apis/productsApi";
+import { useCategories } from "../../context/CategoryContext";
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { theme, toggleTheme } = useTheme();
+
+  // =========================================================
+  // CATEGORIES FROM CONTEXT
+  // =========================================================
+
+  const {
+    categories: navCategories,
+  } = useCategories();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] =
     useState(false);
-
-  const [navCategories, setNavCategories] =
-    useState([]);
 
   // SEARCH
   const [searchQuery, setSearchQuery] =
@@ -66,38 +74,6 @@ function Navbar() {
 
   const totalWishlistItems =
     wishlistItems.length;
-
-  // =========================================================
-  // GET CATEGORIES FROM BACKEND
-  // =========================================================
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getProducts();
-        const products = response.data || [];
-
-        const uniqueCategories = [
-          ...new Set(
-            products
-              .map((product) => product.category)
-              .filter(Boolean)
-          ),
-        ];
-
-        setNavCategories(uniqueCategories);
-      } catch (error) {
-        console.error(
-          "Navbar categories error:",
-          error
-        );
-
-        setNavCategories([]);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   // =========================================================
   // SEARCH
@@ -306,6 +282,7 @@ function Navbar() {
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
                   >
                     <FiLogOut size={17} />
+
                     Sign Out
                   </button>
 
@@ -453,19 +430,17 @@ function Navbar() {
               All Products
             </NavLink>
 
-            {navCategories.map(
-              (category) => (
-                <NavLink
-                  key={category}
-                  to={`/products?category=${encodeURIComponent(
-                    category
-                  )}`}
-                  className="shrink-0 text-sm font-medium text-gray-600 transition hover:text-black dark:!text-white dark:hover:!text-white"
-                >
-                  {category}
-                </NavLink>
-              )
-            )}
+            {navCategories.map((category) => (
+              <NavLink
+                key={category._id}
+                to={`/products?category=${encodeURIComponent(
+                  category.name
+                )}`}
+                className="shrink-0 text-sm font-medium text-gray-600 transition hover:text-black dark:!text-white dark:hover:!text-white"
+              >
+                {category.name}
+              </NavLink>
+            ))}
 
             <span className="ml-auto shrink-0 rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600 dark:bg-red-500/10 dark:!text-red-400">
               SALE
@@ -774,7 +749,6 @@ function Navbar() {
                   size={17}
                   className="shrink-0 dark:text-white"
                 />
-
               </NavLink>
 
               <NavLink
@@ -788,29 +762,25 @@ function Navbar() {
                   size={17}
                   className="shrink-0 dark:text-white"
                 />
-
               </NavLink>
 
-              {navCategories.map(
-                (category) => (
-                  <NavLink
-                    key={category}
-                    to={`/products?category=${encodeURIComponent(
-                      category
-                    )}`}
-                    onClick={closeMobileMenu}
-                    className={mobileLinkClass}
-                  >
-                    {category}
+              {navCategories.map((category) => (
+                <NavLink
+                  key={category._id}
+                  to={`/products?category=${encodeURIComponent(
+                    category.name
+                  )}`}
+                  onClick={closeMobileMenu}
+                  className={mobileLinkClass}
+                >
+                  {category.name}
 
-                    <FiChevronRight
-                      size={17}
-                      className="shrink-0 dark:text-white"
-                    />
-
-                  </NavLink>
-                )
-              )}
+                  <FiChevronRight
+                    size={17}
+                    className="shrink-0 dark:text-white"
+                  />
+                </NavLink>
+              ))}
 
             </nav>
 

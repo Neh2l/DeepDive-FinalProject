@@ -1,5 +1,7 @@
+
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner";
 
 import MainLayout from "./Layout/MainLayout";
 
@@ -30,6 +32,13 @@ function App() {
       {showSplash && (
         <SplashScreen onFinish={() => setShowSplash(false)} />
       )}
+
+      {/* Global Toast Notifications */}
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+      />
 
       <BrowserRouter>
         <Routes>
