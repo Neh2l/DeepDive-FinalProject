@@ -23,6 +23,7 @@ import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
 import Contact from "./pages/Contact";
+import PaymentResult from "./pages/PaymentResult";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -89,6 +90,10 @@ function App() {
              <Route
               path="contact"
               element={<Contact/>}
+            />
+             <Route
+              path="payment-result"
+              element={<PaymentResult/>}
             />
 
             <Route
