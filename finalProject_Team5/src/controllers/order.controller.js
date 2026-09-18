@@ -111,16 +111,20 @@ const createOrder = async (req, res) => {
     }
 };
 
+
 const getMyOrders = async (req, res) => {
     try {
         const userId = req.user.id;
-        const total=await Order.countDocuments({
+
+        const total = await Order.countDocuments({
             user: userId
-        })
+        });
+
         const orders = await Order.find({
             user: userId
         })
             .select("items status total shippingAddress createdAt")
+            .populate("items.product", "name price images")
             .sort({ createdAt: -1 });
 
         return res.status(200).json({
@@ -135,6 +139,7 @@ const getMyOrders = async (req, res) => {
         });
     }
 };
+
 
 const getOrderById = async (req, res) => {
     try {
@@ -164,6 +169,7 @@ const getOrderById = async (req, res) => {
         });
     }
 };
+
 
 const cancelOrder = async (req, res) => {
     try {
@@ -204,6 +210,7 @@ const cancelOrder = async (req, res) => {
     }
 };
 
+
 const getAllOrders = async (req, res) => {
     try {
         const {
@@ -213,7 +220,8 @@ const getAllOrders = async (req, res) => {
             search
         } = req.query;
 
-        const total =await Order.countDocuments();
+        const total = await Order.countDocuments();
+
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
 
@@ -230,15 +238,21 @@ const getAllOrders = async (req, res) => {
 
         // Search by Buyer Name
         if (search && !search.match(/^[0-9a-fA-F]{24}$/)) {
+
             const User = require("../models/user.model");
 
             const users = await User.find({
-                name: { $regex: search, $options: "i" }
+                name: {
+                    $regex: search,
+                    $options: "i"
+                }
             }).select("_id");
 
             const userIds = users.map(user => user._id);
 
-            filter.user = { $in: userIds };
+            filter.user = {
+                $in: userIds
+            };
         }
 
         const skip = (pageNumber - 1) * limitNumber;
@@ -264,6 +278,7 @@ const getAllOrders = async (req, res) => {
         });
     }
 };
+
 
 const updateOrderStatus = async (req, res) => {
     try {
