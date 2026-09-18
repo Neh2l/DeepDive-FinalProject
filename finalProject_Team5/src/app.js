@@ -25,6 +25,7 @@ const contactRoutes = require("./routes/contactRoutes");
 const authRoutes = require("./routes/auth.routes");
 
 const userRoutes = require("./routes/user.routes");
+const offerRoutes = require('./routes/offerRoutes'); 
 
 const footerSettingsRoutes = require("./routes/footerSettings.routes");
 
@@ -43,6 +44,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/auth", authRoutes);
 
 app.use("/api/users", userRoutes);
+app.use('/api/offers', offerRoutes);
 
 app.use("/api/footer-settings", footerSettingsRoutes);
 
