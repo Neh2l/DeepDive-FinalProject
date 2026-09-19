@@ -162,56 +162,62 @@ function FeaturedProducts({ products = [], loading = false }) {
               lg:mt-20
             "
           >
-            <Link
-              to="/products"
-              className="
-                group
-                flex
-                w-full
-                max-w-[260px]
-                items-center
-                justify-center
-                gap-3
-                border
-                border-black
-                px-5
-                py-3
-                text-[8px]
-                font-bold
-                uppercase
-                tracking-[0.14em]
-                text-black
-                transition-all
-                duration-300
-                hover:bg-black
-                hover:text-white
-                dark:border-white
-                dark:text-white
-                dark:hover:bg-white
-                dark:hover:text-black
-                min-[400px]:max-w-[280px]
-                sm:w-fit
-                sm:max-w-none
-                sm:px-8
-                sm:py-3.5
-                sm:text-[9px]
-                sm:tracking-[0.16em]
-              "
-            >
-              View all products
+         <Link
+  to="/products"
+  className="
+    group
+    flex
+    w-full
+    max-w-[260px]
+    items-center
+    justify-center
+    gap-3
+    border
+    border-black
+    px-5
+    py-3
+    text-[8px]
+    font-bold
+    uppercase
+    tracking-[0.14em]
+    !text-black
+    transition-all
+    duration-300
+    hover:!bg-black
+    hover:!text-white
+    dark:!border-white
+    dark:!text-white
+    dark:hover:!bg-white
+    dark:hover:!text-black
+    min-[400px]:max-w-[280px]
+    sm:w-fit
+    sm:max-w-none
+    sm:px-8
+    sm:py-3.5
+    sm:text-[9px]
+    sm:tracking-[0.16em]
+  "
+>
+  <span className="!text-inherit">
+    View all products
+  </span>
 
-              <FiArrowUpRight
-                size={12}
-                className="
-                  transition-transform
-                  duration-300
-                  group-hover:-translate-y-0.5
-                  group-hover:translate-x-0.5
-                  sm:w-[13px]
-                  sm:h-[13px]
-                "
-              />
-            </Link>
+  <FiArrowUpRight
+    size={12}
+    className="
+      !text-black
+      transition-transform
+      duration-300
+      group-hover:-translate-y-0.5
+      group-hover:translate-x-0.5
+      group-hover:!text-white
+      dark:!text-white
+      dark:group-hover:!text-black
+      sm:h-[13px]
+      sm:w-[13px]
+    "
+  />
+</Link>
           </div>
         )}
       </div>

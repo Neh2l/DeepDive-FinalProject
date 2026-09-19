@@ -18,6 +18,7 @@ import {
 import {
   Link,
   NavLink,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
 
@@ -35,64 +36,46 @@ import { useCategories } from "../../context/CategoryContext";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const { theme, toggleTheme } = useTheme();
 
-  // =========================================================
-  // CATEGORIES FROM CONTEXT
-  // =========================================================
-
-  const {
-    categories: navCategories,
-  } = useCategories();
+  const { categories: navCategories } = useCategories();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] =
     useState(false);
 
-  // =========================================================
-  // SEARCH
-  // =========================================================
-
   const [searchQuery, setSearchQuery] =
     useState("");
-
-  // =========================================================
-  // AUTH
-  // =========================================================
 
   const { user, isLoggedIn } = useSelector(
     (state) => state.auth
   );
 
-  // =========================================================
-  // CART
-  // =========================================================
-
   const cartItems = useSelector(
     (state) => state.cart.items
   );
-
-  // =========================================================
-  // WISHLIST
-  // =========================================================
 
   const wishlistItems = useSelector(
     (state) => state.wishlist.items
   );
 
   const totalItems = cartItems.reduce(
-    (total, item) =>
-      total + item.quantity,
+    (total, item) => total + item.quantity,
     0
   );
 
   const totalWishlistItems =
     wishlistItems.length;
 
-  // =========================================================
-  // SEARCH BY PRODUCT NAME
-  // =========================================================
+  const currentCategory = new URLSearchParams(
+    location.search
+  ).get("category");
+
+  const currentSearch = new URLSearchParams(
+    location.search
+  ).get("search");
 
   function handleSearch(event) {
     event.preventDefault();
@@ -109,17 +92,9 @@ function Navbar() {
     );
   }
 
-  // =========================================================
-  // CLOSE MOBILE MENU
-  // =========================================================
-
   function closeMobileMenu() {
     setIsMobileMenuOpen(false);
   }
-
-  // =========================================================
-  // LOGOUT
-  // =========================================================
 
   function handleLogout() {
     dispatch(clearCart());
@@ -131,44 +106,30 @@ function Navbar() {
     navigate("/");
   }
 
-  // =========================================================
-  // MOBILE LINK CLASS
-  // =========================================================
-
-  const mobileLinkClass = ({
-    isActive,
-  }) =>
-    `flex items-center justify-between border-b border-gray-100 px-1 py-4 text-sm font-medium transition dark:border-[#292929] ${
+  const mobileLinkClass = ({ isActive }) =>
+    `flex items-center justify-between border-b border-gray-100 px-1 py-4 text-sm font-medium transition-colors dark:border-[#292929] ${
       isActive
         ? "text-gray-950 dark:!text-white"
         : "text-gray-600 hover:text-gray-950 dark:!text-gray-300 dark:hover:!text-white"
     }`;
 
+  const desktopNavClass = ({ isActive }) =>
+    `relative flex h-full items-center text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+      isActive
+        ? "text-gray-950 dark:!text-white"
+        : "text-gray-500 hover:text-gray-950 dark:!text-gray-300 dark:hover:!text-white"
+    }`;
+
   return (
     <>
-      {/* =====================================================
-          TOP ANNOUNCEMENT
-      ====================================================== */}
-
       <div className="relative z-[60] border-b border-white/10 bg-[#111111] px-4 py-2.5 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white">
         Free delivery on orders over $50
       </div>
 
-      {/* =====================================================
-          MAIN NAVBAR
-      ====================================================== */}
-
       <header className="sticky top-0 z-50 border-b border-[#e8e8e5] bg-white/95 backdrop-blur-xl dark:border-[#292929] dark:bg-[#111111]/95">
-
         <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
 
-          {/* =================================================
-              MAIN ROW
-          ================================================= */}
-
           <div className="flex min-h-[76px] items-center gap-3 lg:gap-6">
-
-            {/* MOBILE MENU */}
 
             <button
               type="button"
@@ -178,15 +139,16 @@ function Navbar() {
               className="flex h-10 w-10 shrink-0 items-center justify-center text-gray-900 transition-colors hover:text-yellow-600 dark:text-white dark:hover:text-yellow-400 lg:hidden"
               aria-label="Open menu"
             >
-              <FiMenu size={22} strokeWidth={1.7} />
+              <FiMenu
+                size={22}
+                strokeWidth={1.7}
+              />
             </button>
-
-            {/* LOGO */}
 
             <Link
               to="/"
               onClick={closeMobileMenu}
-              className="shrink-0 text-[29px] font-black tracking-[-0.075em] leading-none transition-opacity duration-300 hover:opacity-75 sm:text-[31px]"
+              className="shrink-0 text-[29px] font-black leading-none tracking-[-0.075em] transition-opacity duration-300 hover:opacity-75 sm:text-[31px]"
             >
               <span className="text-[#f5c400]">
                 shop
@@ -196,8 +158,6 @@ function Navbar() {
                 ly
               </span>
             </Link>
-
-            {/* LOCATION */}
 
             <button
               type="button"
@@ -220,10 +180,6 @@ function Navbar() {
               </div>
             </button>
 
-            {/* =================================================
-                DESKTOP SEARCH
-            ================================================= */}
-
             <form
               onSubmit={handleSearch}
               className="relative hidden min-w-0 flex-1 md:block"
@@ -238,16 +194,12 @@ function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(event) =>
-                  setSearchQuery(
-                    event.target.value
-                  )
+                  setSearchQuery(event.target.value)
                 }
                 placeholder="Search for products, brands and more"
                 className="h-[43px] w-full border border-[#dededb] bg-[#f7f7f5] pl-11 pr-4 text-[12px] text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-gray-500 focus:bg-white dark:border-[#303030] dark:bg-[#1b1b1b] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#555] dark:focus:bg-[#1b1b1b]"
               />
             </form>
-
-            {/* ACCOUNT */}
 
             {isLoggedIn && user ? (
               <div className="group relative hidden sm:block">
@@ -266,7 +218,7 @@ function Navbar() {
                   <div className="hidden text-left xl:block">
                     <p className="text-[9px] uppercase tracking-[0.08em] text-gray-400">
                       Hello,{" "}
-                      {user.name.split(" ")[0]}
+                      {user.name?.split(" ")[0]}
                     </p>
 
                     <p className="mt-0.5 max-w-[100px] truncate text-[12px] font-bold text-gray-900 dark:text-white">
@@ -275,30 +227,36 @@ function Navbar() {
                   </div>
                 </button>
 
-                <div className="invisible absolute right-0 top-[calc(100%+8px)] z-50 w-52 translate-y-2 border border-[#dededb] bg-white p-2 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,0.10)] transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-[#303030] dark:bg-[#181818]">
+                <div className="invisible absolute right-0 top-[calc(100%+8px)] z-50 w-52 translate-y-2 border border-[#dededb] bg-white p-2 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,0.10)] transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-[#303030] dark:bg-[#181818] dark:shadow-[0_18px_50px_rgba(0,0,0,0.4)]">
 
                   <Link
                     to="/profile"
-                    className="flex items-center gap-3 px-3 py-3 text-[12px] font-medium text-gray-700 transition-colors hover:bg-[#f6f6f4] hover:text-gray-950 dark:text-gray-300 dark:hover:bg-[#242424] dark:hover:text-white"
+                    className="flex items-center gap-3 px-3 py-3 text-[12px] font-medium text-gray-700 transition-colors hover:bg-[#f6f6f4] hover:text-gray-950 dark:!text-gray-100 dark:hover:bg-[#242424] dark:hover:!text-white"
                   >
                     <FiUser
                       size={16}
                       strokeWidth={1.7}
+                      className="shrink-0 text-gray-600 dark:!text-gray-200"
                     />
 
-                    My Account
+                    <span className="dark:!text-gray-100">
+                      My Account
+                    </span>
                   </Link>
 
                   <Link
                     to="/orders"
-                    className="flex items-center gap-3 px-3 py-3 text-[12px] font-medium text-gray-700 transition-colors hover:bg-[#f6f6f4] hover:text-gray-950 dark:text-gray-300 dark:hover:bg-[#242424] dark:hover:text-white"
+                    className="flex items-center gap-3 px-3 py-3 text-[12px] font-medium text-gray-700 transition-colors hover:bg-[#f6f6f4] hover:text-gray-950 dark:!text-gray-100 dark:hover:bg-[#242424] dark:hover:!text-white"
                   >
                     <FiPackage
                       size={16}
                       strokeWidth={1.7}
+                      className="shrink-0 text-gray-600 dark:!text-gray-200"
                     />
 
-                    My Orders
+                    <span className="dark:!text-gray-100">
+                      My Orders
+                    </span>
                   </Link>
 
                   <div className="my-1 border-t border-gray-100 dark:border-[#292929]" />
@@ -306,18 +264,20 @@ function Navbar() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-3 px-3 py-3 text-[12px] font-medium text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
+                    className="flex w-full items-center gap-3 px-3 py-3 text-left text-[12px] font-medium text-red-500 transition-colors hover:bg-red-50 dark:!text-red-400 dark:hover:bg-red-500/10"
                   >
                     <FiLogOut
                       size={16}
                       strokeWidth={1.7}
+                      className="shrink-0 dark:!text-red-400"
                     />
 
-                    Sign Out
+                    <span className="dark:!text-red-400">
+                      Logout
+                    </span>
                   </button>
 
                 </div>
-
               </div>
             ) : (
               <Link
@@ -340,8 +300,6 @@ function Navbar() {
                 </div>
               </Link>
             )}
-
-            {/* THEME */}
 
             <button
               type="button"
@@ -376,15 +334,13 @@ function Navbar() {
               </span>
             </button>
 
-            {/* WISHLIST */}
-
             <Link
               to="/wishlist"
               aria-label="Wishlist"
               className={`relative flex h-9 w-9 shrink-0 items-center justify-center transition-colors duration-200 hover:text-red-500 ${
                 totalWishlistItems > 0
                   ? "text-red-500 dark:text-red-400"
-                  : "text-gray-900 dark:text-white"
+                  : "text-gray-900 dark:!text-white"
               }`}
             >
               <FiHeart
@@ -393,7 +349,7 @@ function Navbar() {
                 className={
                   totalWishlistItems > 0
                     ? "fill-red-500 dark:fill-red-400"
-                    : ""
+                    : "dark:text-white"
                 }
               />
 
@@ -404,16 +360,15 @@ function Navbar() {
               )}
             </Link>
 
-            {/* CART */}
-
             <Link
               to="/cart"
               aria-label="Shopping cart"
-              className="relative flex h-9 w-9 shrink-0 items-center justify-center text-gray-900 transition-colors hover:text-yellow-600 dark:text-white dark:hover:text-yellow-400"
+              className="relative flex h-9 w-9 shrink-0 items-center justify-center text-gray-900 transition-colors hover:text-yellow-600 dark:!text-white dark:hover:text-yellow-400"
             >
               <FiShoppingCart
                 size={21}
                 strokeWidth={1.7}
+                className="dark:text-white"
               />
 
               {totalItems > 0 && (
@@ -424,10 +379,6 @@ function Navbar() {
             </Link>
 
           </div>
-
-          {/* =================================================
-              MOBILE SEARCH
-          ================================================= */}
 
           <form
             onSubmit={handleSearch}
@@ -445,9 +396,7 @@ function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(event) =>
-                  setSearchQuery(
-                    event.target.value
-                  )
+                  setSearchQuery(event.target.value)
                 }
                 placeholder="Search for products, brands and more"
                 className="h-11 w-full border border-[#dededb] bg-[#f7f7f5] pl-11 pr-4 text-[12px] text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-gray-500 focus:bg-white dark:border-[#303030] dark:bg-[#1b1b1b] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#555]"
@@ -456,21 +405,12 @@ function Navbar() {
             </div>
           </form>
 
-          {/* =================================================
-              DYNAMIC CATEGORIES
-          ================================================= */}
-
           <nav className="hidden h-[49px] items-center gap-7 overflow-x-auto border-t border-gray-100 dark:border-[#292929] lg:flex">
 
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                `relative flex h-full items-center text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                  isActive
-                    ? "text-gray-950 dark:text-white"
-                    : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
-                }`
-              }
+              end
+              className={desktopNavClass}
             >
               {({ isActive }) => (
                 <>
@@ -485,52 +425,54 @@ function Navbar() {
 
             <NavLink
               to="/products"
-              className={({ isActive }) =>
-                `relative flex h-full items-center text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                  isActive
-                    ? "text-gray-950 dark:text-white"
-                    : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
-                }`
+              end
+              className={() =>
+                desktopNavClass({
+                  isActive:
+                    location.pathname === "/products" &&
+                    !currentCategory &&
+                    !currentSearch,
+                })
               }
             >
-              {({ isActive }) => (
+              {location.pathname === "/products" &&
+              !currentCategory &&
+              !currentSearch ? (
                 <>
                   All Products
 
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
-                  )}
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
                 </>
+              ) : (
+                "All Products"
               )}
             </NavLink>
 
-            {navCategories.map(
-              (category) => (
+            {navCategories.map((category) => {
+              const isCategoryActive =
+                location.pathname === "/products" &&
+                currentCategory === category._id;
+
+              return (
                 <NavLink
                   key={category._id}
                   to={`/products?category=${encodeURIComponent(
                     category._id
                   )}`}
-                  className={({ isActive }) =>
-                    `relative flex h-full shrink-0 items-center text-[11px] font-medium uppercase tracking-[0.07em] transition-colors ${
-                      isActive
-                        ? "text-gray-950 dark:text-white"
-                        : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
-                    }`
+                  className={() =>
+                    desktopNavClass({
+                      isActive: isCategoryActive,
+                    })
                   }
                 >
-                  {({ isActive }) => (
-                    <>
-                      {category.name}
+                  {category.name}
 
-                      {isActive && (
-                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
-                      )}
-                    </>
+                  {isCategoryActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
                   )}
                 </NavLink>
-              )
-            )}
+              );
+            })}
 
             <span className="ml-auto shrink-0 bg-[#111111] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.14em] text-white dark:bg-[#ffd600] dark:text-gray-950">
               Sale
@@ -540,10 +482,6 @@ function Navbar() {
 
         </div>
       </header>
-
-      {/* =====================================================
-          MOBILE DRAWER
-      ====================================================== */}
 
       <div
         className={`fixed inset-0 z-[100] lg:hidden ${
@@ -570,14 +508,12 @@ function Navbar() {
           }`}
         >
 
-          {/* MOBILE HEADER */}
-
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-5 dark:border-[#292929] dark:bg-[#111111]">
 
             <Link
               to="/"
               onClick={closeMobileMenu}
-              className="text-[30px] font-black tracking-[-0.075em] leading-none"
+              className="text-[30px] font-black leading-none tracking-[-0.075em]"
             >
               <span className="text-[#f5c400]">
                 shop
@@ -600,8 +536,6 @@ function Navbar() {
             </button>
 
           </div>
-
-          {/* ACCOUNT */}
 
           <div className="border-b border-gray-100 p-5 dark:border-[#292929]">
 
@@ -692,8 +626,6 @@ function Navbar() {
 
           </div>
 
-          {/* THEME */}
-
           <div className="border-b border-gray-100 p-5 dark:border-[#292929]">
 
             <button
@@ -760,8 +692,6 @@ function Navbar() {
 
           </div>
 
-          {/* QUICK ACTIONS */}
-
           <div className="border-b border-gray-100 p-5 dark:border-[#292929]">
 
             <p className="mb-4 px-1 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
@@ -776,14 +706,14 @@ function Navbar() {
                 className="relative border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-[#303030] dark:hover:border-red-500/20 dark:hover:bg-red-500/10"
               >
 
-                <div className="mb-4 flex h-9 w-9 items-center justify-center bg-red-50 text-red-500 dark:bg-red-500/10">
+                <div className="mb-4 flex h-9 w-9 items-center justify-center bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400">
 
                   <FiHeart
                     size={18}
                     strokeWidth={1.7}
                     className={
                       totalWishlistItems > 0
-                        ? "fill-red-500"
+                        ? "fill-red-500 dark:fill-red-400"
                         : ""
                     }
                   />
@@ -811,6 +741,7 @@ function Navbar() {
                   <FiShoppingCart
                     size={18}
                     strokeWidth={1.7}
+                    className="dark:text-yellow-400"
                   />
 
                 </div>
@@ -829,10 +760,6 @@ function Navbar() {
 
           </div>
 
-          {/* =================================================
-              MOBILE SHOP CATEGORIES
-          ================================================= */}
-
           <div className="p-5">
 
             <p className="mb-2 px-1 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
@@ -843,6 +770,7 @@ function Navbar() {
 
               <NavLink
                 to="/"
+                end
                 onClick={closeMobileMenu}
                 className={mobileLinkClass}
               >
@@ -856,8 +784,17 @@ function Navbar() {
 
               <NavLink
                 to="/products"
+                end
                 onClick={closeMobileMenu}
-                className={mobileLinkClass}
+                className={() =>
+                  `flex items-center justify-between border-b border-gray-100 px-1 py-4 text-sm font-medium transition-colors dark:border-[#292929] ${
+                    location.pathname === "/products" &&
+                    !currentCategory &&
+                    !currentSearch
+                      ? "text-gray-950 dark:!text-white"
+                      : "text-gray-600 hover:text-gray-950 dark:!text-gray-300 dark:hover:!text-white"
+                  }`
+                }
               >
                 All Products
 
@@ -867,15 +804,25 @@ function Navbar() {
                 />
               </NavLink>
 
-              {navCategories.map(
-                (category) => (
+              {navCategories.map((category) => {
+                const isCategoryActive =
+                  location.pathname === "/products" &&
+                  currentCategory === category._id;
+
+                return (
                   <NavLink
                     key={category._id}
                     to={`/products?category=${encodeURIComponent(
                       category._id
                     )}`}
                     onClick={closeMobileMenu}
-                    className={mobileLinkClass}
+                    className={() =>
+                      `flex items-center justify-between border-b border-gray-100 px-1 py-4 text-sm font-medium transition-colors dark:border-[#292929] ${
+                        isCategoryActive
+                          ? "text-gray-950 dark:!text-white"
+                          : "text-gray-600 hover:text-gray-950 dark:!text-gray-300 dark:hover:!text-white"
+                      }`
+                    }
                   >
                     {category.name}
 
@@ -884,12 +831,10 @@ function Navbar() {
                       className="shrink-0"
                     />
                   </NavLink>
-                )
-              )}
+                );
+              })}
 
             </nav>
-
-            {/* LOCATION */}
 
             <div className="mt-7 border-t border-gray-100 pt-6 dark:border-[#292929]">
 
@@ -897,7 +842,7 @@ function Navbar() {
 
                 <FiMapPin
                   size={18}
-                  className="text-gray-500"
+                  className="text-gray-500 dark:text-gray-400"
                 />
 
                 <div>
@@ -916,13 +861,11 @@ function Navbar() {
 
             </div>
 
-            {/* LOGOUT */}
-
             {isLoggedIn && user && (
               <button
                 type="button"
                 onClick={handleLogout}
-                className="mt-6 flex w-full items-center justify-between border-t border-gray-100 px-1 pt-5 text-[12px] font-bold text-red-500 dark:border-[#292929]"
+                className="mt-6 flex w-full items-center justify-between border-t border-gray-100 px-1 pt-5 text-[12px] font-bold text-red-500 dark:border-[#292929] dark:text-red-400"
               >
 
                 <span className="flex items-center gap-3">
@@ -932,7 +875,7 @@ function Navbar() {
                     strokeWidth={1.7}
                   />
 
-                  Sign Out
+                  Logout
 
                 </span>
 
@@ -943,8 +886,6 @@ function Navbar() {
 
           </div>
 
-          {/* FOOTER */}
-
           <div className="border-t border-gray-100 px-5 py-6 dark:border-[#292929]">
 
             <p className="text-center text-[10px] text-gray-400">
@@ -954,7 +895,6 @@ function Navbar() {
           </div>
 
         </aside>
-
       </div>
     </>
   );
