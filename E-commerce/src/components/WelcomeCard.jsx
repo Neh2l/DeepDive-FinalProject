@@ -10,7 +10,6 @@ function WelcomeCard() {
     const enterTimer = setTimeout(() => {
       setVisible(true);
 
-      // جذب الانتباه مرة واحدة بعد ظهور الكارت
       const attentionTimer = setTimeout(() => {
         setAttention(true);
 
@@ -36,94 +35,98 @@ function WelcomeCard() {
     <div
       className={`
         fixed
-        bottom-6
-        left-1/2
         z-[100]
-        w-[calc(100vw-32px)]
-        max-w-[365px]
-        -translate-x-1/2
+        left-1/2
+        top-1/2
+        w-[calc(100%-24px)]
+        max-w-[370px]
         overflow-hidden
-        rounded-[28px]
+        rounded-[22px]
         border
-        border-black/[0.06]
-        bg-white/[0.97]
-        backdrop-blur-xl
-        shadow-[0_30px_100px_rgba(0,0,0,0.18)]
+        border-black/[0.07]
+        bg-white
+        shadow-[0_24px_70px_rgba(0,0,0,0.18)]
         transition-all
-        duration-[950ms]
+        duration-[800ms]
         ease-[cubic-bezier(.16,1,.3,1)]
+        -translate-x-1/2
 
         ${
           visible
-            ? "translate-y-0 opacity-100"
-            : "translate-y-[150%] opacity-0"
+            ? "-translate-y-1/2 scale-100 opacity-100"
+            : "translate-y-[calc(-50%+25px)] scale-[0.96] opacity-0"
         }
 
         ${attention ? "animate-[welcomeAttention_0.75s_ease-out]" : ""}
 
+        sm:bottom-6
         sm:left-auto
         sm:right-6
-        sm:translate-x-0
+        sm:top-auto
         sm:w-[365px]
+        sm:max-w-[365px]
+        sm:translate-x-0
+        sm:translate-y-0
+        sm:scale-100
 
         dark:border-[#2a2a2a]
-        dark:bg-[#1a1a1a]
+        dark:bg-[#181818]
       `}
     >
-      {/* Top yellow accent */}
-      <div className="absolute left-0 top-0 h-[3px] w-full bg-[#ffd814]" />
+      <div className="absolute left-0 top-0 h-[2px] w-full bg-[#ffd814]" />
 
-      {/* Subtle glow */}
-      <div className="pointer-events-none absolute -inset-[1px] rounded-[28px] bg-[#ffd814]/[0.03]" />
+      <button
+        onClick={() => setVisible(false)}
+        aria-label="Close welcome card"
+        className="
+          absolute
+          right-3.5
+          top-3.5
+          z-30
+          flex
+          h-7
+          w-7
+          items-center
+          justify-center
+          rounded-full
+          bg-white/90
+          text-gray-400
+          shadow-sm
+          backdrop-blur-md
+          transition-all
+          duration-300
+          hover:rotate-90
+          hover:bg-black
+          hover:text-white
+          dark:bg-[#222]/90
+          dark:text-gray-400
+          dark:hover:bg-white
+          dark:hover:text-black
+        "
+      >
+        <FiX size={13} strokeWidth={1.8} />
+      </button>
 
-      <div className="relative p-5 sm:p-6">
-        {/* Close Button */}
-        <button
-          onClick={() => setVisible(false)}
-          aria-label="Close welcome card"
-          className="
-            absolute
-            right-4
-            top-4
-            z-30
-            flex
-            h-7
-            w-7
-            items-center
-            justify-center
-            rounded-full
-            bg-gray-50
-            text-gray-400
-            transition-all
-            duration-300
-            hover:bg-black
-            hover:text-white
-            hover:rotate-90
-            dark:bg-[#222]
-            dark:text-gray-400
-            dark:hover:bg-white
-            dark:hover:text-black
-          "
-        >
-          <FiX size={13} strokeWidth={1.8} />
-        </button>
-
-        {/* Main Content */}
-        <div className="flex items-center gap-5">
-          {/* Video */}
+      <div className="p-4 sm:p-5">
+        <div className="flex items-center gap-4">
           <div
             className={`
               relative
-              h-[105px]
-              w-[105px]
+              h-[100px]
+              w-[100px]
               shrink-0
               overflow-hidden
-              rounded-[23px]
-              bg-[#f5f5f2]
+              rounded-[18px]
+              bg-[#f4f4f1]
               transition-transform
               duration-700
+
+              sm:h-[105px]
+              sm:w-[105px]
+
               dark:bg-[#222]
-              ${attention ? "scale-[1.04]" : "scale-100"}
+
+              ${attention ? "scale-[1.035]" : "scale-100"}
             `}
           >
             <video
@@ -133,61 +136,49 @@ function WelcomeCard() {
               loop
               playsInline
               preload="auto"
-              className="
-                absolute
-                inset-0
-                h-full
-                w-full
-                object-cover
-              "
+              className="absolute inset-0 h-full w-full object-cover"
             />
 
-            {/* Soft video overlay */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-black/[0.04]" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-black/[0.08]" />
 
-            {/* Live Indicator */}
-            <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-full bg-black/55 px-2 py-1 backdrop-blur-md">
+            <div className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 px-2 py-1 backdrop-blur-md">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#ffd814]" />
 
-              <span className="text-[7px] font-bold uppercase tracking-[0.15em] text-white">
+              <span className="text-[6px] font-bold uppercase tracking-[0.15em] text-white">
                 Live
               </span>
             </div>
           </div>
 
-          {/* Text */}
-          <div className="min-w-0 pr-2">
+          <div className="min-w-0 flex-1 pr-5">
             <div className="flex items-center gap-2">
-              <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-gray-400">
+              <span className="text-[7px] font-semibold uppercase tracking-[0.26em] text-gray-400">
                 SHOPLY
               </span>
 
               <span className="h-[3px] w-[3px] rounded-full bg-[#ffd814]" />
             </div>
 
-            <h3 className="mt-2 text-[21px] font-medium leading-[0.98] tracking-[-0.05em] text-[#111] dark:text-white">
+            <h3 className="mt-2 text-[20px] font-medium leading-[0.98] tracking-[-0.055em] text-[#111] dark:text-white">
               Wait...
               <br />
-              <span className="font-semibold">
-                you found us.
-              </span>
+              <span className="font-semibold">you found us.</span>
             </h3>
 
-            <p className="mt-2.5 max-w-[175px] text-[11px] font-normal leading-[1.55] text-gray-500 dark:text-gray-400">
+            <p className="mt-2 max-w-[160px] text-[10px] leading-[1.5] text-gray-500 dark:text-gray-400">
               There’s something worth discovering here.
             </p>
           </div>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-5 border-t border-black/[0.06] pt-4 dark:border-[#2a2a2a]">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+        <div className="mt-4 border-t border-black/[0.07] pt-3.5 dark:border-[#2a2a2a]">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
                 Your next favorite thing
               </p>
 
-              <p className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-[9px] text-gray-500 dark:text-gray-400">
                 might be one click away.
               </p>
             </div>
@@ -197,35 +188,42 @@ function WelcomeCard() {
               className="
                 group
                 inline-flex
+                shrink-0
                 items-center
-                gap-2
+                gap-1.5
                 rounded-full
                 bg-[#111]
-                px-4
+                px-3.5
                 py-2.5
-                text-[8px]
+                text-[7px]
                 font-bold
                 uppercase
-                tracking-[0.16em]
+                tracking-[0.15em]
                 !text-white
                 transition-all
                 duration-300
                 hover:-translate-y-0.5
                 hover:bg-[#ffd814]
                 hover:!text-black
-                hover:shadow-[0_8px_25px_rgba(255,216,20,0.3)]
+                hover:shadow-[0_8px_22px_rgba(255,216,20,0.25)]
+                dark:bg-white
+                dark:!text-black
+                dark:hover:bg-[#ffd814]
               "
             >
-              Discover
+              <span className="!text-inherit">Discover</span>
 
               <FiArrowUpRight
-                size={13}
+                size={12}
                 strokeWidth={2}
                 className="
+                  !text-white
                   transition-transform
                   duration-300
                   group-hover:-translate-y-0.5
                   group-hover:translate-x-0.5
+                  group-hover:!text-black
+                  dark:!text-black
                 "
               />
             </Link>
@@ -233,8 +231,7 @@ function WelcomeCard() {
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gray-100 dark:bg-[#2a2a2a]">
+      <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gray-100 dark:bg-[#292929]">
         <div className="h-full w-full origin-left bg-[#ffd814] animate-[welcomeProgress_6.5s_linear_forwards]" />
       </div>
     </div>
