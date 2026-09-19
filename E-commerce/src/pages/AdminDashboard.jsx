@@ -24,10 +24,7 @@ import {
   updateProductApi,
   deleteProductApi,
 } from "../Apis/productsApi";
-import {
-  getAllOrders,
-  updateOrderStatus,
-} from "../Apis/ordersApi";
+import { getAllOrders, updateOrderStatus } from "../Apis/ordersApi";
 import {
   getCategories,
   createCategory,
@@ -67,33 +64,29 @@ import {
 
 function AdminDashboard() {
   const [orders, setOrders] = useState([]);
-const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersLoading, setOrdersLoading] = useState(false);
 
-const [ordersPage, setOrdersPage] = useState(1);
-const [ordersTotal, setOrdersTotal] = useState(0);
+  const [ordersPage, setOrdersPage] = useState(1);
+  const [ordersTotal, setOrdersTotal] = useState(0);
 
-const [orderStatusFilter, setOrderStatusFilter] = useState("");
-const [orderSearch, setOrderSearch] = useState("");
+  const [orderStatusFilter, setOrderStatusFilter] = useState("");
+  const [orderSearch, setOrderSearch] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-const [footerSettings, setFooterSettings] = useState({
-  phone: "",
-  email: "",
-  location: "",
-  facebook: "",
-  instagram: "",
-  twitter: "",
-  youtube: "",
-});
+  const [footerSettings, setFooterSettings] = useState({
+    phone: "",
+    email: "",
+    location: "",
+    facebook: "",
+    instagram: "",
+    twitter: "",
+    youtube: "",
+  });
 
-const [footerSaving, setFooterSaving] = useState(false);
-  const currentUser = useSelector(
-    (state) => state.auth.user
-  );
+  const [footerSaving, setFooterSaving] = useState(false);
+  const currentUser = useSelector((state) => state.auth.user);
 
-  const cartItems = useSelector(
-    (state) => state.cart.items || []
-  );
+  const cartItems = useSelector((state) => state.cart.items || []);
 
   /*
   ========================================
@@ -102,8 +95,7 @@ const [footerSaving, setFooterSaving] = useState(false);
   */
 
   const [users, setUsers] = useState([]);
-  const [usersLoading, setUsersLoading] =
-    useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
 
   /*
   ========================================
@@ -112,10 +104,8 @@ const [footerSaving, setFooterSaving] = useState(false);
   */
 
   const [products, setProducts] = useState([]);
-  const [productsLoading, setProductsLoading] =
-    useState(true);
-  const [productError, setProductError] =
-    useState("");
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productError, setProductError] = useState("");
 
   /*
   ========================================
@@ -124,8 +114,7 @@ const [footerSaving, setFooterSaving] = useState(false);
   */
 
   const [categories, setCategories] = useState([]);
-  const [categoriesLoading, setCategoriesLoading] =
-    useState(true);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   /*
   ========================================
@@ -133,17 +122,13 @@ const [footerSaving, setFooterSaving] = useState(false);
   ========================================
   */
 
-  const [showCategoryModal, setShowCategoryModal] =
-    useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
 
-  const [editingCategory, setEditingCategory] =
-    useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
 
-  const [categoryName, setCategoryName] =
-    useState("");
+  const [categoryName, setCategoryName] = useState("");
 
-  const [categorySearch, setCategorySearch] =
-    useState("");
+  const [categorySearch, setCategorySearch] = useState("");
 
   /*
   ========================================
@@ -160,14 +145,10 @@ const [footerSaving, setFooterSaving] = useState(false);
 
         setUsers(response.users || []);
       } catch (error) {
-        console.error(
-          "Failed to load customers:",
-          error
-        );
+        console.error("Failed to load customers:", error);
 
         toast.error(
-          error.response?.data?.message ||
-            "Failed to load customers"
+          error.response?.data?.message || "Failed to load customers",
         );
 
         setUsers([]);
@@ -195,14 +176,10 @@ const [footerSaving, setFooterSaving] = useState(false);
 
         setProducts(response.data || []);
       } catch (error) {
-        console.error(
-          "Failed to load products:",
-          error
-        );
+        console.error("Failed to load products:", error);
 
         setProductError(
-          error.response?.data?.message ||
-            "Failed to load products"
+          error.response?.data?.message || "Failed to load products",
         );
       } finally {
         setProductsLoading(false);
@@ -231,10 +208,7 @@ const [footerSaving, setFooterSaving] = useState(false);
           setCategories([]);
         }
       } catch (error) {
-        console.error(
-          "Failed to load categories:",
-          error
-        );
+        console.error("Failed to load categories:", error);
 
         setCategories([]);
       } finally {
@@ -245,14 +219,82 @@ const [footerSaving, setFooterSaving] = useState(false);
     loadCategories();
   }, []);
 
-  const [activePage, setActivePage] =
-    useState("Dashboard");
-    useEffect(() => {
-  if (activePage !== "Orders") return;
+  const [activePage, setActivePage] = useState("Dashboard");
 
-  const fetchOrders = async () => {
+  /* ===== SALES DATA (Dashboard) ===== */
+
+  const [salesOrders, setSalesOrders] = useState([]);
+  const [salesLoading, setSalesLoading] = useState(false);
+
+  useEffect(() => {
+    if (activePage !== "Dashboard") return;
+
+    const loadSalesOrders = async () => {
+      try {
+        setSalesLoading(true);
+
+        const limit = 100;
+        let page = 1;
+        let all = [];
+
+        while (true) {
+          const response = await getAllOrders({ page, limit });
+          const batch = response.orders || [];
+
+          all = [...all, ...batch];
+
+          if (batch.length === 0 || all.length >= (response.total || 0)) {
+            break;
+          }
+
+          page += 1;
+        }
+
+        setSalesOrders(all);
+      } catch (error) {
+        console.error("Failed to load sales data:", error);
+      } finally {
+        setSalesLoading(false);
+      }
+    };
+
+    loadSalesOrders();
+  }, [activePage]);
+
+  /* ===== ORDERS PAGE ===== */
+
+  useEffect(() => {
+    if (activePage !== "Orders") return;
+
+    const fetchOrders = async () => {
+      try {
+        setOrdersLoading(true);
+
+        const response = await getAllOrders({
+          page: ordersPage,
+          limit: 10,
+          status: orderStatusFilter || undefined,
+          search: orderSearch || undefined,
+        });
+
+        setOrders(response.orders || []);
+        setOrdersTotal(response.total || 0);
+      } catch (error) {
+        console.error("Orders error:", error);
+
+        toast.error(error?.response?.data?.message || "Failed to load orders");
+      } finally {
+        setOrdersLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [activePage, ordersPage, orderStatusFilter, orderSearch]);
+  const handleOrderStatusChange = async (orderId, status) => {
     try {
-      setOrdersLoading(true);
+      await updateOrderStatus(orderId, status);
+
+      toast.success("Order status updated successfully");
 
       const response = await getAllOrders({
         page: ordersPage,
@@ -264,77 +306,38 @@ const [footerSaving, setFooterSaving] = useState(false);
       setOrders(response.orders || []);
       setOrdersTotal(response.total || 0);
     } catch (error) {
-      console.error("Orders error:", error);
+      console.error("Update order status error:", error);
 
       toast.error(
-        error?.response?.data?.message ||
-          "Failed to load orders"
+        error?.response?.data?.message || "Failed to update order status",
       );
-    } finally {
-      setOrdersLoading(false);
     }
   };
+  useEffect(() => {
+    if (activePage !== "Settings") return;
 
-  fetchOrders();
-}, [
-  activePage,
-  ordersPage,
-  orderStatusFilter,
-  orderSearch,
-]);
-const handleOrderStatusChange = async (orderId, status) => {
-  try {
-    await updateOrderStatus(orderId, status);
+    const fetchFooterSettings = async () => {
+      try {
+        const response = await getFooterSettings();
 
-    toast.success("Order status updated successfully");
+        setFooterSettings(response.data);
+      } catch (error) {
+        console.error(error);
 
-    const response = await getAllOrders({
-      page: ordersPage,
-      limit: 10,
-      status: orderStatusFilter || undefined,
-      search: orderSearch || undefined,
-    });
+        toast.error("Failed to load footer settings");
+      }
+    };
 
-    setOrders(response.orders || []);
-    setOrdersTotal(response.total || 0);
-  } catch (error) {
-    console.error("Update order status error:", error);
+    fetchFooterSettings();
+  }, [activePage]);
 
-    toast.error(
-      error?.response?.data?.message ||
-        "Failed to update order status"
-    );
-  }
-};
-    useEffect(() => {
-  if (activePage !== "Settings") return;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const fetchFooterSettings = async () => {
-    try {
-      const response = await getFooterSettings();
+  const [searchTerm, setSearchTerm] = useState("");
 
-      setFooterSettings(response.data);
-    } catch (error) {
-      console.error(error);
+  const [showProductModal, setShowProductModal] = useState(false);
 
-      toast.error("Failed to load footer settings");
-    }
-  };
-
-  fetchFooterSettings();
-}, [activePage]);
-
-  const [sidebarOpen, setSidebarOpen] =
-    useState(false);
-
-  const [searchTerm, setSearchTerm] =
-    useState("");
-
-  const [showProductModal, setShowProductModal] =
-    useState(false);
-
-  const [editingProduct, setEditingProduct] =
-    useState(null);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const [productForm, setProductForm] = useState({
     title: "",
@@ -343,10 +346,10 @@ const handleOrderStatusChange = async (orderId, status) => {
     stock: "",
     image: null,
     description: "",
+    rate: "",
   });
 
-  const adminName =
-    currentUser?.name || "Ahmed";
+  const adminName = currentUser?.name || "Ahmed";
 
   /*
   ========================================
@@ -356,23 +359,17 @@ const handleOrderStatusChange = async (orderId, status) => {
 
   const totalProducts = products.length;
 
-  const totalCustomers = users.filter(
-    (user) => user.role === "Buyer"
-  ).length;
+  const totalCustomers = users.filter((user) => user.role === "Buyer").length;
 
   const lowStockProducts = products.filter(
-    (product) =>
-      Number(product.stock || 0) <= 10
+    (product) => Number(product.stock || 0) <= 10,
   );
 
-  const totalInventoryValue =
-    products.reduce(
-      (total, product) =>
-        total +
-        Number(product.price || 0) *
-          Number(product.stock || 0),
-      0
-    );
+  const totalInventoryValue = products.reduce(
+    (total, product) =>
+      total + Number(product.price || 0) * Number(product.stock || 0),
+    0,
+  );
 
   const averageRating = "4.5";
 
@@ -383,18 +380,11 @@ const handleOrderStatusChange = async (orderId, status) => {
   */
 
   const getCategoryName = (category) => {
-    const categoryId =
-      typeof category === "object"
-        ? category?._id
-        : category;
+    const categoryId = typeof category === "object" ? category?._id : category;
 
     return (
-      categories.find(
-        (item) => item._id === categoryId
-      )?.name ||
-      (typeof category === "object"
-        ? category?.name
-        : category) ||
+      categories.find((item) => item._id === categoryId)?.name ||
+      (typeof category === "object" ? category?.name : category) ||
       "Uncategorized"
     );
   };
@@ -406,27 +396,19 @@ const handleOrderStatusChange = async (orderId, status) => {
   */
 
   const filteredProducts = useMemo(() => {
-    const search =
-      searchTerm.trim().toLowerCase();
+    const search = searchTerm.trim().toLowerCase();
 
     if (!search) {
       return products;
     }
 
     return products.filter((product) => {
-      const categoryName =
-        getCategoryName(product.category);
+      const categoryName = getCategoryName(product.category);
 
       return (
-        product.title
-          ?.toLowerCase()
-          .includes(search) ||
-        categoryName
-          ?.toLowerCase()
-          .includes(search) ||
-        product.description
-          ?.toLowerCase()
-          .includes(search)
+        product.title?.toLowerCase().includes(search) ||
+        categoryName?.toLowerCase().includes(search) ||
+        product.description?.toLowerCase().includes(search)
       );
     });
   }, [products, searchTerm, categories]);
@@ -438,17 +420,14 @@ const handleOrderStatusChange = async (orderId, status) => {
   */
 
   const filteredCategories = useMemo(() => {
-    const search =
-      categorySearch.trim().toLowerCase();
+    const search = categorySearch.trim().toLowerCase();
 
     if (!search) {
       return categories;
     }
 
     return categories.filter((category) =>
-      category.name
-        ?.toLowerCase()
-        .includes(search)
+      category.name?.toLowerCase().includes(search),
     );
   }, [categories, categorySearch]);
 
@@ -458,21 +437,65 @@ const handleOrderStatusChange = async (orderId, status) => {
   ========================================
   */
 
-  const salesData = [
-    { month: "Jan", value: 38 },
-    { month: "Feb", value: 52 },
-    { month: "Mar", value: 44 },
-    { month: "Apr", value: 68 },
-    { month: "May", value: 61 },
-    { month: "Jun", value: 78 },
-    { month: "Jul", value: 71 },
-    { month: "Aug", value: 88 },
-    { month: "Sep", value: 76 },
-    { month: "Oct", value: 94 },
-    { month: "Nov", value: 86 },
-    { month: "Dec", value: 100 },
+  const MONTH_LABELS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
+  const currentYear = new Date().getFullYear();
+
+  const salesData = useMemo(() => {
+    const months = MONTH_LABELS.map((label) => ({
+      month: label,
+      revenue: 0,
+      orders: 0,
+    }));
+
+    salesOrders.forEach((order) => {
+      if (!order.createdAt) return;
+
+      const date = new Date(order.createdAt);
+      if (date.getFullYear() !== currentYear) return;
+
+      if (order.status === "Canceled") return;
+      if (order.paymentMethod === "Paymob" && order.paymentStatus !== "Paid") {
+        return;
+      }
+
+      const index = date.getMonth();
+      months[index].revenue += Number(order.total || 0);
+      months[index].orders += 1;
+    });
+
+    const maxRevenue = Math.max(...months.map((m) => m.revenue), 0);
+
+    return months.map((m) => ({
+      ...m,
+      height: maxRevenue > 0 ? Math.max((m.revenue / maxRevenue) * 100, 3) : 3,
+    }));
+  }, [salesOrders, currentYear]);
+
+  const totalYearSales = salesData.reduce((sum, m) => sum + m.revenue, 0);
+
+  const currentMonthIndex = new Date().getMonth();
+  const currentMonthSales = salesData[currentMonthIndex]?.revenue || 0;
+  const previousMonthSales =
+    currentMonthIndex > 0 ? salesData[currentMonthIndex - 1].revenue : 0;
+
+  const salesGrowth =
+    previousMonthSales > 0
+      ? ((currentMonthSales - previousMonthSales) / previousMonthSales) * 100
+      : null;
   /*
   ========================================
   PRODUCT MODAL
@@ -489,6 +512,7 @@ const handleOrderStatusChange = async (orderId, status) => {
       stock: "",
       image: null,
       description: "",
+      rate: "",
     });
 
     setShowProductModal(true);
@@ -506,8 +530,8 @@ const handleOrderStatusChange = async (orderId, status) => {
       price: product.price || "",
       stock: product.stock || "",
       image: null,
-      description:
-        product.description || "",
+      description: product.description || "",
+      rate: product.rate || "",
     });
 
     setShowProductModal(true);
@@ -536,15 +560,14 @@ const handleOrderStatusChange = async (orderId, status) => {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
 
-    const productTitle =
-      productForm.title.trim();
+    const productTitle = productForm.title.trim();
 
-    const productDescription =
-      productForm.description.trim();
+    const productDescription = productForm.description.trim();
 
     const price = Number(productForm.price);
 
     const stock = Number(productForm.stock);
+    const rate = Number(productForm.rate);
 
     /*
     ========================================
@@ -558,16 +581,12 @@ const handleOrderStatusChange = async (orderId, status) => {
     }
 
     if (productTitle.length < 3) {
-      toast.error(
-        "Product name must be at least 3 characters"
-      );
+      toast.error("Product name must be at least 3 characters");
       return;
     }
 
     if (productTitle.length > 100) {
-      toast.error(
-        "Product name must not exceed 100 characters"
-      );
+      toast.error("Product name must not exceed 100 characters");
       return;
     }
 
@@ -576,102 +595,67 @@ const handleOrderStatusChange = async (orderId, status) => {
       return;
     }
 
-    if (
-      productForm.price === "" ||
-      productForm.price === null
-    ) {
+    if (productForm.price === "" || productForm.price === null) {
       toast.error("Please enter product price");
       return;
     }
 
-    if (
-      !Number.isFinite(price) ||
-      price <= 0
-    ) {
-      toast.error(
-        "Product price must be greater than 0"
-      );
+    if (!Number.isFinite(price) || price <= 0) {
+      toast.error("Product price must be greater than 0");
       return;
     }
 
-    if (
-      productForm.stock === "" ||
-      productForm.stock === null
-    ) {
+    if (productForm.stock === "" || productForm.stock === null) {
       toast.error("Please enter product stock");
       return;
     }
 
-    if (
-      !Number.isInteger(stock) ||
-      stock < 0
-    ) {
-      toast.error(
-        "Stock must be a whole number greater than or equal to 0"
-      );
+    if (!Number.isInteger(stock) || stock < 0) {
+      toast.error("Stock must be a whole number greater than or equal to 0");
       return;
     }
 
     if (!productDescription) {
-      toast.error(
-        "Please enter product description"
-      );
+      toast.error("Please enter product description");
       return;
     }
 
     if (productDescription.length < 10) {
-      toast.error(
-        "Product description must be at least 10 characters"
-      );
+      toast.error("Product description must be at least 10 characters");
       return;
     }
 
     if (productDescription.length > 1000) {
-      toast.error(
-        "Product description must not exceed 1000 characters"
-      );
+      toast.error("Product description must not exceed 1000 characters");
+      return;
+    }
+    if (rate.length > 5) {
+      toast.error("Product rate must be from 1 to 5");
       return;
     }
 
     const toastId = toast.loading(
       editingProduct
         ? "Updating product, please wait..."
-        : "Adding product, please wait..."
+        : "Adding product, please wait...",
     );
 
     try {
       const formData = new FormData();
 
-      formData.append(
-        "title",
-        productTitle
-      );
+      formData.append("title", productTitle);
 
-      formData.append(
-        "category",
-        productForm.category
-      );
+      formData.append("category", productForm.category);
 
-      formData.append(
-        "price",
-        price
-      );
+      formData.append("price", price);
 
-      formData.append(
-        "stock",
-        stock
-      );
+      formData.append("stock", stock);
 
-      formData.append(
-        "description",
-        productDescription
-      );
+      formData.append("description", productDescription);
+      formData.append("rate", rate);
 
       if (productForm.image) {
-        formData.append(
-          "images",
-          productForm.image
-        );
+        formData.append("images", productForm.image);
       }
 
       /*
@@ -681,70 +665,47 @@ const handleOrderStatusChange = async (orderId, status) => {
       */
 
       if (editingProduct) {
-        const response =
-          await updateProductApi(
-            editingProduct._id,
-            formData
-          );
+        const response = await updateProductApi(editingProduct._id, formData);
 
-        const updatedProduct =
-          response.data;
+        const updatedProduct = response.data;
 
         setProducts((prevProducts) =>
           prevProducts.map((product) =>
-            product._id ===
-            editingProduct._id
-              ? updatedProduct
-              : product
-          )
+            product._id === editingProduct._id ? updatedProduct : product,
+          ),
         );
 
-        toast.success(
-          "Product updated successfully!",
-          {
-            id: toastId,
-          }
-        );
-      }
+        toast.success("Product updated successfully!", {
+          id: toastId,
+        });
+      } else {
 
       /*
       ========================================
       CREATE PRODUCT
       ========================================
       */
-
-      else {
-        const response =
-          await createProduct(formData);
+        const response = await createProduct(formData);
 
         const newProduct = response.data;
 
-        setProducts((prevProducts) => [
-          newProduct,
-          ...prevProducts,
-        ]);
+        setProducts((prevProducts) => [newProduct, ...prevProducts]);
 
-        toast.success(
-          "Product added successfully!",
-          {
-            id: toastId,
-          }
-        );
+        toast.success("Product added successfully!", {
+          id: toastId,
+        });
       }
 
       closeProductModal();
     } catch (error) {
-      console.error(
-        "Product operation failed:",
-        error
-      );
+      console.error("Product operation failed:", error);
 
       toast.error(
         error.response?.data?.message ||
           "Something went wrong while saving the product",
         {
           id: toastId,
-        }
+        },
       );
     }
   };
@@ -756,58 +717,42 @@ const handleOrderStatusChange = async (orderId, status) => {
   */
 
   const handleDeleteProduct = async (id) => {
-    toast.warning(
-      "Are you sure you want to delete this product?",
-      {
-        duration: 8000,
+    toast.warning("Are you sure you want to delete this product?", {
+      duration: 8000,
 
-        action: {
-          label: "Delete",
+      action: {
+        label: "Delete",
 
-          onClick: async () => {
-            const toastId =
-              toast.loading(
-                "Deleting product, please wait..."
-              );
+        onClick: async () => {
+          const toastId = toast.loading("Deleting product, please wait...");
 
-            try {
-              await deleteProductApi(id);
+          try {
+            await deleteProductApi(id);
 
-              setProducts((prevProducts) =>
-                prevProducts.filter(
-                  (product) =>
-                    product._id !== id
-                )
-              );
+            setProducts((prevProducts) =>
+              prevProducts.filter((product) => product._id !== id),
+            );
 
-              toast.success(
-                "Product deleted successfully!",
-                {
-                  id: toastId,
-                }
-              );
-            } catch (error) {
-              console.error(
-                "Delete product failed:",
-                error
-              );
+            toast.success("Product deleted successfully!", {
+              id: toastId,
+            });
+          } catch (error) {
+            console.error("Delete product failed:", error);
 
-              toast.error(
-                error.response?.data?.message ||
-                  "Failed to delete product",
-                {
-                  id: toastId,
-                }
-              );
-            }
-          },
+            toast.error(
+              error.response?.data?.message || "Failed to delete product",
+              {
+                id: toastId,
+              },
+            );
+          }
         },
+      },
 
-        cancel: {
-          label: "Cancel",
-        },
-      }
-    );
+      cancel: {
+        label: "Cancel",
+      },
+    });
   };
 
   /*
@@ -866,15 +811,9 @@ const handleOrderStatusChange = async (orderId, status) => {
       return "Please enter a valid category name";
     }
 
-    const lettersOnly =
-      trimmedName
-        .replace(/\s/g, "")
-        .toLowerCase();
+    const lettersOnly = trimmedName.replace(/\s/g, "").toLowerCase();
 
-    if (
-      lettersOnly.length >= 3 &&
-      new Set(lettersOnly).size === 1
-    ) {
+    if (lettersOnly.length >= 3 && new Set(lettersOnly).size === 1) {
       return "Please enter a meaningful category name";
     }
 
@@ -890,114 +829,80 @@ const handleOrderStatusChange = async (orderId, status) => {
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
 
-    const trimmedName =
-      categoryName.trim();
+    const trimmedName = categoryName.trim();
 
-    const validationError =
-      validateCategoryName(trimmedName);
+    const validationError = validateCategoryName(trimmedName);
 
     if (validationError) {
       toast.error(validationError);
       return;
     }
 
-    const duplicateCategory =
-      categories.some(
-        (category) =>
-          category.name
-            ?.trim()
-            .toLowerCase() ===
-            trimmedName.toLowerCase() &&
-          category._id !==
-            editingCategory?._id
-      );
+    const duplicateCategory = categories.some(
+      (category) =>
+        category.name?.trim().toLowerCase() === trimmedName.toLowerCase() &&
+        category._id !== editingCategory?._id,
+    );
 
     if (duplicateCategory) {
-      toast.error(
-        "This category already exists"
-      );
+      toast.error("This category already exists");
       return;
     }
 
     const toastId = toast.loading(
       editingCategory
         ? "Updating category, please wait..."
-        : "Adding category, please wait..."
+        : "Adding category, please wait...",
     );
 
     try {
       if (editingCategory) {
-        const response =
-          await updateCategoryApi(
-            editingCategory._id,
-            {
-              name: trimmedName,
-            }
-          );
+        const response = await updateCategoryApi(editingCategory._id, {
+          name: trimmedName,
+        });
 
-        const updatedCategory =
-          response.data;
+        const updatedCategory = response.data;
 
         setCategories((prevCategories) =>
           prevCategories.map((category) =>
-            category._id ===
-            editingCategory._id
-              ? updatedCategory
-              : category
-          )
+            category._id === editingCategory._id ? updatedCategory : category,
+          ),
         );
 
-        toast.success(
-          "Category updated successfully!",
-          {
-            id: toastId,
-          }
-        );
+        toast.success("Category updated successfully!", {
+          id: toastId,
+        });
       } else {
-        const response =
-          await createCategory({
-            name: trimmedName,
-          });
+        const response = await createCategory({
+          name: trimmedName,
+        });
 
-        const newCategory =
-          response.data;
+        const newCategory = response.data;
 
-        setCategories((prevCategories) => [
-          ...prevCategories,
-          newCategory,
-        ]);
+        setCategories((prevCategories) => [...prevCategories, newCategory]);
 
         setProductForm((prev) => ({
           ...prev,
           category: newCategory._id,
         }));
 
-        toast.success(
-          "Category added successfully!",
-          {
-            id: toastId,
-          }
-        );
+        toast.success("Category added successfully!", {
+          id: toastId,
+        });
       }
 
       closeCategoryModal();
     } catch (error) {
-      console.error(
-        "Category operation failed:",
-        error
-      );
+      console.error("Category operation failed:", error);
 
-      console.error(
-        "Backend response:",
-        error.response?.data
-      );
+      console.error("Backend response:", error.response?.data);
 
       toast.error(
         error.response?.data?.message ||
           "Something went wrong while saving the category",
         {
           id: toastId,
-        }
+        },
       );
     }
   };
@@ -1009,70 +914,52 @@ const handleOrderStatusChange = async (orderId, status) => {
   */
 
   const handleDeleteCategory = (id) => {
-    toast.warning(
-      "Are you sure you want to delete this category?",
-      {
-        description:
-          "Categories containing products cannot be deleted.",
-        duration: 8000,
+    toast.warning("Are you sure you want to delete this category?", {
+      description: "Categories containing products cannot be deleted.",
+      duration: 8000,
 
-        action: {
-          label: "Delete",
+      action: {
+        label: "Delete",
 
-          onClick: async () => {
-            const toastId =
-              toast.loading(
-                "Deleting category, please wait..."
-              );
+        onClick: async () => {
+          const toastId = toast.loading("Deleting category, please wait...");
 
-            try {
-              await deleteCategoryApi(id);
+          try {
+            await deleteCategoryApi(id);
 
-              setCategories(
-                (prevCategories) =>
-                  prevCategories.filter(
-                    (category) =>
-                      category._id !== id
-                  )
-              );
+            setCategories((prevCategories) =>
+              prevCategories.filter((category) => category._id !== id),
+            );
 
-              setProductForm((prev) =>
-                prev.category === id
-                  ? {
-                      ...prev,
-                      category: "",
-                    }
-                  : prev
-              );
+            setProductForm((prev) =>
+              prev.category === id
+                ? {
+                    ...prev,
+                    category: "",
+                  }
+                : prev,
+            );
 
-              toast.success(
-                "Category deleted successfully!",
-                {
-                  id: toastId,
-                }
-              );
-            } catch (error) {
-              console.error(
-                "Delete category failed:",
-                error
-              );
+            toast.success("Category deleted successfully!", {
+              id: toastId,
+            });
+          } catch (error) {
+            console.error("Delete category failed:", error);
 
-              toast.error(
-                error.response?.data?.message ||
-                  "Failed to delete category",
-                {
-                  id: toastId,
-                }
-              );
-            }
-          },
+            toast.error(
+              error.response?.data?.message || "Failed to delete category",
+              {
+                id: toastId,
+              },
+            );
+          }
         },
+      },
 
-        cancel: {
-          label: "Cancel",
-        },
-      }
-    );
+      cancel: {
+        label: "Cancel",
+      },
+    });
   };
 
   /*
@@ -1092,32 +979,32 @@ const handleOrderStatusChange = async (orderId, status) => {
   ========================================
   */
 
- const menuItems = [
-  {
-    name: "Dashboard",
-    icon: FiHome,
-  },
-  {
-    name: "Products",
-    icon: FiBox,
-  },
-  {
-    name: "Categories",
-    icon: FiTag,
-  },
-  {
-    name: "Customers",
-    icon: FiUsers,
-  },
-  {
-    name: "Orders",
-    icon: FiShoppingBag,
-  },
-  {
-    name: "Settings",
-    icon: FiSettings,
-  },
-];
+  const menuItems = [
+    {
+      name: "Dashboard",
+      icon: FiHome,
+    },
+    {
+      name: "Products",
+      icon: FiBox,
+    },
+    {
+      name: "Categories",
+      icon: FiTag,
+    },
+    {
+      name: "Customers",
+      icon: FiUsers,
+    },
+    {
+      name: "Orders",
+      icon: FiShoppingBag,
+    },
+    {
+      name: "Settings",
+      icon: FiSettings,
+    },
+  ];
 
   const handleMenuClick = (name) => {
     setActivePage(name);
@@ -1130,13 +1017,7 @@ const handleOrderStatusChange = async (orderId, status) => {
   ========================================
   */
 
-  const StatCard = ({
-    title,
-    value,
-    icon: Icon,
-    trend,
-    description,
-  }) => {
+  const StatCard = ({ title, value, icon: Icon, trend, description }) => {
     return (
       <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
         <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-slate-100 transition-transform duration-500 group-hover:scale-150 dark:bg-[#252525]" />
@@ -1159,9 +1040,7 @@ const handleOrderStatusChange = async (orderId, status) => {
                 </span>
               )}
 
-              <span className="text-xs text-slate-400">
-                {description}
-              </span>
+              <span className="text-xs text-slate-400">{description}</span>
             </div>
           </div>
 
@@ -1172,106 +1051,105 @@ const handleOrderStatusChange = async (orderId, status) => {
       </div>
     );
   };
-const renderOrders = () => {
-  const pendingCount = orders.filter(
-    (order) => order.status === "Pending"
-  ).length;
+  const renderOrders = () => {
+    const pendingCount = orders.filter(
+      (order) => order.status === "Pending",
+    ).length;
 
-  const shippedCount = orders.filter(
-    (order) => order.status === "Shipped"
-  ).length;
+    const shippedCount = orders.filter(
+      (order) => order.status === "Shipped",
+    ).length;
 
-  const deliveredCount = orders.filter(
-    (order) => order.status === "Delivered"
-  ).length;
+    const deliveredCount = orders.filter(
+      (order) => order.status === "Delivered",
+    ).length;
 
-  const canceledCount = orders.filter(
-    (order) => order.status === "Canceled"
-  ).length;
+    const canceledCount = orders.filter(
+      (order) => order.status === "Canceled",
+    ).length;
 
-  const pageSales = orders.reduce(
-    (sum, order) => sum + Number(order.total || 0),
-    0
-  );
+    const pageSales = orders.reduce(
+      (sum, order) => sum + Number(order.total || 0),
+      0,
+    );
 
-  const getStatusStyle = (status) => {
-    switch (status) {
-      case "Pending":
-        return "bg-yellow-50 text-yellow-700 border-yellow-200";
+    const getStatusStyle = (status) => {
+      switch (status) {
+        case "Pending":
+          return "bg-yellow-50 text-yellow-700 border-yellow-200";
 
-      case "Shipped":
-        return "bg-blue-50 text-blue-700 border-blue-200";
+        case "Shipped":
+          return "bg-blue-50 text-blue-700 border-blue-200";
 
-      case "Delivered":
-        return "bg-green-50 text-green-700 border-green-200";
+        case "Delivered":
+          return "bg-green-50 text-green-700 border-green-200";
 
-      case "Canceled":
-        return "bg-red-50 text-red-700 border-red-200";
+        case "Canceled":
+          return "bg-red-50 text-red-700 border-red-200";
 
-      default:
-        return "bg-gray-50 text-gray-600 border-gray-200";
-    }
-  };
+        default:
+          return "bg-gray-50 text-gray-600 border-gray-200";
+      }
+    };
 
-  const getNextStatusOptions = (status) => {
-    if (status === "Pending") {
-      return ["Pending", "Shipped", "Canceled"];
-    }
+    const getNextStatusOptions = (status) => {
+      if (status === "Pending") {
+        return ["Pending", "Shipped", "Canceled"];
+      }
 
-    if (status === "Shipped") {
-      return ["Shipped", "Delivered"];
-    }
+      if (status === "Shipped") {
+        return ["Shipped", "Delivered"];
+      }
 
-    return [status];
-  };
+      return [status];
+    };
 
-  return (
-    <div className="space-y-6">
-      {/* ================= HEADER ================= */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400 text-black shadow-sm">
-              <FiShoppingBag size={21} />
-            </div>
+    return (
+      <div className="space-y-6">
+        {/* ================= HEADER ================= */}
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400 text-black shadow-sm">
+                <FiShoppingBag size={21} />
+              </div>
 
-            <div>
-              <h1 className="text-2xl font-black tracking-tight text-gray-900">
-                Orders
-              </h1>
+              <div>
+                <h1 className="text-2xl font-black tracking-tight text-gray-900">
+                  Orders
+                </h1>
 
-              <p className="mt-1 text-sm text-gray-500">
-                Manage and track all customer orders.
-              </p>
+                <p className="mt-1 text-sm text-gray-500">
+                  Manage and track all customer orders.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={async () => {
-            try {
-              const response = await getAllOrders({
-                page: ordersPage,
-                limit: 10,
-                status: orderStatusFilter || undefined,
-                search: orderSearch || undefined,
-              });
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                const response = await getAllOrders({
+                  page: ordersPage,
+                  limit: 10,
+                  status: orderStatusFilter || undefined,
+                  search: orderSearch || undefined,
+                });
 
-              setOrders(response.orders || []);
-              setOrdersTotal(response.total || 0);
+                setOrders(response.orders || []);
+                setOrdersTotal(response.total || 0);
 
-              toast.success("Orders refreshed");
-            } catch (error) {
-              console.error("Refresh orders error:", error);
+                toast.success("Orders refreshed");
+              } catch (error) {
+                console.error("Refresh orders error:", error);
 
-              toast.error(
-                error?.response?.data?.message ||
-                  "Failed to refresh orders"
-              );
-            }
-          }}
-          className="
+                toast.error(
+                  error?.response?.data?.message || "Failed to refresh orders",
+                );
+              }
+            }}
+            className="
             inline-flex
             items-center
             justify-center
@@ -1292,126 +1170,126 @@ const renderOrders = () => {
             hover:bg-gray-50
             hover:shadow-md
           "
-        >
-          <FiActivity size={17} />
-          Refresh
-        </button>
-      </div>
+          >
+            <FiActivity size={17} />
+            Refresh
+          </button>
+        </div>
 
-      {/* ================= STATS ================= */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {/* Total Orders */}
-        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                Total Orders
-              </p>
+        {/* ================= STATS ================= */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {/* Total Orders */}
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                  Total Orders
+                </p>
 
-              <h3 className="mt-2 text-2xl font-black text-gray-900">
-                {ordersTotal}
-              </h3>
+                <h3 className="mt-2 text-2xl font-black text-gray-900">
+                  {ordersTotal}
+                </h3>
 
-              <p className="mt-1 text-xs text-gray-400">
-                All customer orders
-              </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  All customer orders
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+                <FiShoppingCart size={19} />
+              </div>
             </div>
+          </div>
 
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
-              <FiShoppingCart size={19} />
+          {/* Pending */}
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                  Pending
+                </p>
+
+                <h3 className="mt-2 text-2xl font-black text-gray-900">
+                  {pendingCount}
+                </h3>
+
+                <p className="mt-1 text-xs text-gray-400">
+                  Waiting for processing
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600">
+                <FiClock size={19} />
+              </div>
+            </div>
+          </div>
+
+          {/* Shipped */}
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                  Shipped
+                </p>
+
+                <h3 className="mt-2 text-2xl font-black text-gray-900">
+                  {shippedCount}
+                </h3>
+
+                <p className="mt-1 text-xs text-gray-400">
+                  On the way to customers
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <FiPackage size={19} />
+              </div>
+            </div>
+          </div>
+
+          {/* Delivered */}
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                  Delivered
+                </p>
+
+                <h3 className="mt-2 text-2xl font-black text-gray-900">
+                  {deliveredCount}
+                </h3>
+
+                <p className="mt-1 text-xs text-gray-400">
+                  Successfully completed
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                <FiCheckCircle size={19} />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Pending */}
-        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                Pending
-              </p>
+        {/* ================= FILTER BAR ================= */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            {/* Search */}
+            <div className="relative w-full xl:max-w-md">
+              <FiSearch
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              />
 
-              <h3 className="mt-2 text-2xl font-black text-gray-900">
-                {pendingCount}
-              </h3>
-
-              <p className="mt-1 text-xs text-gray-400">
-                Waiting for processing
-              </p>
-            </div>
-
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600">
-              <FiClock size={19} />
-            </div>
-          </div>
-        </div>
-
-        {/* Shipped */}
-        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                Shipped
-              </p>
-
-              <h3 className="mt-2 text-2xl font-black text-gray-900">
-                {shippedCount}
-              </h3>
-
-              <p className="mt-1 text-xs text-gray-400">
-                On the way to customers
-              </p>
-            </div>
-
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-              <FiPackage size={19} />
-            </div>
-          </div>
-        </div>
-
-        {/* Delivered */}
-        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                Delivered
-              </p>
-
-              <h3 className="mt-2 text-2xl font-black text-gray-900">
-                {deliveredCount}
-              </h3>
-
-              <p className="mt-1 text-xs text-gray-400">
-                Successfully completed
-              </p>
-            </div>
-
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
-              <FiCheckCircle size={19} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= FILTER BAR ================= */}
-      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          {/* Search */}
-          <div className="relative w-full xl:max-w-md">
-            <FiSearch
-              size={18}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-
-            <input
-              type="text"
-              value={orderSearch}
-              onChange={(e) => {
-                setOrderSearch(e.target.value);
-                setOrdersPage(1);
-              }}
-              placeholder="Search by customer or order ID..."
-              className="
+              <input
+                type="text"
+                value={orderSearch}
+                onChange={(e) => {
+                  setOrderSearch(e.target.value);
+                  setOrdersPage(1);
+                }}
+                placeholder="Search by customer or order ID..."
+                className="
                 h-12
                 w-full
                 rounded-xl
@@ -1431,19 +1309,19 @@ const renderOrders = () => {
                 focus:ring-4
                 focus:ring-yellow-100
               "
-            />
-          </div>
+              />
+            </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            {/* Status Filter */}
-            <div className="relative">
-              <select
-                value={orderStatusFilter}
-                onChange={(e) => {
-                  setOrderStatusFilter(e.target.value);
-                  setOrdersPage(1);
-                }}
-                className="
+            <div className="flex flex-col gap-3 sm:flex-row">
+              {/* Status Filter */}
+              <div className="relative">
+                <select
+                  value={orderStatusFilter}
+                  onChange={(e) => {
+                    setOrderStatusFilter(e.target.value);
+                    setOrdersPage(1);
+                  }}
+                  className="
                   h-12
                   min-w-[170px]
                   appearance-none
@@ -1463,30 +1341,30 @@ const renderOrders = () => {
                   focus:ring-4
                   focus:ring-yellow-100
                 "
-              >
-                <option value="">All Statuses</option>
-                <option value="Pending">Pending</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Canceled">Canceled</option>
-              </select>
+                >
+                  <option value="">All Statuses</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Canceled">Canceled</option>
+                </select>
 
-              <FiChevronRight
-                size={16}
-                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-gray-400"
-              />
-            </div>
+                <FiChevronRight
+                  size={16}
+                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-gray-400"
+                />
+              </div>
 
-            {/* Clear */}
-            {(orderSearch || orderStatusFilter) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setOrderSearch("");
-                  setOrderStatusFilter("");
-                  setOrdersPage(1);
-                }}
-                className="
+              {/* Clear */}
+              {(orderSearch || orderStatusFilter) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOrderSearch("");
+                    setOrderStatusFilter("");
+                    setOrdersPage(1);
+                  }}
+                  className="
                   inline-flex
                   h-12
                   items-center
@@ -1504,230 +1382,216 @@ const renderOrders = () => {
                   hover:border-gray-300
                   hover:bg-gray-50
                 "
-              >
-                <FiX size={16} />
-                Clear
-              </button>
-            )}
+                >
+                  <FiX size={16} />
+                  Clear
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ================= ORDERS TABLE ================= */}
-      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-        {/* Table Header */}
-        <div className="border-b border-gray-100 px-6 py-5">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-lg font-black text-gray-900">
-                All Orders
-              </h2>
+        {/* ================= ORDERS TABLE ================= */}
+        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+          {/* Table Header */}
+          <div className="border-b border-gray-100 px-6 py-5">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-lg font-black text-gray-900">All Orders</h2>
 
-              <p className="mt-1 text-xs text-gray-400">
-                Review products, customers, payment and order status.
+                <p className="mt-1 text-xs text-gray-400">
+                  Review products, customers, payment and order status.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500">
+                {orders.length} orders on this page
+              </div>
+            </div>
+          </div>
+
+          {orders.length === 0 ? (
+            <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
+                <FiShoppingBag size={28} />
+              </div>
+
+              <h3 className="mt-5 text-lg font-black text-gray-800">
+                No orders found
+              </h3>
+
+              <p className="mt-2 max-w-sm text-sm leading-6 text-gray-400">
+                There are no orders matching your current search or filter.
               </p>
             </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[1100px]">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-[#fafafa]">
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Order
+                    </th>
 
-            <div className="rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500">
-              {orders.length} orders on this page
-            </div>
-          </div>
-        </div>
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Customer
+                    </th>
 
-        {orders.length === 0 ? (
-          <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
-              <FiShoppingBag size={28} />
-            </div>
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Products
+                    </th>
 
-            <h3 className="mt-5 text-lg font-black text-gray-800">
-              No orders found
-            </h3>
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Total
+                    </th>
 
-            <p className="mt-2 max-w-sm text-sm leading-6 text-gray-400">
-              There are no orders matching your current search or filter.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px]">
-              <thead>
-                <tr className="border-b border-gray-100 bg-[#fafafa]">
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Order
-                  </th>
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Payment
+                    </th>
 
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Customer
-                  </th>
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Status
+                    </th>
 
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Products
-                  </th>
+                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                      Date
+                    </th>
+                  </tr>
+                </thead>
 
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Total
-                  </th>
+                <tbody className="divide-y divide-gray-100">
+                  {orders.map((order) => (
+                    <tr
+                      key={order._id}
+                      className="group transition-colors duration-200 hover:bg-[#fffdf5]"
+                    >
+                      {/* ORDER */}
+                      <td className="px-6 py-5 align-top">
+                        <div>
+                          <p className="font-mono text-xs font-black text-gray-900">
+                            #{order._id?.slice(-8).toUpperCase()}
+                          </p>
 
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Payment
-                  </th>
+                          <p className="mt-1 text-[11px] text-gray-400">
+                            {order.items?.length || 0} product
+                            {(order.items?.length || 0) !== 1 ? "s" : ""}
+                          </p>
+                        </div>
+                      </td>
 
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Status
-                  </th>
+                      {/* CUSTOMER */}
+                      <td className="px-6 py-5 align-top">
+                        <div className="max-w-[180px]">
+                          <p className="truncate text-sm font-black text-gray-800">
+                            {order.user?.name || "Unknown Customer"}
+                          </p>
 
-                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                    Date
-                  </th>
-                </tr>
-              </thead>
+                          <p className="mt-1 truncate text-xs text-gray-400">
+                            {order.user?.email || "No email"}
+                          </p>
+                        </div>
+                      </td>
 
-              <tbody className="divide-y divide-gray-100">
-                {orders.map((order) => (
-                  <tr
-                    key={order._id}
-                    className="group transition-colors duration-200 hover:bg-[#fffdf5]"
-                  >
-                    {/* ORDER */}
-                    <td className="px-6 py-5 align-top">
-                      <div>
-                        <p className="font-mono text-xs font-black text-gray-900">
-                          #{order._id?.slice(-8).toUpperCase()}
-                        </p>
+                      {/* PRODUCTS */}
+                      <td className="px-6 py-5 align-top">
+                        <div className="space-y-3">
+                          {order.items?.map((item, index) => {
+                            const product = item.product;
 
-                        <p className="mt-1 text-[11px] text-gray-400">
-                          {order.items?.length || 0} product
-                          {(order.items?.length || 0) !== 1 ? "s" : ""}
-                        </p>
-                      </div>
-                    </td>
+                            const productImage =
+                              typeof product?.images?.[0] === "string"
+                                ? product.images[0]
+                                : product?.images?.[0]?.url || "";
 
-                    {/* CUSTOMER */}
-                    <td className="px-6 py-5 align-top">
-                      <div className="max-w-[180px]">
-                        <p className="truncate text-sm font-black text-gray-800">
-                          {order.user?.name || "Unknown Customer"}
-                        </p>
+                            console.log("ORDER PRODUCT:", product);
+                            console.log(
+                              "ORDER PRODUCT IMAGES:",
+                              product?.images,
+                            );
+                            console.log(
+                              "ORDER FIRST IMAGE:",
+                              product?.images?.[0],
+                            );
+                            console.log("ORDER IMAGE URL:", productImage);
 
-                        <p className="mt-1 truncate text-xs text-gray-400">
-                          {order.user?.email || "No email"}
-                        </p>
-                      </div>
-                    </td>
+                            return (
+                              <div
+                                key={`${order._id}-${product?._id || index}`}
+                                className="flex min-w-[280px] items-center gap-3"
+                              >
+                                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                                  {productImage ? (
+                                    <img
+                                      src={productImage}
+                                      alt={product?.name || "Product"}
+                                      className="h-full w-full object-cover"
+                                      onError={(e) => {
+                                        console.log(
+                                          "IMAGE FAILED:",
+                                          productImage,
+                                        );
 
-                    {/* PRODUCTS */}
-                    <td className="px-6 py-5 align-top">
-                      <div className="space-y-3">
-                        {order.items?.map((item, index) => {
-                          const product = item.product;
+                                        e.currentTarget.style.display = "none";
+                                      }}
+                                    />
+                                  ) : (
+                                    <div className="flex h-full w-full items-center justify-center text-gray-300">
+                                      <FiPackage size={18} />
+                                    </div>
+                                  )}
+                                </div>
 
-                          const productImage =
-                            typeof product?.images?.[0] === "string"
-                              ? product.images[0]
-                              : product?.images?.[0]?.url || "";
+                                <div className="min-w-0">
+                                  <p className="max-w-[220px] truncate text-sm font-bold text-gray-800">
+                                    {product?.name || "Product unavailable"}
+                                  </p>
 
-                          console.log("ORDER PRODUCT:", product);
-                          console.log(
-                            "ORDER PRODUCT IMAGES:",
-                            product?.images
-                          );
-                          console.log(
-                            "ORDER FIRST IMAGE:",
-                            product?.images?.[0]
-                          );
-                          console.log(
-                            "ORDER IMAGE URL:",
-                            productImage
-                          );
-
-                          return (
-                            <div
-                              key={`${order._id}-${
-                                product?._id || index
-                              }`}
-                              className="flex min-w-[280px] items-center gap-3"
-                            >
-                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                                {productImage ? (
-                                  <img
-                                    src={productImage}
-                                    alt={
-                                      product?.name || "Product"
-                                    }
-                                    className="h-full w-full object-cover"
-                                    onError={(e) => {
-                                      console.log(
-                                        "IMAGE FAILED:",
-                                        productImage
-                                      );
-
-                                      e.currentTarget.style.display =
-                                        "none";
-                                    }}
-                                  />
-                                ) : (
-                                  <div className="flex h-full w-full items-center justify-center text-gray-300">
-                                    <FiPackage size={18} />
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className="min-w-0">
-                                <p className="max-w-[220px] truncate text-sm font-bold text-gray-800">
-                                  {product?.name ||
-                                    "Product unavailable"}
-                                </p>
-
-                                <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-                                  <span>
-                                    Qty:{" "}
-                                    <span className="font-bold text-gray-600">
-                                      {item.quantity}
+                                  <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                                    <span>
+                                      Qty:{" "}
+                                      <span className="font-bold text-gray-600">
+                                        {item.quantity}
+                                      </span>
                                     </span>
-                                  </span>
 
-                                  <span>•</span>
+                                    <span>•</span>
 
-                                  <span>
-                                    {Number(
-                                      item.price || 0
-                                    ).toFixed(2)}{" "}
-                                    EGP
-                                  </span>
+                                    <span>
+                                      {Number(item.price || 0).toFixed(2)} EGP
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </td>
+                            );
+                          })}
+                        </div>
+                      </td>
 
-                    {/* TOTAL */}
-                    <td className="px-6 py-5 align-top">
-                      <p className="whitespace-nowrap text-sm font-black text-gray-900">
-                        {Number(order.total || 0).toFixed(2)} EGP
-                      </p>
-                    </td>
+                      {/* TOTAL */}
+                      <td className="px-6 py-5 align-top">
+                        <p className="whitespace-nowrap text-sm font-black text-gray-900">
+                          {Number(order.total || 0).toFixed(2)} EGP
+                        </p>
+                      </td>
 
-                    {/* PAYMENT */}
-                    <td className="px-6 py-5 align-top">
-                      <div className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
-                        <span className="text-sm">💵</span>
+                      {/* PAYMENT */}
+                      <td className="px-6 py-5 align-top">
+                        <div className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                          <span className="text-sm">💵</span>
 
-                        <span className="text-xs font-bold text-gray-600">
-                          {order.paymentMethod === "COD"
-                            ? "Cash on Delivery"
-                            : order.paymentMethod || "N/A"}
-                        </span>
-                      </div>
-                    </td>
+                          <span className="text-xs font-bold text-gray-600">
+                            {order.paymentMethod === "COD"
+                              ? "Cash on Delivery"
+                              : order.paymentMethod || "N/A"}
+                          </span>
+                        </div>
+                      </td>
 
-                    {/* STATUS */}
-                    <td className="px-6 py-5 align-top">
-                      <div className="flex flex-col items-start gap-2">
-                        <span
-                          className={`
+                      {/* STATUS */}
+                      <td className="px-6 py-5 align-top">
+                        <div className="flex flex-col items-start gap-2">
+                          <span
+                            className={`
                             inline-flex
                             items-center
                             rounded-full
@@ -1738,21 +1602,21 @@ const renderOrders = () => {
                             font-black
                             ${getStatusStyle(order.status)}
                           `}
-                        >
-                          {order.status}
-                        </span>
+                          >
+                            {order.status}
+                          </span>
 
-                        {order.status !== "Delivered" &&
-                          order.status !== "Canceled" && (
-                            <select
-                              value={order.status}
-                              onChange={(e) =>
-                                handleOrderStatusChange(
-                                  order._id,
-                                  e.target.value
-                                )
-                              }
-                              className="
+                          {order.status !== "Delivered" &&
+                            order.status !== "Canceled" && (
+                              <select
+                                value={order.status}
+                                onChange={(e) =>
+                                  handleOrderStatusChange(
+                                    order._id,
+                                    e.target.value,
+                                  )
+                                }
+                                className="
                                 rounded-lg
                                 border
                                 border-gray-200
@@ -1768,79 +1632,73 @@ const renderOrders = () => {
                                 focus:ring-2
                                 focus:ring-yellow-100
                               "
-                            >
-                              {getNextStatusOptions(
-                                order.status
-                              ).map((status) => (
-                                <option
-                                  key={status}
-                                  value={status}
-                                >
-                                  {status}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                      </div>
-                    </td>
+                              >
+                                {getNextStatusOptions(order.status).map(
+                                  (status) => (
+                                    <option key={status} value={status}>
+                                      {status}
+                                    </option>
+                                  ),
+                                )}
+                              </select>
+                            )}
+                        </div>
+                      </td>
 
-                    {/* DATE */}
-                    <td className="px-6 py-5 align-top">
-                      <div className="whitespace-nowrap">
-                        <p className="text-sm font-bold text-gray-700">
-                          {order.createdAt
-                            ? new Date(
-                                order.createdAt
-                              ).toLocaleDateString("en-GB")
-                            : "—"}
-                        </p>
+                      {/* DATE */}
+                      <td className="px-6 py-5 align-top">
+                        <div className="whitespace-nowrap">
+                          <p className="text-sm font-bold text-gray-700">
+                            {order.createdAt
+                              ? new Date(order.createdAt).toLocaleDateString(
+                                  "en-GB",
+                                )
+                              : "—"}
+                          </p>
 
-                        <p className="mt-1 text-xs text-gray-400">
-                          {order.createdAt
-                            ? new Date(
-                                order.createdAt
-                              ).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })
-                            : ""}
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                          <p className="mt-1 text-xs text-gray-400">
+                            {order.createdAt
+                              ? new Date(order.createdAt).toLocaleTimeString(
+                                  [],
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  },
+                                )
+                              : ""}
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-        {/* ================= PAGINATION ================= */}
-        {ordersTotal > 10 && (
-          <div className="flex flex-col gap-4 border-t border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs font-medium text-gray-400">
-              Showing{" "}
-              <span className="font-bold text-gray-700">
-                {(ordersPage - 1) * 10 + 1}
-              </span>{" "}
-              -{" "}
-              <span className="font-bold text-gray-700">
-                {Math.min(ordersPage * 10, ordersTotal)}
-              </span>{" "}
-              of{" "}
-              <span className="font-bold text-gray-700">
-                {ordersTotal}
-              </span>{" "}
-              orders
-            </p>
+          {/* ================= PAGINATION ================= */}
+          {ordersTotal > 10 && (
+            <div className="flex flex-col gap-4 border-t border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs font-medium text-gray-400">
+                Showing{" "}
+                <span className="font-bold text-gray-700">
+                  {(ordersPage - 1) * 10 + 1}
+                </span>{" "}
+                -{" "}
+                <span className="font-bold text-gray-700">
+                  {Math.min(ordersPage * 10, ordersTotal)}
+                </span>{" "}
+                of{" "}
+                <span className="font-bold text-gray-700">{ordersTotal}</span>{" "}
+                orders
+              </p>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                disabled={ordersPage === 1}
-                onClick={() =>
-                  setOrdersPage((prev) => prev - 1)
-                }
-                className="
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={ordersPage === 1}
+                  onClick={() => setOrdersPage((prev) => prev - 1)}
+                  className="
                   flex
                   h-10
                   w-10
@@ -1856,24 +1714,19 @@ const renderOrders = () => {
                   disabled:cursor-not-allowed
                   disabled:opacity-40
                 "
-              >
-                <FiChevronRight
-                  size={17}
-                  className="rotate-180"
-                />
-              </button>
+                >
+                  <FiChevronRight size={17} className="rotate-180" />
+                </button>
 
-              <div className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-yellow-400 px-3 text-sm font-black text-black">
-                {ordersPage}
-              </div>
+                <div className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-yellow-400 px-3 text-sm font-black text-black">
+                  {ordersPage}
+                </div>
 
-              <button
-                type="button"
-                disabled={ordersPage * 10 >= ordersTotal}
-                onClick={() =>
-                  setOrdersPage((prev) => prev + 1)
-                }
-                className="
+                <button
+                  type="button"
+                  disabled={ordersPage * 10 >= ordersTotal}
+                  onClick={() => setOrdersPage((prev) => prev + 1)}
+                  className="
                   flex
                   h-10
                   w-10
@@ -1889,348 +1742,339 @@ const renderOrders = () => {
                   disabled:cursor-not-allowed
                   disabled:opacity-40
                 "
-              >
-                <FiChevronRight size={17} />
-              </button>
+                >
+                  <FiChevronRight size={17} />
+                </button>
+              </div>
             </div>
+          )}
+        </div>
+
+        {/* ================= SMALL SUMMARY ================= */}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+            <p className="text-xs font-bold text-gray-400">Pending</p>
+
+            <p className="mt-1 text-lg font-black text-yellow-600">
+              {pendingCount}
+            </p>
           </div>
-        )}
-      </div>
 
-      {/* ================= SMALL SUMMARY ================= */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-          <p className="text-xs font-bold text-gray-400">
-            Pending
-          </p>
+          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+            <p className="text-xs font-bold text-gray-400">Shipped</p>
 
-          <p className="mt-1 text-lg font-black text-yellow-600">
-            {pendingCount}
-          </p>
-        </div>
+            <p className="mt-1 text-lg font-black text-blue-600">
+              {shippedCount}
+            </p>
+          </div>
 
-        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-          <p className="text-xs font-bold text-gray-400">
-            Shipped
-          </p>
+          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+            <p className="text-xs font-bold text-gray-400">Delivered</p>
 
-          <p className="mt-1 text-lg font-black text-blue-600">
-            {shippedCount}
-          </p>
-        </div>
+            <p className="mt-1 text-lg font-black text-green-600">
+              {deliveredCount}
+            </p>
+          </div>
 
-        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-          <p className="text-xs font-bold text-gray-400">
-            Delivered
-          </p>
+          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
+            <p className="text-xs font-bold text-gray-400">Page Sales</p>
 
-          <p className="mt-1 text-lg font-black text-green-600">
-            {deliveredCount}
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-          <p className="text-xs font-bold text-gray-400">
-            Page Sales
-          </p>
-
-          <p className="mt-1 text-lg font-black text-gray-900">
-            {pageSales.toFixed(2)} EGP
-          </p>
+            <p className="mt-1 text-lg font-black text-gray-900">
+              {pageSales.toFixed(2)} EGP
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
-const renderSettings = () => {
-  const handleFooterChange = (e) => {
-    const { name, value } = e.target;
-
-    setFooterSettings((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    );
   };
+  const renderSettings = () => {
+    const handleFooterChange = (e) => {
+      const { name, value } = e.target;
 
-  const handleFooterSave = async (e) => {
-    e.preventDefault();
+      setFooterSettings((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    };
 
-    try {
-      setFooterSaving(true);
+    const handleFooterSave = async (e) => {
+      e.preventDefault();
 
-      const response = await updateFooterSettings(footerSettings);
+      try {
+        setFooterSaving(true);
 
-      setFooterSettings(response.data);
+        const response = await updateFooterSettings(footerSettings);
 
-      toast.success("settings saved successfully");
-    } catch (error) {
-      console.error(error);
+        setFooterSettings(response.data);
 
-      toast.error(
-        error?.response?.data?.message ||
-          "Failed to save footer settings"
-      );
-    } finally {
-      setFooterSaving(false);
-    }
-  };
+        toast.success("settings saved successfully");
+      } catch (error) {
+        console.error(error);
 
-  return (
-    <div className="min-h-full bg-[#f7f7f7] p-4 sm:p-6 lg:p-8">
-      {/* Page Header */}
-      <div className="mb-7">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#ffcf00]" />
+        toast.error(
+          error?.response?.data?.message || "Failed to save footer settings",
+        );
+      } finally {
+        setFooterSaving(false);
+      }
+    };
 
-              <span className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500">
-                Store Configuration
-              </span>
+    return (
+      <div className="min-h-full bg-[#f7f7f7] p-4 sm:p-6 lg:p-8">
+        {/* Page Header */}
+        <div className="mb-7">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#ffcf00]" />
+
+                <span className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500">
+                  Store Configuration
+                </span>
+              </div>
+
+              <h1 className="text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
+                Settings
+              </h1>
+
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+                Manage the contact information and social media links displayed
+                in your Shoply footer.
+              </p>
             </div>
 
-            <h1 className="text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
-               Settings
-            </h1>
+            <div className="hidden rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:block">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                Status
+              </p>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
-              Manage the contact information and social media links
-              displayed in your Shoply footer.
-            </p>
-          </div>
-
-          <div className="hidden rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:block">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-              Status
-            </p>
-
-            <p className="mt-1 flex items-center gap-2 text-sm font-bold text-gray-900">
-              <span className="h-2 w-2 rounded-full bg-green-500" />
-              Active
-            </p>
+              <p className="mt-1 flex items-center gap-2 text-sm font-bold text-gray-900">
+                <span className="h-2 w-2 rounded-full bg-green-500" />
+                Active
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Card */}
-      <form onSubmit={handleFooterSave}>
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-          {/* Card Header */}
-          <div className="border-b border-gray-100 px-5 py-5 sm:px-7">
-            <div className="flex items-start gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
-                <FiSettings className="text-xl" />
-              </div>
-
-              <div>
-                <h2 className="text-base font-extrabold text-gray-900">
-                  Contact Information
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  Update the information your customers see in the
-                  website footer.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Information */}
-          <div className="p-5 sm:p-7">
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-              {/* Phone */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  Phone Number
-                </label>
-
-                <div className="group relative">
-                  <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={footerSettings.phone}
-                    onChange={handleFooterChange}
-                    placeholder="01092362189"
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                  />
-                </div>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  Email Address
-                </label>
-
-                <div className="group relative">
-                  <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                  <input
-                    type="email"
-                    name="email"
-                    value={footerSettings.email}
-                    onChange={handleFooterChange}
-                    placeholder="support@shoply.com"
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                  />
-                </div>
-              </div>
-
-              {/* Location */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  Location
-                </label>
-
-                <div className="group relative">
-                  <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                  <input
-                    type="text"
-                    name="location"
-                    value={footerSettings.location}
-                    onChange={handleFooterChange}
-                    placeholder="Egypt"
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Media */}
-          <div className="border-t border-gray-100">
-            <div className="px-5 py-5 sm:px-7">
+        {/* Main Card */}
+        <form onSubmit={handleFooterSave}>
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            {/* Card Header */}
+            <div className="border-b border-gray-100 px-5 py-5 sm:px-7">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
-                  <FiInstagram className="text-xl" />
+                  <FiSettings className="text-xl" />
                 </div>
 
                 <div>
                   <h2 className="text-base font-extrabold text-gray-900">
-                    Social Media
+                    Contact Information
                   </h2>
 
                   <p className="mt-1 text-sm text-gray-500">
-                    Add or update the social media links displayed in
-                    the footer.
+                    Update the information your customers see in the website
+                    footer.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-5 border-t border-gray-100 p-5 sm:grid-cols-2 sm:p-7">
-              {/* Facebook */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  Facebook
-                </label>
+            {/* Contact Information */}
+            <div className="p-5 sm:p-7">
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+                {/* Phone */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    Phone Number
+                  </label>
 
-                <div className="group relative">
-                  <FiFacebook className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+                  <div className="group relative">
+                    <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
 
-                  <input
-                    type="url"
-                    name="facebook"
-                    value={footerSettings.facebook}
-                    onChange={handleFooterChange}
-                    placeholder="https://facebook.com/..."
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                  />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={footerSettings.phone}
+                      onChange={handleFooterChange}
+                      placeholder="01092362189"
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Instagram */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  Instagram
-                </label>
+                {/* Email */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    Email Address
+                  </label>
 
-                <div className="group relative">
-                  <FiInstagram className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+                  <div className="group relative">
+                    <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
 
-                  <input
-                    type="url"
-                    name="instagram"
-                    value={footerSettings.instagram}
-                    onChange={handleFooterChange}
-                    placeholder="https://instagram.com/..."
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
-                  />
+                    <input
+                      type="email"
+                      name="email"
+                      value={footerSettings.email}
+                      onChange={handleFooterChange}
+                      placeholder="support@shoply.com"
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Twitter */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  X / Twitter
-                </label>
+                {/* Location */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    Location
+                  </label>
 
-                <div className="group relative">
-                  <FiTwitter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+                  <div className="group relative">
+                    <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
 
-                  <input
-                    type="url"
-                    name="twitter"
-                    value={footerSettings.twitter}
-                    onChange={handleFooterChange}
-                    placeholder="https://x.com/..."
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
-                  />
-                </div>
-              </div>
-
-              {/* YouTube */}
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                  YouTube
-                </label>
-
-                <div className="group relative">
-                  <FiYoutube className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                  <input
-                    type="url"
-                    name="youtube"
-                    value={footerSettings.youtube}
-                    onChange={handleFooterChange}
-                    placeholder="https://youtube.com/..."
-                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                  />
+                    <input
+                      type="text"
+                      name="location"
+                      value={footerSettings.location}
+                      onChange={handleFooterChange}
+                      placeholder="Egypt"
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Bottom Action */}
-          <div className="flex flex-col gap-4 border-t border-gray-100 bg-[#fafafa] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
-            <div>
-              <p className="text-sm font-bold text-gray-900">
-                Save your changes
-              </p>
+            {/* Social Media */}
+            <div className="border-t border-gray-100">
+              <div className="px-5 py-5 sm:px-7">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
+                    <FiInstagram className="text-xl" />
+                  </div>
 
-              <p className="mt-1 text-xs text-gray-500">
-                These settings will appear on the storefront footer.
-              </p>
+                  <div>
+                    <h2 className="text-base font-extrabold text-gray-900">
+                      Social Media
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                      Add or update the social media links displayed in the
+                      footer.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 border-t border-gray-100 p-5 sm:grid-cols-2 sm:p-7">
+                {/* Facebook */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    Facebook
+                  </label>
+
+                  <div className="group relative">
+                    <FiFacebook className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                    <input
+                      type="url"
+                      name="facebook"
+                      value={footerSettings.facebook}
+                      onChange={handleFooterChange}
+                      placeholder="https://facebook.com/..."
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
+                </div>
+
+                {/* Instagram */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    Instagram
+                  </label>
+
+                  <div className="group relative">
+                    <FiInstagram className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                    <input
+                      type="url"
+                      name="instagram"
+                      value={footerSettings.instagram}
+                      onChange={handleFooterChange}
+                      placeholder="https://instagram.com/..."
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
+                </div>
+
+                {/* Twitter */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    X / Twitter
+                  </label>
+
+                  <div className="group relative">
+                    <FiTwitter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                    <input
+                      type="url"
+                      name="twitter"
+                      value={footerSettings.twitter}
+                      onChange={handleFooterChange}
+                      placeholder="https://x.com/..."
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
+                </div>
+
+                {/* YouTube */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
+                    YouTube
+                  </label>
+
+                  <div className="group relative">
+                    <FiYoutube className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
+
+                    <input
+                      type="url"
+                      name="youtube"
+                      value={footerSettings.youtube}
+                      onChange={handleFooterChange}
+                      placeholder="https://youtube.com/..."
+                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={footerSaving}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#ffcf00] px-7 py-3.5 text-sm font-extrabold text-gray-950 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#f5c500] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
-            >
-              <FiSave className="text-base" />
+            {/* Bottom Action */}
+            <div className="flex flex-col gap-4 border-t border-gray-100 bg-[#fafafa] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+              <div>
+                <p className="text-sm font-bold text-gray-900">
+                  Save your changes
+                </p>
 
-              {footerSaving ? "Saving..." : "Save Changes"}
-            </button>
+                <p className="mt-1 text-xs text-gray-500">
+                  These settings will appear on the storefront footer.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={footerSaving}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#ffcf00] px-7 py-3.5 text-sm font-extrabold text-gray-950 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#f5c500] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+              >
+                <FiSave className="text-base" />
+
+                {footerSaving ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
-  );
-};
+        </form>
+      </div>
+    );
+  };
   /*
   ========================================
   DASHBOARD PAGE
@@ -2240,16 +2084,12 @@ const renderSettings = () => {
   const renderDashboard = () => {
     const today = new Date();
 
-    const formattedDate =
-      today.toLocaleDateString(
-        "en-US",
-        {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }
-      );
+    const formattedDate = today.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
 
     return (
       <>
@@ -2265,8 +2105,7 @@ const renderSettings = () => {
               </h1>
 
               <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
-                Here&apos;s what&apos;s happening with
-                your store today.
+                Here&apos;s what&apos;s happening with your store today.
               </p>
             </div>
 
@@ -2283,11 +2122,7 @@ const renderSettings = () => {
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Total Products"
-            value={
-              productsLoading
-                ? "..."
-                : totalProducts
-            }
+            value={productsLoading ? "..." : totalProducts}
             icon={FiBox}
             trend="+4.5%"
             description="this month"
@@ -2295,11 +2130,7 @@ const renderSettings = () => {
 
           <StatCard
             title="Categories"
-            value={
-              categoriesLoading
-                ? "..."
-                : categories.length
-            }
+            value={categoriesLoading ? "..." : categories.length}
             icon={FiTag}
             trend="+2"
             description="available"
@@ -2307,11 +2138,7 @@ const renderSettings = () => {
 
           <StatCard
             title="Customers"
-            value={
-              usersLoading
-                ? "..."
-                : totalCustomers
-            }
+            value={usersLoading ? "..." : totalCustomers}
             icon={FiUsers}
             trend="+8.2%"
             description="registered"
@@ -2325,155 +2152,139 @@ const renderSettings = () => {
             description="total stock"
           />
         </div>
+        <br />
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1.7fr_1fr]">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-            <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+          {/* Header */}
+          <div className="flex flex-col gap-4 border-b border-slate-100 p-6 sm:flex-row sm:items-center sm:justify-between dark:border-[#2a2a2a]">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-sm dark:bg-emerald-500/10 dark:text-emerald-400">
+                <FiBarChart2 size={19} />
+              </div>
+
               <div>
                 <h2 className="text-lg font-bold text-slate-950 dark:text-white">
                   Sales Performance
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
-                  Monthly sales overview
+                  {salesLoading
+                    ? "Loading..."
+                    : `${totalYearSales.toLocaleString()} EGP total revenue in ${currentYear}`}
                 </p>
               </div>
+            </div>
 
-              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400">
-                <FiTrendingUp />
-                +18.4%
+            {salesGrowth !== null && (
+              <div
+                className={`flex items-center gap-1.5 self-start rounded-full px-3 py-1.5 text-xs font-bold sm:self-auto ${
+                  salesGrowth >= 0
+                    ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
+                    : "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
+                }`}
+              >
+                <FiTrendingUp
+                  size={13}
+                  className={salesGrowth < 0 ? "rotate-180" : ""}
+                />
+                {salesGrowth >= 0 ? "+" : ""}
+                {salesGrowth.toFixed(1)}% vs last month
               </div>
-            </div>
-
-            <div className="flex h-64 items-end gap-2 sm:gap-4">
-              {salesData.map((item) => (
-                <div
-                  key={item.month}
-                  className="group flex h-full flex-1 flex-col items-center justify-end"
-                >
-                  <div className="relative flex w-full flex-1 items-end justify-center">
-                    <div
-                      className="w-full max-w-8 rounded-t-lg bg-slate-900 transition-all duration-500 group-hover:bg-emerald-500"
-                      style={{
-                        height: `${item.value}%`,
-                      }}
-                    >
-                      <span className="absolute -top-7 left-1/2 hidden -translate-x-1/2 rounded-md bg-slate-950 px-2 py-1 text-[10px] font-semibold text-white group-hover:block">
-                        ${item.value}k
-                      </span>
-                    </div>
-                  </div>
-
-                  <span className="mt-3 text-[11px] font-medium text-slate-400">
-                    {item.month}
-                  </span>
-                </div>
-              ))}
-            </div>
+            )}
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-slate-950 dark:text-white">
-                Store Health
-              </h2>
+          {/* Quick stats strip - derived from the same real salesData */}
+          <div className="grid grid-cols-3 divide-x divide-slate-100 border-b border-slate-100 dark:divide-[#2a2a2a] dark:border-[#2a2a2a]">
+            <div className="p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                This Month
+              </p>
 
-              <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
-                Current store overview
+              <p className="mt-1 text-base font-bold text-slate-950 sm:text-lg dark:text-white">
+                {currentMonthSales.toLocaleString()} EGP
               </p>
             </div>
 
-            <div className="space-y-5">
-              <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600 dark:text-gray-400">
-                    Products
-                  </span>
+            <div className="p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Avg / Month
+              </p>
 
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    {totalProducts}
-                  </span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
-                  <div className="h-full w-[82%] rounded-full bg-slate-900" />
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600 dark:text-gray-400">
-                    Categories
-                  </span>
-
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    {categories.length}
-                  </span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
-                  <div className="h-full w-[76%] rounded-full bg-emerald-500" />
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600 dark:text-gray-400">
-                    Customers
-                  </span>
-
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    {totalCustomers}
-                  </span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
-                  <div className="h-full w-[68%] rounded-full bg-emerald-500" />
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-slate-600 dark:text-gray-400">
-                    Inventory
-                  </span>
-
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    {lowStockProducts.length === 0
-                      ? "Healthy"
-                      : `${lowStockProducts.length} low`}
-                  </span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-[#2a2a2a]">
-                  <div
-                    className={`h-full rounded-full ${
-                      lowStockProducts.length > 0
-                        ? "w-[42%] bg-amber-500"
-                        : "w-[92%] bg-emerald-500"
-                    }`}
-                  />
-                </div>
-              </div>
+              <p className="mt-1 text-base font-bold text-slate-950 sm:text-lg dark:text-white">
+                {Math.round(totalYearSales / 12).toLocaleString()} EGP
+              </p>
             </div>
 
-            <div className="mt-7 rounded-xl bg-slate-50 p-4 dark:bg-[#171717]">
-              <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 shadow-sm dark:bg-[#252525]">
-                  <FiActivity />
-                </div>
+            <div className="p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Best Month
+              </p>
 
-                <div>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                    Everything looks good
-                  </p>
+              <p className="mt-1 text-base font-bold text-slate-950 sm:text-lg dark:text-white">
+                {salesData.reduce(
+                  (best, item) => (item.revenue > best.revenue ? item : best),
+                  salesData[0] || { month: "—", revenue: 0 },
+                ).month}
+              </p>
+            </div>
+          </div>
 
-                  <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-gray-400">
-                    Your store is running smoothly.
-                    Keep adding great products.
-                  </p>
-                </div>
+          {/* Chart */}
+          <div className="p-6">
+            <div className="relative flex h-64 items-end gap-2 sm:gap-4">
+              {/* Grid lines */}
+              <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
+                {[0, 1, 2, 3].map((line) => (
+                  <div
+                    key={line}
+                    className="h-px w-full bg-slate-100 dark:bg-[#232323]"
+                  />
+                ))}
               </div>
+
+              {salesData.map((item, index) => {
+                const isCurrentMonth = index === currentMonthIndex;
+
+                return (
+                  <div
+                    key={item.month}
+                    className="group relative z-10 flex h-full flex-1 flex-col items-center justify-end"
+                  >
+                    <div className="relative flex w-full flex-1 items-end justify-center">
+                      <div
+                        className={`w-full max-w-8 rounded-t-lg transition-all duration-500 ${
+                          isCurrentMonth
+                            ? "bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-lg shadow-emerald-500/30"
+                            : "bg-gradient-to-t from-slate-800 to-slate-600 group-hover:from-emerald-600 group-hover:to-emerald-400 dark:from-slate-600 dark:to-slate-400"
+                        }`}
+                        style={{ height: `${item.height}%` }}
+                      >
+                        <span className="pointer-events-none absolute -top-14 left-1/2 z-20 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-950 px-3 py-2 text-[11px] font-semibold text-white shadow-xl group-hover:block dark:bg-black">
+                          <span className="block">
+                            {item.revenue.toLocaleString()} EGP
+                          </span>
+
+                          <span className="block text-[10px] font-normal text-slate-300">
+                            {item.orders} order{item.orders !== 1 ? "s" : ""}
+                          </span>
+
+                          <span className="absolute left-1/2 top-full -mt-1 h-2 w-2 -translate-x-1/2 rotate-45 bg-slate-950 dark:bg-black" />
+                        </span>
+                      </div>
+                    </div>
+
+                    <span
+                      className={`mt-3 text-[11px] font-medium ${
+                        isCurrentMonth
+                          ? "font-bold text-emerald-600 dark:text-emerald-400"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {item.month}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -2491,9 +2302,7 @@ const renderSettings = () => {
             </div>
 
             <button
-              onClick={() =>
-                setActivePage("Products")
-              }
+              onClick={() => setActivePage("Products")}
               className="flex items-center gap-1 text-sm font-semibold text-slate-900 transition hover:text-emerald-600 dark:text-gray-300"
             >
               View all
@@ -2505,25 +2314,15 @@ const renderSettings = () => {
             <table className="w-full min-w-[700px]">
               <thead>
                 <tr className="border-b border-slate-100 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a]">
-                  <th className="px-6 py-4 font-semibold">
-                    Product
-                  </th>
+                  <th className="px-6 py-4 font-semibold">Product</th>
 
-                  <th className="px-6 py-4 font-semibold">
-                    Category
-                  </th>
+                  <th className="px-6 py-4 font-semibold">Category</th>
 
-                  <th className="px-6 py-4 font-semibold">
-                    Price
-                  </th>
+                  <th className="px-6 py-4 font-semibold">Price</th>
 
-                  <th className="px-6 py-4 font-semibold">
-                    Stock
-                  </th>
+                  <th className="px-6 py-4 font-semibold">Stock</th>
 
-                  <th className="px-6 py-4 font-semibold">
-                    Rating
-                  </th>
+                  <th className="px-6 py-4 font-semibold">Rating</th>
                 </tr>
               </thead>
 
@@ -2547,67 +2346,58 @@ const renderSettings = () => {
                     </td>
                   </tr>
                 ) : (
-                  products
-                    .slice(0, 5)
-                    .map((product) => (
-                      <tr
-                        key={product._id}
-                        className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={
-                                product.images?.[0]?.url ||
-                                product.thumbnail ||
-                                product.image ||
-                                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
-                              }
-                              alt={product.title}
-                              className="h-11 w-11 rounded-xl object-cover"
-                            />
+                  products.slice(0, 5).map((product) => (
+                    <tr
+                      key={product._id}
+                      className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={
+                              product.images?.[0]?.url ||
+                              product.thumbnail ||
+                              product.image ||
+                              "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+                            }
+                            alt={product.title}
+                            className="h-11 w-11 rounded-xl object-cover"
+                          />
 
-                            <span className="text-sm font-semibold text-slate-900 dark:text-white">
-                              {product.title}
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
-                          {getCategoryName(
-                            product.category
-                          )}
-                        </td>
-
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
-                          $
-                          {Number(
-                            product.price || 0
-                          ).toFixed(2)}
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                              Number(
-                                product.stock || 0
-                              ) <= 10
-                                ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
-                                : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
-                            }`}
-                          >
-                            {product.stock} in stock
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                            {product.title}
                           </span>
-                        </td>
+                        </div>
+                      </td>
 
-                        <td className="px-6 py-4">
-                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
-                            <FiStar className="fill-yellow-400 text-yellow-400" />
-                            {averageRating}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
+                      <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
+                        {getCategoryName(product.category)}
+                      </td>
+
+                      <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                        ${Number(product.price || 0).toFixed(2)}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            Number(product.stock || 0) <= 10
+                              ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
+                              : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
+                          }`}
+                        >
+                          {product.stock} in stock
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                          <FiStar className="fill-yellow-400 text-yellow-400" />
+                          {averageRating}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>
@@ -2660,9 +2450,7 @@ const renderSettings = () => {
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) =>
-                setSearchTerm(e.target.value)
-              }
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search products..."
               className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
             />
@@ -2678,39 +2466,24 @@ const renderSettings = () => {
             <table className="w-full min-w-[900px]">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
-                  <th className="px-6 py-4">
-                    Product
-                  </th>
+                  <th className="px-6 py-4">Product</th>
 
-                  <th className="px-6 py-4">
-                    Category
-                  </th>
+                  <th className="px-6 py-4">Category</th>
 
-                  <th className="px-6 py-4">
-                    Price
-                  </th>
+                  <th className="px-6 py-4">Price</th>
 
-                  <th className="px-6 py-4">
-                    Stock
-                  </th>
+                  <th className="px-6 py-4">Stock</th>
 
-                  <th className="px-6 py-4">
-                    Rating
-                  </th>
+                  <th className="px-6 py-4">Rating</th>
 
-                  <th className="px-6 py-4 text-right">
-                    Actions
-                  </th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 {productsLoading ? (
                   <tr>
-                    <td
-                      colSpan="6"
-                      className="px-6 py-16 text-center"
-                    >
+                    <td colSpan="6" className="px-6 py-16 text-center">
                       <FiBox
                         className="mx-auto animate-pulse text-slate-300"
                         size={40}
@@ -2731,110 +2504,90 @@ const renderSettings = () => {
                     </td>
                   </tr>
                 ) : (
-                  filteredProducts.map(
-                    (product) => (
-                      <tr
-                        key={product._id}
-                        className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={
-                                product.images?.[0]?.url ||
-                                product.thumbnail ||
-                                product.image ||
-                                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
-                              }
-                              alt={product.title}
-                              className="h-12 w-12 rounded-xl object-cover"
-                            />
+                  filteredProducts.map((product) => (
+                    <tr
+                      key={product._id}
+                      className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={
+                              product.images?.[0]?.url ||
+                              product.thumbnail ||
+                              product.image ||
+                              "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+                            }
+                            alt={product.title}
+                            className="h-12 w-12 rounded-xl object-cover"
+                          />
 
-                            <div>
-                              <p className="text-sm font-bold text-slate-900 dark:text-white">
-                                {product.title}
-                              </p>
+                          <div>
+                            <p className="text-sm font-bold text-slate-900 dark:text-white">
+                              {product.title}
+                            </p>
 
-                              <p className="mt-1 max-w-xs truncate text-xs text-slate-400">
-                                {product.description ||
-                                  "No description available"}
-                              </p>
-                            </div>
+                            <p className="mt-1 max-w-xs truncate text-xs text-slate-400">
+                              {product.description ||
+                                "No description available"}
+                            </p>
                           </div>
-                        </td>
+                        </div>
+                      </td>
 
-                        <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
-                          {getCategoryName(
-                            product.category
-                          )}
-                        </td>
+                      <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
+                        {getCategoryName(product.category)}
+                      </td>
 
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
-                          $
-                          {Number(
-                            product.price || 0
-                          ).toFixed(2)}
-                        </td>
+                      <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                        ${Number(product.price || 0).toFixed(2)}
+                      </td>
 
-                        <td className="px-6 py-4">
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                              Number(
-                                product.stock || 0
-                              ) <= 10
-                                ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
-                                : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
-                            }`}
+                      <td className="px-6 py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            Number(product.stock || 0) <= 10
+                              ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
+                              : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400"
+                          }`}
+                        >
+                          {product.stock}
+                        </span>
+                      </td>
+
+                     <td className="px-6 py-4">
+  <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
+    <FiStar className="fill-yellow-400 text-yellow-400" />
+    {product.rate ? Number(product.rate).toFixed(1) : "—"}
+  </span>
+</td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => openEditProduct(product)}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-300 dark:hover:bg-white dark:hover:text-slate-950"
                           >
-                            {product.stock}
-                          </span>
-                        </td>
+                            <FiEdit3 size={15} />
+                          </button>
 
-                        <td className="px-6 py-4">
-                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 dark:text-gray-300">
-                            <FiStar className="fill-yellow-400 text-yellow-400" />
-                            {averageRating}
-                          </span>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-end gap-2">
-                            <button
-                              onClick={() =>
-                                openEditProduct(
-                                  product
-                                )
-                              }
-                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-300 dark:hover:bg-white dark:hover:text-slate-950"
-                            >
-                              <FiEdit3 size={15} />
-                            </button>
-
-                            <button
-                              onClick={() =>
-                                handleDeleteProduct(
-                                  product._id
-                                )
-                              }
-                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white dark:bg-red-950/30 dark:text-red-400"
-                            >
-                              <FiTrash2 size={15} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  )
+                          <button
+                            onClick={() => handleDeleteProduct(product._id)}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white dark:bg-red-950/30 dark:text-red-400"
+                          >
+                            <FiTrash2 size={15} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                 )}
 
                 {!productsLoading &&
                   !productError &&
                   filteredProducts.length === 0 && (
                     <tr>
-                      <td
-                        colSpan="6"
-                        className="px-6 py-16 text-center"
-                      >
+                      <td colSpan="6" className="px-6 py-16 text-center">
                         <FiBox
                           className="mx-auto text-slate-300 dark:text-gray-600"
                           size={40}
@@ -2845,8 +2598,7 @@ const renderSettings = () => {
                         </p>
 
                         <p className="mt-1 text-xs text-slate-400">
-                          Try another search or add a new
-                          product.
+                          Try another search or add a new product.
                         </p>
                       </td>
                     </tr>
@@ -2895,22 +2647,14 @@ const renderSettings = () => {
         <div className="mb-6 grid gap-5 sm:grid-cols-2">
           <StatCard
             title="Total Categories"
-            value={
-              categoriesLoading
-                ? "..."
-                : categories.length
-            }
+            value={categoriesLoading ? "..." : categories.length}
             icon={FiTag}
             description="available"
           />
 
           <StatCard
             title="Total Products"
-            value={
-              productsLoading
-                ? "..."
-                : totalProducts
-            }
+            value={productsLoading ? "..." : totalProducts}
             icon={FiBox}
             description="across all categories"
           />
@@ -2926,11 +2670,7 @@ const renderSettings = () => {
             <input
               type="text"
               value={categorySearch}
-              onChange={(e) =>
-                setCategorySearch(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setCategorySearch(e.target.value)}
               placeholder="Search categories..."
               className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
             />
@@ -2946,31 +2686,20 @@ const renderSettings = () => {
             <table className="w-full min-w-[700px]">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
-                  <th className="px-6 py-4">
-                    Category
-                  </th>
+                  <th className="px-6 py-4">Category</th>
 
-                  <th className="px-6 py-4">
-                    Products
-                  </th>
+                  <th className="px-6 py-4">Products</th>
 
-                  <th className="px-6 py-4">
-                    Status
-                  </th>
+                  <th className="px-6 py-4">Status</th>
 
-                  <th className="px-6 py-4 text-right">
-                    Actions
-                  </th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 {categoriesLoading ? (
                   <tr>
-                    <td
-                      colSpan="4"
-                      className="px-6 py-16 text-center"
-                    >
+                    <td colSpan="4" className="px-6 py-16 text-center">
                       <FiTag
                         className="mx-auto animate-pulse text-slate-300"
                         size={40}
@@ -2982,118 +2711,92 @@ const renderSettings = () => {
                     </td>
                   </tr>
                 ) : (
-                  filteredCategories.map(
-                    (category) => {
-                      const categoryProducts =
-                        products.filter(
-                          (product) => {
-                            const productCategory =
-                              typeof product.category ===
-                              "object"
-                                ? product.category?._id
-                                : product.category;
+                  filteredCategories.map((category) => {
+                    const categoryProducts = products.filter((product) => {
+                      const productCategory =
+                        typeof product.category === "object"
+                          ? product.category?._id
+                          : product.category;
 
-                            return (
-                              productCategory ===
-                              category._id
-                            );
-                          }
-                        );
+                      return productCategory === category._id;
+                    });
 
-                      return (
-                        <tr
-                          key={category._id}
-                          className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
-                        >
-                          <td className="px-6 py-5">
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-sm dark:bg-[#252525]">
-                                <FiTag size={18} />
-                              </div>
-
-                              <div>
-                                <p className="text-sm font-bold text-slate-900 dark:text-white">
-                                  {category.name}
-                                </p>
-
-                                <p className="mt-1 text-xs text-slate-400">
-                                  Category
-                                </p>
-                              </div>
+                    return (
+                      <tr
+                        key={category._id}
+                        className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
+                      >
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-sm dark:bg-[#252525]">
+                              <FiTag size={18} />
                             </div>
-                          </td>
 
-                          <td className="px-6 py-5">
-                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
-                              {
-                                categoryProducts.length
-                              }{" "}
-                              products
-                            </span>
-                          </td>
+                            <div>
+                              <p className="text-sm font-bold text-slate-900 dark:text-white">
+                                {category.name}
+                              </p>
 
-                          <td className="px-6 py-5">
-                            <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
-                              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                              Active
-                            </span>
-                          </td>
-
-                          <td className="px-6 py-5">
-                            <div className="flex justify-end gap-2">
-                              <button
-                                onClick={() =>
-                                  openEditCategory(
-                                    category
-                                  )
-                                }
-                                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-300 dark:hover:bg-white dark:hover:text-slate-950"
-                              >
-                                <FiEdit3 size={15} />
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  handleDeleteCategory(
-                                    category._id
-                                  )
-                                }
-                                className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white dark:bg-red-950/30 dark:text-red-400"
-                              >
-                                <FiTrash2 size={15} />
-                              </button>
+                              <p className="mt-1 text-xs text-slate-400">
+                                Category
+                              </p>
                             </div>
-                          </td>
-                        </tr>
-                      );
-                    }
-                  )
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
+                            {categoryProducts.length} products
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
+                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                            Active
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => openEditCategory(category)}
+                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-900 hover:text-white dark:bg-[#252525] dark:text-gray-300 dark:hover:bg-white dark:hover:text-slate-950"
+                            >
+                              <FiEdit3 size={15} />
+                            </button>
+
+                            <button
+                              onClick={() => handleDeleteCategory(category._id)}
+                              className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-500 hover:text-white dark:bg-red-950/30 dark:text-red-400"
+                            >
+                              <FiTrash2 size={15} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
 
-                {!categoriesLoading &&
-                  filteredCategories.length ===
-                    0 && (
-                    <tr>
-                      <td
-                        colSpan="4"
-                        className="px-6 py-16 text-center"
-                      >
-                        <FiTag
-                          className="mx-auto text-slate-300 dark:text-gray-600"
-                          size={40}
-                        />
+                {!categoriesLoading && filteredCategories.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="px-6 py-16 text-center">
+                      <FiTag
+                        className="mx-auto text-slate-300 dark:text-gray-600"
+                        size={40}
+                      />
 
-                        <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
-                          No categories found
-                        </p>
+                      <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                        No categories found
+                      </p>
 
-                        <p className="mt-1 text-xs text-slate-400">
-                          Add a new category to organize
-                          your products.
-                        </p>
-                      </td>
-                    </tr>
-                  )}
+                      <p className="mt-1 text-xs text-slate-400">
+                        Add a new category to organize your products.
+                      </p>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -3109,9 +2812,7 @@ const renderSettings = () => {
   */
 
   const renderCustomers = () => {
-    const customerUsers = users.filter(
-      (user) => user.role === "Buyer"
-    );
+    const customerUsers = users.filter((user) => user.role === "Buyer");
 
     return (
       <>
@@ -3132,11 +2833,7 @@ const renderSettings = () => {
         <div className="mb-6 grid gap-5 sm:grid-cols-3">
           <StatCard
             title="Total Customers"
-            value={
-              usersLoading
-                ? "..."
-                : totalCustomers
-            }
+            value={usersLoading ? "..." : totalCustomers}
             icon={FiUsers}
             description="registered"
           />
@@ -3185,35 +2882,22 @@ const renderSettings = () => {
             <table className="w-full min-w-[850px]">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-400 dark:border-[#2a2a2a] dark:bg-[#171717]">
-                  <th className="px-6 py-4">
-                    Customer
-                  </th>
+                  <th className="px-6 py-4">Customer</th>
 
-                  <th className="px-6 py-4">
-                    Email
-                  </th>
+                  <th className="px-6 py-4">Email</th>
 
-                  <th className="px-6 py-4">
-                    Role
-                  </th>
+                  <th className="px-6 py-4">Role</th>
 
-                  <th className="px-6 py-4">
-                    Joined
-                  </th>
+                  <th className="px-6 py-4">Joined</th>
 
-                  <th className="px-6 py-4">
-                    Status
-                  </th>
+                  <th className="px-6 py-4">Status</th>
                 </tr>
               </thead>
 
               <tbody>
                 {usersLoading ? (
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-16 text-center"
-                    >
+                    <td colSpan="5" className="px-6 py-16 text-center">
                       <FiUsers
                         className="mx-auto animate-pulse text-slate-300 dark:text-gray-600"
                         size={42}
@@ -3229,109 +2913,93 @@ const renderSettings = () => {
                     </td>
                   </tr>
                 ) : (
-                  customerUsers.map(
-                    (user, index) => {
-                      const joinedDate =
-                        user.createdAt
-                          ? new Date(
-                              user.createdAt
-                            ).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              }
-                            )
-                          : "—";
+                  customerUsers.map((user, index) => {
+                    const joinedDate = user.createdAt
+                      ? new Date(user.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "—";
 
-                      const initials =
-                        user.name
-                          ?.split(" ")
-                          .filter(Boolean)
-                          .slice(0, 2)
-                          .map((part) =>
-                            part
-                              .charAt(0)
-                              .toUpperCase()
-                          )
-                          .join("") || "U";
+                    const initials =
+                      user.name
+                        ?.split(" ")
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map((part) => part.charAt(0).toUpperCase())
+                        .join("") || "U";
 
-                      return (
-                        <tr
-                          key={`${user._id || user.email}-${index}`}
-                          className="group border-b border-slate-50 transition-all duration-200 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
-                        >
-                          <td className="px-6 py-5">
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white shadow-sm transition-transform duration-200 group-hover:scale-105 dark:bg-[#252525]">
-                                {initials}
-                              </div>
-
-                              <div className="min-w-0">
-                                <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
-                                  {user.name ||
-                                    "Unnamed Customer"}
-                                </p>
-
-                                <p className="mt-1 text-xs text-slate-400">
-                                  Customer account
-                                </p>
-                              </div>
+                    return (
+                      <tr
+                        key={`${user._id || user.email}-${index}`}
+                        className="group border-b border-slate-50 transition-all duration-200 hover:bg-slate-50 dark:border-[#2a2a2a] dark:hover:bg-[#222]"
+                      >
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white shadow-sm transition-transform duration-200 group-hover:scale-105 dark:bg-[#252525]">
+                              {initials}
                             </div>
-                          </td>
 
-                          <td className="px-6 py-5">
-                            <span className="text-sm text-slate-600 dark:text-gray-400">
-                              {user.email}
-                            </span>
-                          </td>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
+                                {user.name || "Unnamed Customer"}
+                              </p>
 
-                          <td className="px-6 py-5">
-                            <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
-                              {user.role === "Buyer"
-                                ? "Customer"
-                                : user.role}
-                            </span>
-                          </td>
+                              <p className="mt-1 text-xs text-slate-400">
+                                Customer account
+                              </p>
+                            </div>
+                          </div>
+                        </td>
 
-                          <td className="px-6 py-5">
-                            <span className="text-sm text-slate-500 dark:text-gray-400">
-                              {joinedDate}
-                            </span>
-                          </td>
+                        <td className="px-6 py-5">
+                          <span className="text-sm text-slate-600 dark:text-gray-400">
+                            {user.email}
+                          </span>
+                        </td>
 
-                          <td className="px-6 py-5">
-                            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400">
-                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                              Active
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    }
-                  )
+                        <td className="px-6 py-5">
+                          <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:bg-[#252525] dark:text-gray-300">
+                            {user.role === "Buyer" ? "Customer" : user.role}
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <span className="text-sm text-slate-500 dark:text-gray-400">
+                            {joinedDate}
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                            Active
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
           </div>
 
-          {!usersLoading &&
-            customerUsers.length === 0 && (
-              <div className="px-6 py-16 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 dark:bg-[#252525] dark:text-gray-500">
-                  <FiUsers size={28} />
-                </div>
-
-                <p className="mt-4 text-sm font-semibold text-slate-700 dark:text-gray-300">
-                  No customers yet
-                </p>
-
-                <p className="mt-1 text-xs text-slate-400">
-                  Registered customers will appear here automatically.
-                </p>
+          {!usersLoading && customerUsers.length === 0 && (
+            <div className="px-6 py-16 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 dark:bg-[#252525] dark:text-gray-500">
+                <FiUsers size={28} />
               </div>
-            )}
+
+              <p className="mt-4 text-sm font-semibold text-slate-700 dark:text-gray-300">
+                No customers yet
+              </p>
+
+              <p className="mt-1 text-xs text-slate-400">
+                Registered customers will appear here automatically.
+              </p>
+            </div>
+          )}
         </div>
       </>
     );
@@ -3343,19 +3011,13 @@ const renderSettings = () => {
   ========================================
   */
 
-
-
   /*
   ========================================
   OTHER PAGES
   ========================================
   */
 
-  const renderPlaceholder = (
-    title,
-    description,
-    Icon
-  ) => {
+  const renderPlaceholder = (title, description, Icon) => {
     return (
       <div className="flex min-h-[500px] items-center justify-center">
         <div className="max-w-md text-center">
@@ -3407,14 +3069,14 @@ const renderSettings = () => {
         return renderPlaceholder(
           "Analytics",
           "Advanced sales analytics, revenue insights, product performance and customer behavior will live here.",
-          FiBarChart2
+          FiBarChart2,
         );
 
       case "Payments":
         return renderPlaceholder(
           "Payments",
           "Payment tracking, transactions, refunds and financial reports will live here.",
-          FiDollarSign
+          FiDollarSign,
         );
 
       case "Settings":
@@ -3441,9 +3103,7 @@ const renderSettings = () => {
 
       <aside
         className={`fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-950 text-white transition-transform duration-300 ${
-          sidebarOpen
-            ? "translate-x-0"
-            : "-translate-x-full lg:translate-x-0"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         {/* Logo */}
@@ -3454,13 +3114,8 @@ const renderSettings = () => {
               <FiShoppingBag size={20} />
             </div>
 
-            <div
-              onClick={() => navigate("/")}
-              className="cursor-pointer"
-            >
-              <h2 className="text-xl font-black tracking-tight">
-                Shoply
-              </h2>
+            <div onClick={() => navigate("/")} className="cursor-pointer">
+              <h2 className="text-xl font-black tracking-tight">Shoply</h2>
 
               <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-500">
                 Admin Panel
@@ -3480,15 +3135,12 @@ const renderSettings = () => {
             {menuItems.map((item) => {
               const Icon = item.icon;
 
-              const active =
-                activePage === item.name;
+              const active = activePage === item.name;
 
               return (
                 <button
                   key={item.name}
-                  onClick={() =>
-                    handleMenuClick(item.name)
-                  }
+                  onClick={() => handleMenuClick(item.name)}
                   className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all ${
                     active
                       ? "bg-white text-slate-950 shadow-lg"
@@ -3498,27 +3150,23 @@ const renderSettings = () => {
                   <Icon
                     size={18}
                     className={`transition-transform ${
-                      active
-                        ? ""
-                        : "group-hover:scale-110"
+                      active ? "" : "group-hover:scale-110"
                     }`}
                   />
 
                   <span>{item.name}</span>
 
-                  {item.name === "Products" &&
-                    lowStockProducts.length > 0 && (
-                      <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                        {lowStockProducts.length}
-                      </span>
-                    )}
+                  {item.name === "Products" && lowStockProducts.length > 0 && (
+                    <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                      {lowStockProducts.length}
+                    </span>
+                  )}
 
-                  {item.name === "Categories" &&
-                    categories.length > 0 && (
-                      <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-[10px] font-bold text-slate-950">
-                        {categories.length}
-                      </span>
-                    )}
+                  {item.name === "Categories" && categories.length > 0 && (
+                    <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-[10px] font-bold text-slate-950">
+                      {categories.length}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -3530,9 +3178,7 @@ const renderSettings = () => {
         <div className="border-t border-white/10 p-4">
           <div className="mb-3 flex items-center gap-3 rounded-xl bg-white/5 p-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 font-bold text-slate-950">
-              {adminName
-                .charAt(0)
-                .toUpperCase()}
+              {adminName.charAt(0).toUpperCase()}
             </div>
 
             <div className="min-w-0">
@@ -3540,9 +3186,7 @@ const renderSettings = () => {
                 {adminName}
               </p>
 
-              <p className="text-xs text-slate-500">
-                Administrator
-              </p>
+              <p className="text-xs text-slate-500">Administrator</p>
             </div>
           </div>
 
@@ -3585,9 +3229,7 @@ const renderSettings = () => {
             <div className="hidden h-8 w-px bg-slate-200 dark:bg-[#2a2a2a] sm:block" />
 
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white dark:bg-[#252525]">
-              {adminName
-                .charAt(0)
-                .toUpperCase()}
+              {adminName.charAt(0).toUpperCase()}
             </div>
           </div>
         </header>
@@ -3607,9 +3249,7 @@ const renderSettings = () => {
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
               <div>
                 <h2 className="text-xl font-bold text-slate-950 dark:text-white">
-                  {editingProduct
-                    ? "Edit Product"
-                    : "Add New Product"}
+                  {editingProduct ? "Edit Product" : "Add New Product"}
                 </h2>
 
                 <p className="mt-1 text-xs text-slate-500 dark:text-gray-400">
@@ -3627,10 +3267,7 @@ const renderSettings = () => {
               </button>
             </div>
 
-            <form
-              onSubmit={handleProductSubmit}
-              className="space-y-5 p-6"
-            >
+            <form onSubmit={handleProductSubmit} className="space-y-5 p-6">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="sm:col-span-2">
                   <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
@@ -3664,16 +3301,11 @@ const renderSettings = () => {
                         : "Select category"}
                     </option>
 
-                    {categories.map(
-                      (category) => (
-                        <option
-                          key={category._id}
-                          value={category._id}
-                        >
-                          {category.name}
-                        </option>
-                      )
-                    )}
+                    {categories.map((category) => (
+                      <option key={category._id} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
 
                   <button
@@ -3726,13 +3358,13 @@ const renderSettings = () => {
                   </label>
 
                   <input
-                    name="rating"
+                    name="rate"
                     type="number"
                     min="0"
                     max="5"
                     step="0.1"
-                    value="4.5"
-                    disabled
+                    value={productForm.rate}
+                    onChange={handleProductChange}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 outline-none dark:border-[#2a2a2a] dark:bg-[#222] dark:text-gray-400"
                   />
                 </div>
@@ -3749,9 +3381,7 @@ const renderSettings = () => {
                     onChange={(e) => {
                       setProductForm((prev) => ({
                         ...prev,
-                        image:
-                          e.target.files?.[0] ||
-                          null,
+                        image: e.target.files?.[0] || null,
                       }));
                     }}
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:ring-[#222]"
@@ -3793,9 +3423,7 @@ const renderSettings = () => {
                   type="submit"
                   className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-slate-800"
                 >
-                  {editingProduct
-                    ? "Save Changes"
-                    : "Add Product"}
+                  {editingProduct ? "Save Changes" : "Add Product"}
                 </button>
               </div>
             </form>
@@ -3811,9 +3439,7 @@ const renderSettings = () => {
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5 dark:border-[#2a2a2a]">
               <div>
                 <h2 className="text-xl font-bold text-slate-950 dark:text-white">
-                  {editingCategory
-                    ? "Edit Category"
-                    : "Add New Category"}
+                  {editingCategory ? "Edit Category" : "Add New Category"}
                 </h2>
 
                 <p className="mt-1 text-xs text-slate-500 dark:text-gray-400">
@@ -3832,10 +3458,7 @@ const renderSettings = () => {
               </button>
             </div>
 
-            <form
-              onSubmit={handleCategorySubmit}
-              className="p-6"
-            >
+            <form onSubmit={handleCategorySubmit} className="p-6">
               <div>
                 <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
                   Category Name
@@ -3850,11 +3473,7 @@ const renderSettings = () => {
                   <input
                     type="text"
                     value={categoryName}
-                    onChange={(e) =>
-                      setCategoryName(
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => setCategoryName(e.target.value)}
                     placeholder="e.g. Electronics"
                     autoFocus
                     maxLength={30}
@@ -3888,9 +3507,7 @@ const renderSettings = () => {
                 >
                   <FiCheckCircle size={16} />
 
-                  {editingCategory
-                    ? "Save Changes"
-                    : "Add Category"}
+                  {editingCategory ? "Save Changes" : "Add Category"}
                 </button>
               </div>
             </form>

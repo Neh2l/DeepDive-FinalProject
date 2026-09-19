@@ -13,9 +13,8 @@ import {
   FiShield,
   FiRefreshCw,
   FiHeadphones,
-  FiCheckCircle,
+  FiArrowUpRight,
   FiShoppingBag,
-  FiStar,
 } from "react-icons/fi";
 
 import { Link, useLocation } from "react-router-dom";
@@ -39,9 +38,9 @@ function Footer() {
 
   const location = useLocation();
 
-  /* =========================================================
-     FETCH FOOTER SETTINGS
-  ========================================================= */
+  // =========================================================
+  // FETCH FOOTER SETTINGS
+  // =========================================================
 
   useEffect(() => {
     const fetchFooterSettings = async () => {
@@ -57,9 +56,9 @@ function Footer() {
     fetchFooterSettings();
   }, []);
 
-  /* =========================================================
-     SCROLL TO TOP
-  ========================================================= */
+  // =========================================================
+  // SCROLL TO TOP
+  // =========================================================
 
   useEffect(() => {
     window.scrollTo({
@@ -69,338 +68,232 @@ function Footer() {
   }, [location.pathname, location.search]);
 
   return (
-    <footer className="border-t border-gray-200 bg-white text-gray-800 dark:border-[#2a2a2a] dark:bg-[#111111] dark:text-gray-200">
+    <footer
+      className="
+        border-t
+        border-gray-200
+        bg-white
+        text-gray-900
+        dark:border-[#292929]
+        dark:bg-[#111111]
+        dark:text-white
+      "
+    >
 
       {/* =====================================================
-          BIG BRAND INTRO
-      ===================================================== */}
+          SERVICE STRIP
+      ====================================================== */}
 
-      <section className="border-b border-gray-100 dark:border-[#2a2a2a]">
+      <div
+        className="
+          border-b
+          border-gray-200
+          dark:border-[#292929]
+        "
+      >
+        <div
+          className="
+            mx-auto
+            grid
+            max-w-[1400px]
+            grid-cols-2
+            lg:grid-cols-4
+          "
+        >
 
-        <div className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10 lg:py-20">
+          <ServiceItem
+            icon={<FiTruck size={18} />}
+            title="Fast delivery"
+            text="Delivered to your door"
+          />
 
-          <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:items-center">
+          <ServiceItem
+            icon={<FiShield size={18} />}
+            title="Secure shopping"
+            text="Safe & protected checkout"
+          />
 
-            {/* BRAND */}
+          <ServiceItem
+            icon={<FiRefreshCw size={18} />}
+            title="Easy returns"
+            text="Simple return process"
+          />
 
-            <div>
-
-              <div className="flex items-center gap-3">
-
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400 text-black shadow-lg">
-
-                  <FiShoppingBag size={27} />
-
-                </div>
-
-                <Link
-                  to="/"
-                  className="text-5xl font-black tracking-tight"
-                >
-                  <span className="text-yellow-400">
-                    shop
-                  </span>
-                  ly
-                </Link>
-
-              </div>
-
-              <h2 className="mt-7 max-w-2xl text-3xl font-black leading-tight tracking-tight text-gray-900 dark:text-white md:text-4xl">
-                Everything you need.
-                <br />
-                <span className="text-yellow-400">
-                  All in one place.
-                </span>
-              </h2>
-
-              <p className="mt-5 max-w-2xl text-base leading-8 text-gray-500 dark:text-gray-400">
-                Shoply is your everyday online marketplace, bringing
-                products, great deals, and a smooth shopping experience
-                together in one place.
-              </p>
-
-              <div className="mt-7 flex flex-wrap items-center gap-5">
-
-                <div className="flex items-center gap-2">
-
-                  <FiCheckCircle
-                    className="text-yellow-500"
-                    size={18}
-                  />
-
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    Reliable shopping
-                  </span>
-
-                </div>
-
-                <div className="flex items-center gap-2">
-
-                  <FiCheckCircle
-                    className="text-yellow-500"
-                    size={18}
-                  />
-
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    Quality products
-                  </span>
-
-                </div>
-
-                <div className="flex items-center gap-2">
-
-                  <FiCheckCircle
-                    className="text-yellow-500"
-                    size={18}
-                  />
-
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    Easy shopping
-                  </span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* RIGHT FEATURE CARD */}
-
-            <div className="relative overflow-hidden rounded-3xl bg-gray-950 p-8 text-white shadow-2xl dark:bg-[#1a1a1a] md:p-10">
-
-              <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-yellow-400/20 blur-3xl" />
-
-              <div className="relative">
-
-                <FiStar
-                  size={28}
-                  className="text-yellow-400"
-                />
-
-                <h3 className="mt-5 text-2xl font-black">
-                  A better way to shop
-                </h3>
-
-                <p className="mt-4 text-sm leading-7 text-gray-400">
-                  Discover products you love, explore new categories,
-                  and enjoy a shopping experience designed around
-                  simplicity and convenience.
-                </p>
-
-                <div className="mt-7 flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black">
-                    <FiShoppingBag size={18} />
-                  </div>
-
-                  <span className="text-sm font-semibold">
-                    Shop smarter with Shoply
-                  </span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
+          <ServiceItem
+            icon={<FiHeadphones size={18} />}
+            title="Need help?"
+            text="We're here for you"
+          />
 
         </div>
-
-      </section>
+      </div>
 
       {/* =====================================================
-          MAIN FOOTER CONTENT
-      ===================================================== */}
+          MAIN FOOTER
+      ====================================================== */}
 
-      <div className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10">
+      <div
+        className="
+          mx-auto
+          max-w-[1400px]
+          px-5
+          py-16
+          sm:px-8
+          lg:px-10
+          lg:py-20
+        "
+      >
 
-        <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-[1.2fr_1.4fr_1fr_1fr]">
+        {/* ===================================================
+            BRAND INTRO
+        ==================================================== */}
 
-          {/* =================================================
-              BRAND / SOCIAL
-          ================================================= */}
+        <div
+          className="
+            grid
+            gap-12
+            border-b
+            border-gray-200
+            pb-14
+            dark:border-[#292929]
+            lg:grid-cols-[1.5fr_1fr]
+            lg:items-end
+          "
+        >
+
+          {/* BRAND */}
 
           <div>
 
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white">
-              Shoply
-            </h3>
+            <Link
+              to="/"
+              className="
+                inline-flex
+                items-center
+                gap-2.5
+              "
+            >
 
-            <p className="mt-5 max-w-sm text-sm leading-7 text-gray-500 dark:text-gray-400">
-              Your trusted destination for everyday shopping.
-              Find what you need, discover something new, and
-              enjoy a simple experience from start to finish.
+              <span
+                className="
+                  flex
+                  h-9
+                  w-9
+                  items-center
+                  justify-center
+                  bg-[#ffd814]
+                  text-black
+                "
+              >
+                <FiShoppingBag size={17} />
+              </span>
+
+              <span
+                className="
+                  text-[25px]
+                  font-black
+                  tracking-[-0.06em]
+                "
+              >
+                <span className="text-[#ffd814]">
+                  shop
+                </span>
+                ly
+              </span>
+
+            </Link>
+
+            <p
+              className="
+                mt-6
+                max-w-[570px]
+                text-[13px]
+                leading-7
+                text-gray-500
+                dark:text-gray-400
+              "
+            >
+              Everything you need, all in one place.
+              Discover everyday essentials, new favourites,
+              and products worth bringing home.
             </p>
-
-            <div className="mt-7">
-
-              <p className="mb-4 text-xs font-bold uppercase tracking-wider text-gray-400">
-                Follow Shoply
-              </p>
-
-              <div className="flex gap-3">
-
-                <Social
-                  icon={<FiFacebook size={18} />}
-                  label="Facebook"
-                  href={footerSettings.facebook}
-                />
-
-                <Social
-                  icon={<FiInstagram size={18} />}
-                  label="Instagram"
-                  href={footerSettings.instagram}
-                />
-
-                <Social
-                  icon={<FiTwitter size={18} />}
-                  label="Twitter"
-                  href={footerSettings.twitter}
-                />
-
-                <Social
-                  icon={<FiYoutube size={18} />}
-                  label="YouTube"
-                  href={footerSettings.youtube}
-                />
-
-              </div>
-
-            </div>
 
           </div>
 
-          {/* =================================================
-              SHOP CATEGORIES
-          ================================================= */}
+          {/* NEWSLETTER */}
 
           <div>
 
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white">
-              Shop Categories
-            </h3>
+            <p
+              className="
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-[0.2em]
+                text-gray-400
+              "
+            >
+              Stay in the know
+            </p>
 
-            <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-4">
+            <div
+              className="
+                mt-4
+                flex
+                border-b
+                border-gray-900
+                dark:border-white
+              "
+            >
 
-              <Link
-                to="/products"
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="
+                  min-w-0
+                  flex-1
+                  bg-transparent
+                  px-0
+                  py-3
+                  text-[12px]
+                  text-gray-900
+                  outline-none
+                  placeholder:text-gray-400
+                  dark:text-white
+                "
+              />
+
+              <button
+                type="button"
                 className="
                   group
                   flex
                   items-center
-                  text-sm
-                  text-gray-500
+                  gap-2
+                  pb-3
+                  pl-4
+                  text-[9px]
+                  font-bold
+                  uppercase
+                  tracking-[0.15em]
+                  text-gray-900
                   transition-all
-                  duration-200
-                  hover:translate-x-1
-                  hover:text-gray-900
-                  dark:text-gray-400
-                  dark:hover:text-white
+                  hover:text-gray-500
+                  dark:text-white
                 "
               >
-                <FiChevronRight
-                  size={14}
-                  className="mr-2 text-yellow-500"
-                />
+                Subscribe
 
-                All Products
-              </Link>
-
-              {footerCategories.map((category) => (
-                <Link
-                  key={category._id}
-                  to={`/products?category=${encodeURIComponent(
-                    category._id
-                  )}`}
+                <FiArrowUpRight
+                  size={13}
                   className="
-                    group
-                    flex
-                    items-center
-                    text-sm
-                    text-gray-500
-                    transition-all
-                    duration-200
-                    hover:translate-x-1
-                    hover:text-gray-900
-                    dark:text-gray-400
-                    dark:hover:text-white
+                    transition-transform
+                    duration-300
+                    group-hover:translate-x-1
+                    group-hover:-translate-y-1
                   "
-                >
-                  <FiChevronRight
-                    size={14}
-                    className="mr-2 text-yellow-500"
-                  />
-
-                  {category.name}
-                </Link>
-              ))}
-
-            </div>
-
-          </div>
-
-          {/* =================================================
-              HELP
-          ================================================= */}
-
-          <div>
-
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white">
-              Help & Support
-            </h3>
-
-            <div className="mt-6 space-y-4">
-
-              <FooterLink to="/profile">
-                My Account
-              </FooterLink>
-
-              <FooterLink to="/orders">
-                My Orders
-              </FooterLink>
-
-              <FooterLink to="/contact">
-                Contact Us
-              </FooterLink>
-
-              <FooterLink to="/about">
-                About Shoply
-              </FooterLink>
-
-            </div>
-
-          </div>
-
-          {/* =================================================
-              CONTACT
-          ================================================= */}
-
-          <div>
-
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white">
-              Get In Touch
-            </h3>
-
-            <div className="mt-6 space-y-5">
-
-              <Contact
-                icon={<FiPhone size={18} />}
-                title="Phone"
-                text={footerSettings.phone}
-              />
-
-              <Contact
-                icon={<FiMail size={18} />}
-                title="Email"
-                text={footerSettings.email}
-              />
-
-              <Contact
-                icon={<FiMapPin size={18} />}
-                title="Location"
-                text={footerSettings.location}
-              />
+                />
+              </button>
 
             </div>
 
@@ -408,70 +301,189 @@ function Footer() {
 
         </div>
 
-        {/* =====================================================
-            SERVICE FEATURES
-        ===================================================== */}
+        {/* ===================================================
+            LINKS
+        ==================================================== */}
 
-        <div className="mt-16 overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 dark:border-[#2a2a2a] dark:bg-[#171717]">
+        <div
+          className="
+            grid
+            gap-12
+            border-b
+            border-gray-200
+            py-14
+            dark:border-[#292929]
+            sm:grid-cols-2
+            lg:grid-cols-[1fr_1.5fr_1fr_1fr]
+          "
+        >
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4">
+          {/* SHOP */}
 
-            <ServiceItem
-              icon={<FiTruck size={23} />}
-              title="Fast Delivery"
-              text="Reliable delivery to your doorstep"
+          <FooterColumn title="Shop">
+
+            <FooterLink to="/products">
+              All Products
+            </FooterLink>
+
+            {footerCategories.slice(0, 7).map((category) => (
+              <FooterLink
+                key={category._id}
+                to={`/products?category=${encodeURIComponent(
+                  category._id
+                )}`}
+              >
+                {category.name}
+              </FooterLink>
+            ))}
+
+          </FooterColumn>
+
+          {/* HELP */}
+
+          <FooterColumn title="Help & information">
+
+            <FooterLink to="/profile">
+              My Account
+            </FooterLink>
+
+            <FooterLink to="/orders">
+              My Orders
+            </FooterLink>
+
+            <FooterLink to="/contact">
+              Contact Us
+            </FooterLink>
+
+            <FooterLink to="/about">
+              About Shoply
+            </FooterLink>
+
+          </FooterColumn>
+
+          {/* CONTACT */}
+
+          <FooterColumn title="Contact">
+
+            <ContactRow
+              icon={<FiPhone size={15} />}
+              text={footerSettings.phone}
             />
 
-            <ServiceItem
-              icon={<FiShield size={23} />}
-              title="Secure Shopping"
-              text="Your information stays protected"
+            <ContactRow
+              icon={<FiMail size={15} />}
+              text={footerSettings.email}
             />
 
-            <ServiceItem
-              icon={<FiRefreshCw size={23} />}
-              title="Easy Returns"
-              text="Simple and convenient experience"
+            <ContactRow
+              icon={<FiMapPin size={15} />}
+              text={footerSettings.location}
             />
 
-            <ServiceItem
-              icon={<FiHeadphones size={23} />}
-              title="Customer Support"
-              text="We're here whenever you need us"
-            />
+          </FooterColumn>
 
-          </div>
+          {/* FOLLOW */}
+
+          <FooterColumn title="Follow us">
+
+            <div className="flex flex-wrap gap-2">
+
+              <Social
+                icon={<FiInstagram size={16} />}
+                label="Instagram"
+                href={footerSettings.instagram}
+              />
+
+              <Social
+                icon={<FiFacebook size={16} />}
+                label="Facebook"
+                href={footerSettings.facebook}
+              />
+
+              <Social
+                icon={<FiTwitter size={16} />}
+                label="Twitter"
+                href={footerSettings.twitter}
+              />
+
+              <Social
+                icon={<FiYoutube size={16} />}
+                label="YouTube"
+                href={footerSettings.youtube}
+              />
+
+            </div>
+
+            <p
+              className="
+                mt-6
+                max-w-[180px]
+                text-[10px]
+                leading-5
+                text-gray-400
+              "
+            >
+              Follow Shoply for new arrivals,
+              offers and inspiration.
+            </p>
+
+          </FooterColumn>
 
         </div>
 
-      </div>
+        {/* ===================================================
+            BOTTOM
+        ==================================================== */}
 
-      {/* =====================================================
-          BOTTOM BAR
-      ===================================================== */}
+        <div
+          className="
+            flex
+            flex-col
+            gap-5
+            pt-7
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+          "
+        >
 
-      <div className="border-t border-gray-200 dark:border-[#2a2a2a]">
+          {/* COPYRIGHT */}
 
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-4 px-6 py-7 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between lg:px-10">
-
-          <p>
+          <p
+            className="
+              text-[9px]
+              font-medium
+              uppercase
+              tracking-[0.12em]
+              text-gray-400
+            "
+          >
             © 2026 Shoply. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-2">
+          {/* PAYMENT */}
 
-            <span className="text-gray-400">
-              Payment method:
+          <div
+            className="
+              flex
+              items-center
+              gap-3
+              text-[9px]
+              font-medium
+              uppercase
+              tracking-[0.12em]
+              text-gray-400
+            "
+          >
+
+            <span>
+              Secure checkout
             </span>
 
-            <span className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-semibold text-gray-700 dark:border-[#2a2a2a] dark:bg-[#171717] dark:text-gray-300">
+            <span className="h-1 w-1 bg-[#ffd814]" />
 
-              <span className="text-base">
-                💵
-              </span>
-
-              Cash on Delivery
-
+            <span>
+              Cash on delivery
             </span>
 
           </div>
@@ -481,6 +493,37 @@ function Footer() {
       </div>
 
     </footer>
+  );
+}
+
+
+/* =========================================================
+   FOOTER COLUMN
+========================================================= */
+
+function FooterColumn({ title, children }) {
+  return (
+    <div>
+
+      <h3
+        className="
+          mb-6
+          text-[9px]
+          font-bold
+          uppercase
+          tracking-[0.2em]
+          text-gray-900
+          dark:text-white
+        "
+      >
+        {title}
+      </h3>
+
+      <div className="space-y-4">
+        {children}
+      </div>
+
+    </div>
   );
 }
 
@@ -496,23 +539,32 @@ function FooterLink({ to, children }) {
       className="
         group
         flex
+        w-fit
         items-center
-        text-sm
+        gap-2
+        text-[12px]
         text-gray-500
         transition-all
-        duration-200
-        hover:translate-x-1
-        hover:text-gray-900
+        duration-300
+        hover:text-gray-950
         dark:text-gray-400
         dark:hover:text-white
       "
     >
-      <FiChevronRight
-        size={14}
-        className="mr-2 text-yellow-500"
+
+      <span
+        className="
+          h-px
+          w-0
+          bg-[#ffd814]
+          transition-all
+          duration-300
+          group-hover:w-3
+        "
       />
 
       {children}
+
     </Link>
   );
 }
@@ -531,25 +583,19 @@ function Social({ icon, label, href }) {
       aria-label={label}
       className="
         flex
-        h-11
-        w-11
+        h-9
+        w-9
         items-center
         justify-center
-        rounded-xl
         border
         border-gray-200
-        bg-white
-        text-gray-600
-        shadow-sm
+        text-gray-500
         transition-all
         duration-300
-        hover:-translate-y-1
-        hover:border-yellow-400
-        hover:bg-yellow-400
+        hover:border-[#ffd814]
+        hover:bg-[#ffd814]
         hover:text-black
-        hover:shadow-lg
         dark:border-[#333]
-        dark:bg-[#1a1a1a]
         dark:text-gray-400
       "
     >
@@ -560,28 +606,35 @@ function Social({ icon, label, href }) {
 
 
 /* =========================================================
-   CONTACT
+   CONTACT ROW
 ========================================================= */
 
-function Contact({ icon, title, text }) {
+function ContactRow({ icon, text }) {
   return (
     <div className="flex items-start gap-3">
 
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-400/15 text-yellow-500">
+      <span
+        className="
+          mt-0.5
+          shrink-0
+          text-[#d5ad00]
+          dark:text-[#ffd814]
+        "
+      >
         {icon}
-      </div>
+      </span>
 
-      <div className="min-w-0">
-
-        <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-          {title}
-        </p>
-
-        <p className="mt-1 break-words text-sm font-medium text-gray-700 dark:text-gray-300">
-          {text || "Not available"}
-        </p>
-
-      </div>
+      <span
+        className="
+          break-words
+          text-[12px]
+          leading-5
+          text-gray-500
+          dark:text-gray-400
+        "
+      >
+        {text || "Not available"}
+      </span>
 
     </div>
   );
@@ -594,19 +647,55 @@ function Contact({ icon, title, text }) {
 
 function ServiceItem({ icon, title, text }) {
   return (
-    <div className="flex items-center gap-4 border-b border-gray-200 px-6 py-6 last:border-b-0 md:border-r md:last:border-r-0 lg:border-b-0 dark:border-[#2a2a2a]">
+    <div
+      className="
+        flex
+        items-center
+        gap-3
+        border-b
+        border-gray-200
+        px-5
+        py-5
+        dark:border-[#292929]
+        sm:px-7
+        lg:border-b-0
+        lg:border-r
+        lg:last:border-r-0
+      "
+    >
 
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-yellow-400/15 text-yellow-500">
+      <span
+        className="
+          shrink-0
+          text-gray-900
+          dark:text-white
+        "
+      >
         {icon}
-      </div>
+      </span>
 
       <div>
 
-        <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+        <p
+          className="
+            text-[9px]
+            font-bold
+            uppercase
+            tracking-[0.14em]
+            text-gray-900
+            dark:text-white
+          "
+        >
           {title}
-        </h4>
+        </p>
 
-        <p className="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">
+        <p
+          className="
+            mt-1
+            text-[9px]
+            text-gray-400
+          "
+        >
           {text}
         </p>
 

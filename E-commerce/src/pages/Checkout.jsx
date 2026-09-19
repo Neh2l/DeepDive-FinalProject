@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -13,7 +12,6 @@ import {
   FiCreditCard,
   FiShield,
   FiLock,
-  FiSmartphone,
 } from "react-icons/fi";
 
 import { clearCart } from "../redux/cartSlice";
@@ -223,7 +221,7 @@ function Checkout() {
           paymentResponse
         );
 
-        /*
+        /* 
          * The backend will return the
          * Paymob Unified Checkout URL.
          */
@@ -287,38 +285,58 @@ function Checkout() {
 
   if (items.length === 0) {
     return (
-      <main className="min-h-screen bg-[#f7f7f7] px-4 py-10 sm:py-16 dark:bg-[#111111]">
+      <main className="min-h-screen bg-[#f5f5f3] px-5 py-16 text-[#111] dark:bg-[#111] dark:text-white sm:px-8 sm:py-24">
+        <div className="mx-auto max-w-3xl border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
+          <div className="grid md:grid-cols-[0.8fr_1.2fr]">
+            
+            <div className="hidden min-h-[360px] bg-[#111] p-10 text-white md:flex md:flex-col md:justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#ffd600]">
+                  Shoply
+                </p>
 
-        <div className="mx-auto max-w-xl rounded-3xl border border-gray-200 bg-white p-6 text-center shadow-sm sm:p-10 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+                <h2 className="mt-8 max-w-xs text-4xl font-black leading-[0.95] tracking-[-0.05em]">
+                  Nothing to
+                  <br />
+                  checkout.
+                </h2>
+              </div>
 
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-400 sm:h-16 sm:w-16 dark:bg-[#222] dark:text-gray-500">
-            <FiCreditCard
-              size={26}
-              className="sm:h-7 sm:w-7"
-            />
+              <p className="max-w-xs text-xs leading-6 text-white/45">
+                Your shopping bag is currently empty.
+              </p>
+            </div>
+
+            <div className="flex min-h-[360px] flex-col items-center justify-center px-6 py-14 text-center sm:px-10">
+              <div className="flex h-14 w-14 items-center justify-center border border-[#deded9] bg-[#f7f7f5] text-gray-400 dark:border-[#303030] dark:bg-[#222]">
+                <FiCreditCard size={24} />
+              </div>
+
+              <p className="mt-7 text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400">
+                Your bag
+              </p>
+
+              <h1 className="mt-2 text-2xl font-black tracking-[-0.03em] sm:text-3xl">
+                Your cart is empty
+              </h1>
+
+              <p className="mt-3 max-w-sm text-sm leading-6 text-gray-500 dark:text-gray-400">
+                Add some products before continuing
+                to checkout.
+              </p>
+
+              <Link
+                to="/products"
+                className="mt-8 inline-flex items-center gap-3 bg-[#ffd600] px-7 py-3.5 text-xs font-black uppercase tracking-[0.12em] text-black transition-all duration-300 hover:bg-[#f3ca00]"
+              >
+                Start Shopping
+                <FiArrowLeft
+                  size={15}
+                  className="rotate-180"
+                />
+              </Link>
+            </div>
           </div>
-
-          <h1 className="mt-5 text-xl font-black text-gray-900 sm:text-2xl dark:text-white">
-            Your cart is empty
-          </h1>
-
-          <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
-            Add some products before continuing
-            to checkout.
-          </p>
-
-          <Link
-            to="/products"
-            className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#ffd600] px-5 py-3 text-sm font-black text-black transition hover:bg-[#f5cc00] sm:px-6 sm:py-3.5"
-          >
-            Start Shopping
-
-            <FiArrowLeft
-              size={17}
-              className="rotate-180"
-            />
-          </Link>
-
         </div>
       </main>
     );
@@ -329,92 +347,92 @@ function Checkout() {
   ========================================================= */
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f7f7f7] text-gray-900 dark:bg-[#111111] dark:text-white">
-
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+    <main className="min-h-screen overflow-x-hidden bg-[#f5f5f3] text-[#111] dark:bg-[#111] dark:text-white">
+      <div className="mx-auto max-w-[1450px] px-5 py-7 sm:px-8 sm:py-10 lg:px-12 xl:px-16">
 
         {/* =====================================================
             HEADER
         ===================================================== */}
 
-        <div className="mb-6 sm:mb-8">
-
+        <header className="mb-10 border-b border-[#deded9] pb-7 dark:border-[#292929] sm:mb-12 sm:pb-8">
           <Link
             to="/cart"
-            className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-gray-500 transition hover:text-gray-900 sm:mb-5 dark:text-gray-400 dark:hover:text-white"
+            className="group mb-8 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500 transition-colors hover:text-black dark:text-gray-400 dark:hover:text-white"
           >
-            <FiArrowLeft size={16} />
+            <FiArrowLeft
+              size={14}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
 
             Back to cart
           </Link>
 
-          <div>
+          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.28em] text-gray-400">
+                Shoply / Checkout
+              </p>
 
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 sm:text-[11px]">
-              Shoply
+              <h1 className="mt-3 text-4xl font-black tracking-[-0.055em] sm:text-5xl lg:text-6xl">
+                Checkout
+              </h1>
+            </div>
+
+            <p className="max-w-md text-xs leading-6 text-gray-500 dark:text-gray-400 md:text-right">
+              Complete your delivery details and choose
+              how you would like to pay for your order.
             </p>
-
-            <h1 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl md:text-4xl dark:text-white">
-              Checkout
-            </h1>
-
-            <p className="mt-2 max-w-xl text-xs leading-5 text-gray-500 sm:mt-3 sm:text-sm sm:leading-6 dark:text-gray-400">
-              Complete your delivery information
-              and choose your preferred payment
-              method.
-            </p>
-
           </div>
-        </div>
+        </header>
 
-        <div className="grid gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_390px] xl:gap-16">
 
           {/* ===================================================
               LEFT
           =================================================== */}
 
-          <div className="min-w-0 space-y-5 sm:space-y-6">
+          <div className="min-w-0">
 
             {/* =================================================
                 DELIVERY
             ================================================= */}
 
-            <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:rounded-3xl sm:p-6 md:p-7 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+            <section className="border-b border-[#deded9] pb-9 dark:border-[#292929] sm:pb-11">
+              <div className="mb-7 flex items-start justify-between gap-5">
+                <div className="flex gap-4">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-[#ffd600] text-black">
+                    <FiMapPin size={17} />
+                  </span>
 
-              <div className="mb-5 flex items-center gap-3 sm:mb-6">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                      01
+                    </p>
 
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ffd600] text-black sm:h-11 sm:w-11 sm:rounded-2xl">
-                  <FiMapPin size={19} />
-                </div>
+                    <h2 className="mt-1 text-xl font-black tracking-[-0.025em] sm:text-2xl">
+                      Delivery Information
+                    </h2>
 
-                <div className="min-w-0">
-
-                  <h2 className="text-lg font-black sm:text-xl dark:text-white">
-                    Delivery Information
-                  </h2>
-
-                  <p className="mt-1 text-[11px] text-gray-400 sm:text-xs">
-                    Where should we deliver your order?
-                  </p>
-
+                    <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                      Where should we deliver your order?
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
+              <div className="grid gap-x-7 gap-y-6 sm:grid-cols-2">
 
                 {/* Full Name */}
 
                 <div className="min-w-0">
-
-                  <label className="mb-2 block text-[10px] font-black uppercase tracking-wider text-gray-500 sm:text-xs dark:text-gray-400">
+                  <label className="mb-2.5 block text-[9px] font-black uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
                     Full Name
                   </label>
 
                   <div className="relative">
-
                     <FiUser
-                      size={17}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 sm:left-4"
+                      size={15}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400"
                     />
 
                     <input
@@ -423,25 +441,22 @@ function Checkout() {
                       value={formData.fullName}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm font-medium outline-none transition focus:border-gray-900 focus:bg-white sm:rounded-2xl sm:py-3.5 sm:pl-11 sm:pr-4 dark:border-[#2a2a2a] dark:bg-[#222] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:bg-[#222]"
+                      className="w-full border-b border-[#cfcfc9] bg-transparent py-3 pl-7 pr-2 text-sm font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-black dark:border-[#3a3a3a] dark:text-white dark:focus:border-white"
                     />
-
                   </div>
                 </div>
 
                 {/* Phone */}
 
                 <div className="min-w-0">
-
-                  <label className="mb-2 block text-[10px] font-black uppercase tracking-wider text-gray-500 sm:text-xs dark:text-gray-400">
+                  <label className="mb-2.5 block text-[9px] font-black uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
                     Phone Number
                   </label>
 
                   <div className="relative">
-
                     <FiPhone
-                      size={17}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 sm:left-4"
+                      size={15}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400"
                     />
 
                     <input
@@ -450,17 +465,15 @@ function Checkout() {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="01xxxxxxxxx"
-                      className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm font-medium outline-none transition focus:border-gray-900 focus:bg-white sm:rounded-2xl sm:py-3.5 sm:pl-11 sm:pr-4 dark:border-[#2a2a2a] dark:bg-[#222] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:bg-[#222]"
+                      className="w-full border-b border-[#cfcfc9] bg-transparent py-3 pl-7 pr-2 text-sm font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-black dark:border-[#3a3a3a] dark:text-white dark:focus:border-white"
                     />
-
                   </div>
                 </div>
 
                 {/* City */}
 
                 <div className="min-w-0">
-
-                  <label className="mb-2 block text-[10px] font-black uppercase tracking-wider text-gray-500 sm:text-xs dark:text-gray-400">
+                  <label className="mb-2.5 block text-[9px] font-black uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
                     City
                   </label>
 
@@ -470,16 +483,14 @@ function Checkout() {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="Cairo"
-                    className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm font-medium outline-none transition focus:border-gray-900 focus:bg-white sm:rounded-2xl sm:px-4 sm:py-3.5 dark:border-[#2a2a2a] dark:bg-[#222] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:bg-[#222]"
+                    className="w-full border-b border-[#cfcfc9] bg-transparent py-3 text-sm font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-black dark:border-[#3a3a3a] dark:text-white dark:focus:border-white"
                   />
-
                 </div>
 
                 {/* Address */}
 
                 <div className="min-w-0">
-
-                  <label className="mb-2 block text-[10px] font-black uppercase tracking-wider text-gray-500 sm:text-xs dark:text-gray-400">
+                  <label className="mb-2.5 block text-[9px] font-black uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
                     Address
                   </label>
 
@@ -489,11 +500,9 @@ function Checkout() {
                     value={formData.address}
                     onChange={handleChange}
                     placeholder="Street, building, apartment..."
-                    className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm font-medium outline-none transition focus:border-gray-900 focus:bg-white sm:rounded-2xl sm:px-4 sm:py-3.5 dark:border-[#2a2a2a] dark:bg-[#222] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 dark:focus:bg-[#222]"
+                    className="w-full border-b border-[#cfcfc9] bg-transparent py-3 text-sm font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-black dark:border-[#3a3a3a] dark:text-white dark:focus:border-white"
                   />
-
                 </div>
-
               </div>
             </section>
 
@@ -501,26 +510,25 @@ function Checkout() {
                 PAYMENT METHOD
             ================================================= */}
 
-            <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:rounded-3xl sm:p-6 md:p-7 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-
-              <div className="mb-5 flex items-center gap-3 sm:mb-6">
-
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-800 sm:h-11 sm:w-11 sm:rounded-2xl dark:bg-[#222] dark:text-gray-200">
-                  <FiCreditCard size={19} />
-                </div>
+            <section className="border-b border-[#deded9] py-9 dark:border-[#292929] sm:py-11">
+              <div className="mb-7 flex items-start gap-4">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-black text-white dark:bg-white dark:text-black">
+                  <FiCreditCard size={17} />
+                </span>
 
                 <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                    02
+                  </p>
 
-                  <h2 className="text-lg font-black sm:text-xl dark:text-white">
+                  <h2 className="mt-1 text-xl font-black tracking-[-0.025em] sm:text-2xl">
                     Payment Method
                   </h2>
 
-                  <p className="mt-1 text-[11px] text-gray-400 sm:text-xs">
+                  <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                     Choose how you want to pay.
                   </p>
-
                 </div>
-
               </div>
 
               <div className="space-y-3">
@@ -534,35 +542,37 @@ function Checkout() {
                   onClick={() =>
                     setPaymentMethod("COD")
                   }
-                  className={`w-full rounded-2xl border-2 p-4 text-left transition-all duration-300 ${
+                  className={`group w-full border p-4 text-left transition-all duration-300 sm:p-5 ${
                     paymentMethod === "COD"
-                      ? "border-gray-900 bg-gray-50 shadow-sm dark:border-white dark:bg-[#222]"
-                      : "border-gray-200 bg-white hover:border-gray-400 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:hover:border-gray-600"
+                      ? "border-black bg-white dark:border-white dark:bg-[#1a1a1a]"
+                      : "border-[#d7d7d1] bg-transparent hover:border-gray-500 dark:border-[#303030] dark:hover:border-gray-500"
                   }`}
                 >
-
-                  <div className="flex items-center gap-3 sm:gap-4">
-
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ffd600] text-black">
-                      <FiTruck size={19} />
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center transition-colors ${
+                        paymentMethod === "COD"
+                          ? "bg-[#ffd600] text-black"
+                          : "bg-[#e9e9e5] text-gray-600 dark:bg-[#252525] dark:text-gray-300"
+                      }`}
+                    >
+                      <FiTruck size={18} />
                     </div>
 
                     <div className="min-w-0 flex-1">
-
-                      <p className="text-sm font-black dark:text-white">
+                      <p className="text-sm font-black">
                         Cash on Delivery
                       </p>
 
-                      <p className="mt-1 text-[11px] leading-4 text-gray-500 sm:text-xs dark:text-gray-400">
+                      <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
                         Pay when your order arrives.
                       </p>
-
                     </div>
 
                     <div
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition ${
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center border transition-all ${
                         paymentMethod === "COD"
-                          ? "border-gray-900 bg-gray-900 dark:border-white dark:bg-white"
+                          ? "border-black bg-black dark:border-white dark:bg-white"
                           : "border-gray-300 dark:border-gray-600"
                       }`}
                     >
@@ -573,9 +583,7 @@ function Checkout() {
                         />
                       )}
                     </div>
-
                   </div>
-
                 </button>
 
                 {/* =================================================
@@ -587,43 +595,43 @@ function Checkout() {
                   onClick={() =>
                     setPaymentMethod("Paymob")
                   }
-                  className={`w-full rounded-2xl border-2 p-4 text-left transition-all duration-300 ${
+                  className={`group w-full border p-4 text-left transition-all duration-300 sm:p-5 ${
                     paymentMethod === "Paymob"
-                      ? "border-gray-900 bg-gray-50 shadow-sm dark:border-white dark:bg-[#222]"
-                      : "border-gray-200 bg-white hover:border-gray-400 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:hover:border-gray-600"
+                      ? "border-black bg-white dark:border-white dark:bg-[#1a1a1a]"
+                      : "border-[#d7d7d1] bg-transparent hover:border-gray-500 dark:border-[#303030] dark:hover:border-gray-500"
                   }`}
                 >
-
-                  <div className="flex items-center gap-3 sm:gap-4">
-
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#111] text-white dark:bg-white dark:text-black">
-                      <FiCreditCard size={19} />
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center transition-colors ${
+                        paymentMethod === "Paymob"
+                          ? "bg-black text-white dark:bg-white dark:text-black"
+                          : "bg-[#e9e9e5] text-gray-600 dark:bg-[#252525] dark:text-gray-300"
+                      }`}
+                    >
+                      <FiCreditCard size={18} />
                     </div>
 
                     <div className="min-w-0 flex-1">
-
                       <div className="flex flex-wrap items-center gap-2">
-
-                        <p className="text-sm font-black dark:text-white">
+                        <p className="text-sm font-black">
                           Pay Online
                         </p>
 
-                        <span className="rounded-full bg-green-100 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                        <span className="bg-[#e9f7ed] px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em] text-green-700 dark:bg-green-900/20 dark:text-green-400">
                           Secure
                         </span>
-
                       </div>
 
-                      <p className="mt-1 text-[11px] leading-4 text-gray-500 sm:text-xs dark:text-gray-400">
+                      <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
                         Pay securely with Paymob.
                       </p>
-
                     </div>
 
                     <div
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition ${
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center border transition-all ${
                         paymentMethod === "Paymob"
-                          ? "border-gray-900 bg-gray-900 dark:border-white dark:bg-white"
+                          ? "border-black bg-black dark:border-white dark:bg-white"
                           : "border-gray-300 dark:border-gray-600"
                       }`}
                     >
@@ -634,14 +642,13 @@ function Checkout() {
                         />
                       )}
                     </div>
-
                   </div>
 
                   {paymentMethod === "Paymob" && (
-                    <div className="mt-4 flex items-start gap-2 rounded-xl bg-white p-3 text-[10px] leading-4 text-gray-500 dark:bg-[#1a1a1a] dark:text-gray-400">
+                    <div className="mt-4 flex items-start gap-2 border-t border-gray-100 pt-4 text-[10px] leading-5 text-gray-500 dark:border-[#292929] dark:text-gray-400">
                       <FiLock
-                        size={14}
-                        className="mt-0.5 shrink-0"
+                        size={13}
+                        className="mt-1 shrink-0"
                       />
 
                       <span>
@@ -650,9 +657,7 @@ function Checkout() {
                       </span>
                     </div>
                   )}
-
                 </button>
-
               </div>
             </section>
 
@@ -660,58 +665,58 @@ function Checkout() {
                 SECURITY
             ================================================= */}
 
-            <div className="flex items-start gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 sm:items-center sm:p-4 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-
+            <div className="flex items-center gap-3 py-6">
               <FiShield
-                size={18}
-                className="mt-0.5 shrink-0 text-green-600 sm:mt-0"
+                size={17}
+                className="shrink-0 text-green-600"
               />
 
-              <p className="text-[11px] leading-5 text-gray-500 sm:text-xs dark:text-gray-400">
-                Your payment information is securely
-                handled by Paymob. We never store your
-                card details.
+              <p className="text-[10px] leading-5 text-gray-500 dark:text-gray-400 sm:text-xs">
+                Your payment information is securely handled
+                by Paymob. We never store your card details.
               </p>
-
             </div>
-
           </div>
 
           {/* ===================================================
-              RIGHT
+              RIGHT — ORDER SUMMARY
           =================================================== */}
 
-          <aside className="min-w-0 lg:sticky lg:top-6">
-
-            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(0,0,0,0.06)] sm:rounded-3xl dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+          <aside className="min-w-0 lg:sticky lg:top-7">
+            <div className="border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
 
               {/* Header */}
 
-              <div className="border-b border-gray-100 p-4 sm:p-6 dark:border-[#2a2a2a]">
+              <div className="border-b border-[#e2e2dd] px-5 py-5 dark:border-[#292929] sm:px-6 sm:py-6">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-gray-400">
+                      Shoply
+                    </p>
 
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 sm:text-[11px]">
-                  Shoply
-                </p>
+                    <h2 className="mt-1 text-xl font-black tracking-[-0.03em]">
+                      Your Order
+                    </h2>
+                  </div>
 
-                <h2 className="mt-1 text-xl font-black sm:text-2xl dark:text-white">
-                  Your Order
-                </h2>
-
+                  <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-gray-400">
+                    {items.length}{" "}
+                    {items.length === 1
+                      ? "item"
+                      : "items"}
+                  </span>
+                </div>
               </div>
 
               {/* Items */}
 
-              <div className="max-h-[300px] space-y-4 overflow-y-auto p-4 sm:max-h-[340px] sm:p-6">
-
+              <div className="max-h-[330px] space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
                 {items.map((item) => (
-
                   <div
                     key={item.id}
                     className="flex min-w-0 gap-3"
                   >
-
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:h-16 sm:w-16 dark:bg-[#222]">
-
+                    <div className="relative h-[68px] w-[58px] shrink-0 overflow-hidden bg-[#f2f2ef] dark:bg-[#242424]">
                       <img
                         src={
                           item.thumbnail ||
@@ -721,108 +726,92 @@ function Checkout() {
                         className="h-full w-full object-contain"
                       />
 
-                      <span className="absolute right-1 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-900 px-1 text-[9px] font-black text-white">
+                      <span className="absolute bottom-0 left-0 flex min-w-5 items-center justify-center bg-black px-1.5 py-1 text-[8px] font-black text-white">
                         {item.quantity}
                       </span>
-
                     </div>
 
-                    <div className="min-w-0 flex-1">
-
-                      <p className="truncate text-xs font-bold text-gray-900 sm:text-sm dark:text-white">
+                    <div className="min-w-0 flex-1 py-0.5">
+                      <p className="line-clamp-2 text-xs font-bold leading-5 text-gray-900 dark:text-white">
                         {item.title}
                       </p>
 
-                      <p className="mt-1 text-[10px] text-gray-400 sm:text-xs">
-                        {Number(item.price).toFixed(2)} EGP ×{" "}
+                      <p className="mt-1.5 text-[9px] uppercase tracking-[0.08em] text-gray-400">
+                        {Number(item.price).toFixed(2)} EGP
+                        {" × "}
                         {item.quantity}
                       </p>
-
                     </div>
 
-                    <p className="shrink-0 text-xs font-black sm:text-sm dark:text-white">
+                    <p className="shrink-0 py-0.5 text-xs font-black">
                       {(
                         Number(item.price) *
                         Number(item.quantity)
                       ).toFixed(2)}{" "}
                       EGP
                     </p>
-
                   </div>
-
                 ))}
-
               </div>
 
-              {/* =================================================
-                  SUMMARY
-              ================================================= */}
+              {/* Summary */}
 
-              <div className="border-t border-gray-100 p-4 sm:p-6 dark:border-[#2a2a2a]">
+              <div className="border-t border-[#e2e2dd] px-5 py-6 dark:border-[#292929] sm:px-6">
+                <div className="space-y-4">
 
-                <div className="space-y-3">
-
-                  <div className="flex justify-between gap-4 text-sm">
-
+                  <div className="flex justify-between gap-4 text-xs">
                     <span className="text-gray-500 dark:text-gray-400">
                       Subtotal
                     </span>
 
-                    <span className="shrink-0 font-bold dark:text-white">
+                    <span className="font-bold">
                       {subtotal.toFixed(2)} EGP
                     </span>
-
                   </div>
 
-                  <div className="flex justify-between gap-4 text-sm">
-
+                  <div className="flex justify-between gap-4 text-xs">
                     <span className="text-gray-500 dark:text-gray-400">
                       Delivery
                     </span>
 
                     {delivery === 0 ? (
-
-                      <span className="shrink-0 font-bold text-green-600 dark:text-green-400">
+                      <span className="font-bold text-green-600 dark:text-green-400">
                         FREE
                       </span>
-
                     ) : (
-
-                      <span className="shrink-0 font-bold dark:text-white">
+                      <span className="font-bold">
                         {delivery.toFixed(2)} EGP
                       </span>
-
                     )}
-
                   </div>
 
-                  <div className="my-4 h-px bg-gray-100 dark:bg-[#2a2a2a]" />
+                  <div className="my-5 h-px bg-[#e2e2dd] dark:bg-[#292929]" />
 
                   <div className="flex items-end justify-between gap-4">
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-gray-400">
+                        Total
+                      </p>
 
-                    <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
-                      Total
-                    </span>
+                      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Including delivery
+                      </p>
+                    </div>
 
-                    <span className="text-2xl font-black sm:text-3xl dark:text-white">
+                    <span className="text-2xl font-black tracking-[-0.04em] sm:text-3xl">
                       {total.toFixed(2)} EGP
                     </span>
-
                   </div>
-
                 </div>
 
-                {/* =================================================
-                    BUTTON
-                ================================================= */}
+                {/* Button */}
 
                 <button
                   type="button"
                   onClick={handleConfirmOrder}
                   disabled={isSubmitting}
-                  className="group mt-5 flex min-h-12 w-full items-center justify-center gap-3 rounded-2xl bg-[#ffd600] px-4 py-3.5 text-sm font-black text-black transition duration-300 hover:-translate-y-0.5 hover:bg-[#f5cc00] hover:shadow-[0_12px_30px_rgba(255,214,0,0.25)] disabled:cursor-not-allowed disabled:opacity-60 sm:mt-6 sm:px-5 sm:py-4"
+                  className="group mt-7 flex min-h-14 w-full items-center justify-center gap-3 bg-[#ffd600] px-5 py-4 text-[10px] font-black uppercase tracking-[0.14em] text-black transition-all duration-300 hover:bg-[#f3ca00] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-
                   {isSubmitting
                     ? paymentMethod === "Paymob"
                       ? "Opening Secure Checkout..."
@@ -831,33 +820,27 @@ function Checkout() {
                       ? "Continue to Payment"
                       : "Confirm Order"}
 
-                  {!isSubmitting && (
-                    paymentMethod === "Paymob" ? (
+                  {!isSubmitting &&
+                    (paymentMethod === "Paymob" ? (
                       <FiCreditCard
-                        size={18}
+                        size={16}
                         className="transition-transform duration-300 group-hover:scale-110"
                       />
                     ) : (
                       <FiCheck
-                        size={18}
+                        size={17}
                         className="transition-transform duration-300 group-hover:scale-110"
                       />
-                    )
-                  )}
-
+                    ))}
                 </button>
 
-                <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-gray-400">
-                  <FiLock size={12} />
+                <div className="mt-5 flex items-center justify-center gap-2 text-[9px] font-medium uppercase tracking-[0.12em] text-gray-400">
+                  <FiLock size={11} />
                   Secure checkout
                 </div>
-
               </div>
-
             </div>
-
           </aside>
-
         </div>
       </div>
     </main>

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -36,10 +35,13 @@ function Orders() {
           data.orders?.[0]?.items?.[0]
         );
 
-        const ordersData = data.orders || data.data || [];
+        const ordersData =
+          data.orders || data.data || [];
 
         setOrders(
-          Array.isArray(ordersData) ? ordersData : []
+          Array.isArray(ordersData)
+            ? ordersData
+            : []
         );
       } catch (error) {
         console.error(
@@ -76,50 +78,71 @@ function Orders() {
         );
 
   return (
-    <main className="min-h-screen bg-[#f7f7f7] text-gray-900 dark:bg-[#111111] dark:text-white">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#f5f5f3] text-[#111] transition-colors duration-300 dark:bg-[#111] dark:text-white">
+      <div className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
 
-        {/* Header */}
+        {/* =========================
+            HEADER
+        ========================= */}
 
-        <div className="mb-8">
+        <div className="mb-9 border-b border-[#deded9] pb-8 dark:border-[#292929]">
           <Link
             to="/"
-            className="mb-5 inline-flex items-center gap-2 text-sm font-bold text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+            className="
+              group
+              mb-8
+              inline-flex
+              items-center
+              gap-2
+              text-[10px]
+              font-black
+              uppercase
+              tracking-[0.14em]
+              text-gray-500
+              transition-colors
+              hover:text-black
+              dark:text-gray-400
+              dark:hover:text-white
+            "
           >
             <FiArrowRight
-              size={16}
-              className="rotate-180"
+              size={15}
+              className="rotate-180 transition-transform duration-300 group-hover:-translate-x-1"
             />
 
-            Continue shopping
+            Continue Shopping
           </Link>
 
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ffd600] text-black">
-              <FiPackage size={22} />
-            </div>
-
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                Shoply
+              <p className="text-[9px] font-black uppercase tracking-[0.28em] text-gray-400">
+                Shoply Account
               </p>
 
-              <h1 className="text-3xl font-black tracking-tight sm:text-4xl dark:text-white">
+              <h1 className="mt-3 text-4xl font-black tracking-[-0.055em] sm:text-5xl">
                 Your Orders
               </h1>
+
+              <p className="mt-4 max-w-xl text-sm leading-7 text-gray-500 dark:text-gray-400">
+                Track your purchases and view your complete
+                order history.
+              </p>
+            </div>
+
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-[#ffd600] text-black sm:h-14 sm:w-14">
+              <FiPackage
+                size={23}
+              />
             </div>
           </div>
-
-          <p className="mt-3 max-w-xl text-sm leading-6 text-gray-500 dark:text-gray-400">
-            Track your purchases and view your order
-            history.
-          </p>
         </div>
 
-        {/* Filters */}
+        {/* =========================
+            FILTERS
+        ========================= */}
 
-        <div className="mb-6 overflow-x-auto">
-          <div className="flex min-w-max gap-2 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+        <div className="mb-8 overflow-x-auto">
+          <div className="flex min-w-max border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
             {filters.map((filter) => (
               <button
                 key={filter}
@@ -127,11 +150,23 @@ function Orders() {
                 onClick={() =>
                   setActiveFilter(filter)
                 }
-                className={`rounded-xl px-5 py-2.5 text-xs font-bold transition ${
-                  activeFilter === filter
-                    ? "bg-gray-900 text-white shadow-sm dark:bg-white dark:text-black"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[#222] dark:hover:text-white"
-                }`}
+                className={`
+                  relative
+                  px-5
+                  py-4
+                  text-[9px]
+                  font-black
+                  uppercase
+                  tracking-[0.14em]
+                  transition-all
+                  duration-300
+                  sm:px-7
+                  ${
+                    activeFilter === filter
+                      ? "bg-black text-white dark:bg-white dark:text-black"
+                      : "text-gray-500 hover:bg-[#f7f7f5] hover:text-black dark:text-gray-400 dark:hover:bg-[#222] dark:hover:text-white"
+                  }
+                `}
               >
                 {filter}
               </button>
@@ -139,36 +174,46 @@ function Orders() {
           </div>
         </div>
 
-        {/* Loading */}
+        {/* =========================
+            LOADING
+        ========================= */}
 
         {loading ? (
-          <div className="rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-gray-900 dark:border-[#2a2a2a] dark:border-t-white" />
+          <div className="border border-[#deded9] bg-white px-6 py-16 text-center dark:border-[#292929] dark:bg-[#181818]">
+            <div className="mx-auto h-9 w-9 animate-spin border-[3px] border-[#deded9] border-t-black dark:border-[#333] dark:border-t-white" />
 
-            <p className="mt-4 text-sm font-bold text-gray-500 dark:text-gray-400">
+            <p className="mt-6 text-[10px] font-black uppercase tracking-[0.18em] text-gray-400">
               Loading your orders...
             </p>
           </div>
         ) : error ? (
-          /* Error */
+          /* =========================
+             ERROR
+          ========================= */
 
-          <div className="rounded-3xl border border-red-200 bg-red-50 px-6 py-12 text-center dark:border-red-900/40 dark:bg-red-950/20">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-500 dark:bg-red-950/40 dark:text-red-400">
+          <div className="border border-red-200 bg-red-50 px-7 py-14 text-center dark:border-red-900/40 dark:bg-red-950/20">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center border border-red-200 bg-red-100 text-red-500 dark:border-red-900/40 dark:bg-red-950/40 dark:text-red-400">
               <FiPackage size={27} />
             </div>
 
-            <h2 className="mt-5 text-xl font-black text-red-700 dark:text-red-400">
+            <p className="mt-7 text-[9px] font-black uppercase tracking-[0.25em] text-red-500 dark:text-red-400">
+              Order History
+            </p>
+
+            <h2 className="mt-3 text-2xl font-black tracking-[-0.04em] text-red-700 dark:text-red-400">
               Something went wrong
             </h2>
 
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-red-600 dark:text-red-400">
               {error}
             </p>
           </div>
         ) : filteredOrders.length > 0 ? (
-          /* Orders */
+          /* =========================
+             ORDERS
+          ========================= */
 
-          <div className="space-y-5">
+          <div className="space-y-6">
             {filteredOrders.map((order) => (
               <OrderCard
                 key={order._id}
@@ -177,29 +222,56 @@ function Orders() {
             ))}
           </div>
         ) : (
-          /* Empty */
+          /* =========================
+             EMPTY
+          ========================= */
 
-          <div className="rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400 dark:bg-[#222] dark:text-gray-500">
+          <div className="border border-[#deded9] bg-white px-7 py-16 text-center dark:border-[#292929] dark:bg-[#181818]">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center border border-[#deded9] bg-[#f7f7f5] text-gray-400 dark:border-[#333] dark:bg-[#222] dark:text-gray-500">
               <FiShoppingBag size={27} />
             </div>
 
-            <h2 className="mt-5 text-xl font-black dark:text-white">
+            <p className="mt-7 text-[9px] font-black uppercase tracking-[0.25em] text-gray-400">
+              Shopping History
+            </p>
+
+            <h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">
               No orders found
             </h2>
 
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-gray-500 dark:text-gray-400">
               You don't have any{" "}
               {activeFilter.toLowerCase()} orders.
             </p>
 
             <Link
               to="/products"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#ffd600] px-5 py-3 text-sm font-black text-black transition hover:bg-[#f5cc00]"
+              className="
+                group
+                mt-8
+                inline-flex
+                min-h-12
+                items-center
+                gap-3
+                bg-[#ffd600]
+                px-6
+                py-3.5
+                text-[10px]
+                font-black
+                uppercase
+                tracking-[0.14em]
+                text-black
+                transition-all
+                duration-300
+                hover:bg-[#f3ca00]
+              "
             >
               Start Shopping
 
-              <FiArrowRight size={16} />
+              <FiArrowRight
+                size={15}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </Link>
           </div>
         )}
@@ -219,16 +291,16 @@ function OrderCard({ order }) {
 
   const statusStyle = {
     Pending:
-      "bg-yellow-100 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400",
+      "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-900/40 dark:bg-yellow-950/20 dark:text-yellow-400",
 
     Shipped:
-      "bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
+      "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/40 dark:bg-blue-950/20 dark:text-blue-400",
 
     Delivered:
-      "bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400",
+      "border-green-200 bg-green-50 text-green-700 dark:border-green-900/40 dark:bg-green-950/20 dark:text-green-400",
 
     Canceled:
-      "bg-red-100 text-red-700 dark:bg-red-950/30 dark:text-red-400",
+      "border-red-200 bg-red-50 text-red-700 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-400",
   };
 
   const firstItems = (
@@ -244,14 +316,16 @@ function OrderCard({ order }) {
   );
 
   return (
-    <article className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+    <article className="border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
 
-      {/* Top */}
+      {/* =========================
+          TOP
+      ========================= */}
 
-      <div className="flex flex-col gap-4 border-b border-gray-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 dark:border-[#2a2a2a]">
+      <div className="flex flex-col gap-5 border-b border-[#deded9] px-7 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-9 sm:py-8 dark:border-[#292929]">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-black uppercase tracking-wider text-gray-400">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-400">
               Order
             </span>
 
@@ -260,7 +334,7 @@ function OrderCard({ order }) {
             </span>
           </div>
 
-          <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
+          <div className="mt-3 flex items-center gap-2 text-[10px] uppercase tracking-[0.08em] text-gray-400">
             <FiCalendar size={13} />
 
             {date}
@@ -268,18 +342,20 @@ function OrderCard({ order }) {
         </div>
 
         <span
-          className={`w-fit rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-wider ${
+          className={`w-fit border px-3.5 py-2 text-[9px] font-black uppercase tracking-[0.14em] ${
             statusStyle[order.status] ||
-            "bg-gray-100 text-gray-600 dark:bg-[#222] dark:text-gray-400"
+            "border-gray-200 bg-gray-50 text-gray-600 dark:border-[#333] dark:bg-[#222] dark:text-gray-400"
           }`}
         >
           {order.status}
         </span>
       </div>
 
-      {/* Products */}
+      {/* =========================
+          PRODUCTS
+      ========================= */}
 
-      <div className="p-5 sm:p-6">
+      <div className="px-7 py-7 sm:px-9 sm:py-8">
         <div className="flex flex-wrap gap-3">
           {firstItems.map((item, index) => {
 
@@ -297,13 +373,13 @@ function OrderCard({ order }) {
             return (
               <div
                 key={`${order._id}-${index}`}
-                className="relative h-20 w-20 overflow-hidden rounded-2xl bg-gray-100 dark:bg-[#222]"
+                className="relative flex h-24 w-24 items-center justify-center overflow-hidden bg-[#f6f6f4] dark:bg-[#222] sm:h-28 sm:w-28"
               >
                 {productImage ? (
                   <img
                     src={productImage}
                     alt={productName}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain p-2"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-gray-300 dark:text-gray-600">
@@ -315,22 +391,24 @@ function OrderCard({ order }) {
           })}
 
           {order.items?.length > 3 && (
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100 text-xs font-black text-gray-500 dark:bg-[#222] dark:text-gray-400">
+            <div className="flex h-24 w-24 items-center justify-center bg-[#f1f1ee] text-xs font-black text-gray-500 dark:bg-[#222] dark:text-gray-400 sm:h-28 sm:w-28">
               +{order.items.length - 3}
             </div>
           )}
         </div>
 
-        {/* Order Info */}
+        {/* =========================
+            ORDER INFO
+        ========================= */}
 
-        <div className="mt-6 grid gap-5 border-t border-gray-100 pt-5 sm:grid-cols-3 dark:border-[#2a2a2a]">
+        <div className="mt-8 grid gap-6 border-t border-[#deded9] pt-7 sm:grid-cols-3 dark:border-[#292929]">
 
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-400">
               Items
             </p>
 
-            <p className="mt-1 text-sm font-black dark:text-white">
+            <p className="mt-2 text-sm font-black">
               {totalItems}{" "}
               {totalItems === 1
                 ? "item"
@@ -339,43 +417,84 @@ function OrderCard({ order }) {
           </div>
 
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-400">
               Payment
             </p>
 
-            <p className="mt-1 text-sm font-black dark:text-white">
+            <p className="mt-2 text-sm font-black">
               {order.paymentMethod === "COD"
                 ? "Cash on Delivery"
-                : order.paymentMethod || "N/A"}
+                : order.paymentMethod ||
+                  "N/A"}
             </p>
           </div>
 
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-400">
               Total
             </p>
 
-            <p className="mt-1 text-lg font-black dark:text-white">
+            <p className="mt-2 text-xl font-black tracking-[-0.03em]">
               $
-              {Number(order.total).toFixed(2)}
+              {Number(
+                order.total
+              ).toFixed(2)}
             </p>
           </div>
-
         </div>
 
-        {/* View Order */}
+        {/* =========================
+            VIEW ORDER
+        ========================= */}
 
-      <Link
-  to={`/orders/${order._id}`}
-  className="group mt-6 flex items-center justify-center gap-2 rounded-2xl border border-gray-200 py-3.5 text-sm font-black text-gray-800 transition hover:border-gray-900 hover:bg-gray-900 hover:!text-white dark:border-[#2a2a2a] dark:text-gray-200 dark:hover:border-white dark:hover:bg-white dark:hover:!text-black"
->
-  View Order
+        <Link
+          to={`/orders/${order._id}`}
+          className="
+            group
+            mt-8
+            flex
+            min-h-12
+            items-center
+            justify-center
+            gap-3
+            border
+            border-[#d6d6d1]
+            bg-white
+            px-5
+            py-3.5
+            text-[10px]
+            font-black
+            uppercase
+            tracking-[0.14em]
+            text-gray-800
+            transition-all
+            duration-300
+            hover:border-black
+            hover:bg-black
+            hover:text-white
+            dark:border-[#333]
+            dark:bg-[#181818]
+            dark:text-gray-200
+            dark:hover:border-white
+            dark:hover:bg-white
+            dark:hover:text-black
+          "
+        >
+          View Order
 
-  <FiChevronRight
-    size={17}
-    className="text-gray-800 transition-transform group-hover:translate-x-1 group-hover:!text-white dark:text-gray-200 dark:group-hover:!text-black"
-  />
-</Link>
+          <FiChevronRight
+            size={16}
+            className="
+              text-gray-800
+              transition-transform
+              duration-300
+              group-hover:translate-x-1
+              group-hover:text-white
+              dark:text-gray-200
+              dark:group-hover:text-black
+            "
+          />
+        </Link>
       </div>
     </article>
   );

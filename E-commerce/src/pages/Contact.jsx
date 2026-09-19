@@ -113,82 +113,73 @@ function Contact() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f7f7f7] text-gray-900 transition-colors duration-300 dark:bg-[#101010] dark:text-white">
+    <main className="min-h-screen bg-[#f5f5f3] text-[#111] transition-colors duration-300 dark:bg-[#111] dark:text-white">
 
       {/* =====================================================
           PAGE HEADER
       ===================================================== */}
 
-      <section className="border-b border-gray-200 bg-white dark:border-[#292929] dark:bg-[#171717]">
-
-        <div className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8 lg:px-12">
+      <section className="border-b border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
+        <div className="mx-auto max-w-[1500px] px-5 py-9 sm:px-8 sm:py-11 lg:px-12 lg:py-14">
 
           {/* Breadcrumb */}
 
-          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-
+          <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.16em] text-gray-400">
             <span>Home</span>
 
-            <FiArrowRight size={12} />
+            <FiArrowRight size={11} />
 
-            <span className="font-semibold text-gray-800 dark:text-gray-200">
+            <span className="text-gray-800 dark:text-gray-200">
               Contact Us
             </span>
-
           </div>
 
-          <div className="mt-7 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+          <div className="mt-9 flex flex-col justify-between gap-7 md:flex-row md:items-end">
 
             <div>
-
-              <p className="text-xs font-bold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">
+              <p className="text-[9px] font-black uppercase tracking-[0.28em] text-gray-400">
                 Customer Service
               </p>
 
-              <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+              <h1 className="mt-3 max-w-3xl text-4xl font-black tracking-[-0.055em] sm:text-5xl lg:text-6xl">
                 How can we help you?
               </h1>
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400">
-                Find answers, get help with your orders, or contact our
-                customer service team.
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-gray-500 dark:text-gray-400">
+                Find answers, get help with your orders, or contact
+                our customer service team.
               </p>
-
             </div>
 
-            <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 dark:border-[#303030] dark:bg-[#202020]">
+            <div className="flex items-center gap-4 border border-[#deded9] bg-[#f8f8f6] px-5 py-4 dark:border-[#303030] dark:bg-[#202020]">
 
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400 text-black">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#ffd600] text-black">
                 <FiHeadphones size={18} />
               </div>
 
               <div>
-
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">
                   Need help?
                 </p>
 
-                <p className="text-sm font-bold">
+                <p className="mt-1 text-sm font-black">
                   We're here for you
                 </p>
-
               </div>
 
             </div>
 
           </div>
-
         </div>
-
       </section>
 
       {/* =====================================================
           HELP CATEGORIES
       ===================================================== */}
 
-      <section className="mx-auto max-w-[1500px] px-5 py-7 sm:px-8 lg:px-12">
+      <section className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8 sm:py-10 lg:px-12">
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-px border border-[#deded9] bg-[#deded9] md:grid-cols-3 lg:grid-cols-6 dark:border-[#292929] dark:bg-[#292929]">
 
           <HelpCategory
             icon={<FiPackage />}
@@ -227,57 +218,51 @@ function Contact() {
           />
 
         </div>
-
       </section>
 
       {/* =====================================================
           CONTACT + FORM
       ===================================================== */}
 
-      <section className="mx-auto max-w-[1500px] px-5 pb-8 sm:px-8 lg:px-12">
+      <section className="mx-auto max-w-[1500px] px-5 pb-10 sm:px-8 lg:px-12">
 
-        <div className="grid gap-5 lg:grid-cols-[0.75fr_1.25fr]">
+        <div className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr]">
 
           {/* =================================================
-              CUSTOMER SERVICE CARD
+              CUSTOMER SERVICE
           ================================================= */}
 
-          <div className="rounded-2xl border border-gray-200 bg-white dark:border-[#292929] dark:bg-[#171717]">
+          <div className="border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
 
-            <div className="border-b border-gray-200 p-6 dark:border-[#292929] sm:p-7">
+            <div className="border-b border-[#deded9] px-7 py-7 sm:px-8 sm:py-8 dark:border-[#292929]">
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400 text-black">
-
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center bg-[#ffd600] text-black">
                   <FiHeadphones size={20} />
-
                 </div>
 
                 <div>
-
-                  <p className="text-xs font-bold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">
+                  <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400">
                     Contact us
                   </p>
 
-                  <h2 className="mt-1 text-xl font-black">
+                  <h2 className="mt-1.5 text-xl font-black tracking-[-0.02em]">
                     Customer Service
                   </h2>
-
                 </div>
 
               </div>
-
             </div>
 
-            <div className="p-6 sm:p-7">
+            <div className="px-7 py-8 sm:px-8 sm:py-9">
 
-              <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
+              <p className="max-w-md text-sm leading-7 text-gray-500 dark:text-gray-400">
                 Our customer service team is ready to help you with
                 your orders, products, payments, and more.
               </p>
 
-              <div className="mt-7 space-y-1">
+              <div className="mt-8 space-y-1">
 
                 <ContactInfo
                   icon={<FiPhone />}
@@ -307,22 +292,22 @@ function Contact() {
 
               </div>
 
-              <div className="mt-7 rounded-xl bg-gray-50 p-5 dark:bg-[#202020]">
+              <div className="mt-8 border border-[#e3e3de] bg-[#f8f8f6] px-5 py-5 dark:border-[#292929] dark:bg-[#202020]">
 
-                <div className="flex gap-3">
+                <div className="flex gap-4">
 
                   <FiMessageCircle
-                    className="mt-0.5 shrink-0 text-yellow-500"
+                    className="mt-0.5 shrink-0 text-[#c6a900] dark:text-[#ffd600]"
                     size={19}
                   />
 
                   <div>
 
-                    <p className="text-sm font-bold">
+                    <p className="text-sm font-black">
                       Need quick assistance?
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">
+                    <p className="mt-2 text-xs leading-6 text-gray-500 dark:text-gray-400">
                       Send us your question and our team will get
                       back to you as soon as possible.
                     </p>
@@ -330,42 +315,39 @@ function Contact() {
                   </div>
 
                 </div>
-
               </div>
-
             </div>
-
           </div>
 
           {/* =================================================
               CONTACT FORM
           ================================================= */}
 
-          <div className="rounded-2xl border border-gray-200 bg-white dark:border-[#292929] dark:bg-[#171717]">
+          <div className="border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
 
-            <div className="border-b border-gray-200 p-6 dark:border-[#292929] sm:p-7">
+            <div className="border-b border-[#deded9] px-7 py-7 sm:px-8 sm:py-8 dark:border-[#292929]">
 
-              <p className="text-xs font-bold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">
+              <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400">
                 Send us a message
               </p>
 
-              <h2 className="mt-2 text-2xl font-black">
+              <h2 className="mt-3 text-2xl font-black tracking-[-0.035em] sm:text-3xl">
                 Tell us what you need
               </h2>
 
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                Complete the form below and we'll help you with your request.
+              <p className="mt-3 max-w-xl text-sm leading-6 text-gray-500 dark:text-gray-400">
+                Complete the form below and we'll help you with your
+                request.
               </p>
 
             </div>
 
-            <div className="p-6 sm:p-7">
+            <div className="px-7 py-8 sm:px-8 sm:py-9">
 
               {/* SUCCESS MESSAGE */}
 
               {submitted && (
-
-                <div className="mb-6 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-900/40 dark:bg-green-900/10">
+                <div className="mb-7 flex items-start gap-4 border border-green-200 bg-green-50 px-5 py-4 dark:border-green-900/40 dark:bg-green-900/10">
 
                   <FiCheckCircle
                     size={19}
@@ -378,22 +360,20 @@ function Contact() {
                       Message sent successfully
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-green-600 dark:text-green-500">
-                      Thank you for contacting Shoply. We'll get back
-                      to you soon.
+                    <p className="mt-1.5 text-xs leading-5 text-green-600 dark:text-green-500">
+                      Thank you for contacting Shoply. We'll get
+                      back to you soon.
                     </p>
 
                   </div>
 
                 </div>
-
               )}
 
               {/* ERROR MESSAGE */}
 
               {error && (
-
-                <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/40 dark:bg-red-900/10">
+                <div className="mb-7 flex items-start gap-4 border border-red-200 bg-red-50 px-5 py-4 dark:border-red-900/40 dark:bg-red-900/10">
 
                   <FiAlertCircle
                     size={19}
@@ -406,24 +386,23 @@ function Contact() {
                       Message could not be sent
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-red-600 dark:text-red-500">
+                    <p className="mt-1.5 text-xs leading-5 text-red-600 dark:text-red-500">
                       {error}
                     </p>
 
                   </div>
 
                 </div>
-
               )}
 
               <form
                 onSubmit={handleSubmit}
-                className="space-y-5"
+                className="space-y-7"
               >
 
                 {/* NAME + EMAIL */}
 
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid gap-7 sm:grid-cols-2">
 
                   <InputField
                     label="Full Name"
@@ -463,7 +442,7 @@ function Contact() {
 
                 <div>
 
-                  <label className="mb-2 block text-sm font-semibold">
+                  <label className="mb-2.5 block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
                     Message
                   </label>
 
@@ -477,25 +456,23 @@ function Contact() {
                     className="
                       w-full
                       resize-none
-                      rounded-xl
                       border
-                      border-gray-200
-                      bg-gray-50
+                      border-[#d6d6d1]
+                      bg-[#fafaf8]
                       px-4
-                      py-3.5
+                      py-4
                       text-sm
                       text-gray-900
                       outline-none
                       transition-all
                       duration-200
                       placeholder:text-gray-400
-                      focus:border-yellow-400
+                      focus:border-black
                       focus:bg-white
-                      focus:ring-4
-                      focus:ring-yellow-400/10
                       dark:border-[#333]
                       dark:bg-[#202020]
                       dark:text-white
+                      dark:focus:border-white
                       dark:focus:bg-[#202020]
                     "
                   />
@@ -510,86 +487,85 @@ function Contact() {
                   className="
                     group
                     flex
+                    min-h-14
                     w-full
                     items-center
                     justify-center
                     gap-3
-                    rounded-xl
-                    bg-yellow-400
+                    bg-[#ffd600]
                     px-6
                     py-4
-                    text-sm
+                    text-[10px]
                     font-black
+                    uppercase
+                    tracking-[0.14em]
                     text-black
                     transition-all
                     duration-300
-                    hover:bg-yellow-300
-                    hover:shadow-lg
-                    hover:shadow-yellow-400/10
-                    active:scale-[0.99]
+                    hover:bg-[#f3ca00]
                     disabled:cursor-not-allowed
                     disabled:opacity-60
                   "
                 >
 
-                  {sending ? "Sending..." : "Send Message"}
+                  {sending
+                    ? "Sending..."
+                    : "Send Message"}
 
                   <FiSend
-                    size={17}
+                    size={16}
                     className={`transition-transform duration-300 ${
-                      sending ? "animate-pulse" : "group-hover:translate-x-1"
+                      sending
+                        ? "animate-pulse"
+                        : "group-hover:translate-x-1"
                     }`}
                   />
 
                 </button>
 
-                <p className="text-center text-xs text-gray-400">
+                <p className="text-center text-[10px] leading-5 text-gray-400">
                   We'll only use your information to respond to your request.
                 </p>
 
               </form>
-
             </div>
-
           </div>
 
         </div>
-
       </section>
 
       {/* =====================================================
           FAQ
       ===================================================== */}
 
-      <section className="mx-auto max-w-[1500px] px-5 pb-12 sm:px-8 lg:px-12">
+      <section className="mx-auto max-w-[1500px] px-5 pb-14 sm:px-8 lg:px-12">
 
-        <div className="rounded-2xl border border-gray-200 bg-white dark:border-[#292929] dark:bg-[#171717]">
+        <div className="border border-[#deded9] bg-white dark:border-[#292929] dark:bg-[#181818]">
 
-          <div className="border-b border-gray-200 p-6 dark:border-[#292929] sm:p-7">
+          <div className="border-b border-[#deded9] px-7 py-7 sm:px-8 sm:py-8 dark:border-[#292929]">
 
-            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 
               <div>
 
-                <p className="text-xs font-bold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">
+                <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400">
                   Help Center
                 </p>
 
-                <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+                <h2 className="mt-3 text-2xl font-black tracking-[-0.035em] sm:text-3xl">
                   Frequently Asked Questions
                 </h2>
 
               </div>
 
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-gray-400">
                 Find answers to common questions
               </p>
 
             </div>
-
           </div>
 
-          <div className="divide-y divide-gray-200 dark:divide-[#292929]">
+          <div className="divide-y divide-[#deded9] dark:divide-[#292929]">
 
             <FAQItem
               index={0}
@@ -632,15 +608,12 @@ function Contact() {
             />
 
           </div>
-
         </div>
-
       </section>
 
     </main>
   );
 }
-
 
 /* =========================================================
    HELP CATEGORY
@@ -652,41 +625,33 @@ function HelpCategory({ icon, title, text }) {
       type="button"
       className="
         group
-        rounded-xl
-        border
-        border-gray-200
         bg-white
-        p-5
+        px-5
+        py-6
         text-left
         transition-all
-        duration-200
-        hover:-translate-y-0.5
-        hover:border-yellow-400
-        hover:shadow-sm
-        dark:border-[#292929]
-        dark:bg-[#171717]
-        dark:hover:border-yellow-400
+        duration-300
+        hover:bg-[#fafaf8]
+        dark:bg-[#181818]
+        dark:hover:bg-[#202020]
       "
     >
 
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-gray-700 transition-colors duration-200 group-hover:bg-yellow-400 group-hover:text-black dark:bg-[#242424] dark:text-gray-300">
-
+      <div className="flex h-10 w-10 items-center justify-center border border-[#deded9] bg-[#f7f7f5] text-gray-600 transition-all duration-300 group-hover:border-[#ffd600] group-hover:bg-[#ffd600] group-hover:text-black dark:border-[#333] dark:bg-[#222] dark:text-gray-300">
         {icon}
-
       </div>
 
-      <h3 className="mt-4 text-sm font-bold">
+      <h3 className="mt-5 text-sm font-black">
         {title}
       </h3>
 
-      <p className="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">
+      <p className="mt-1.5 text-[10px] leading-5 text-gray-500 dark:text-gray-400">
         {text}
       </p>
 
     </button>
   );
 }
-
 
 /* =========================================================
    CONTACT INFO
@@ -699,21 +664,19 @@ function ContactInfo({
   href,
 }) {
   const content = (
-    <div className="group flex items-center gap-4 rounded-xl p-3 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-[#202020]">
+    <div className="group flex items-center gap-4 px-2 py-4 transition-colors duration-200 hover:bg-[#f8f8f6] dark:hover:bg-[#202020]">
 
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-yellow-400/15 text-yellow-600 dark:text-yellow-400">
-
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#deded9] bg-[#fafaf8] text-gray-600 dark:border-[#333] dark:bg-[#202020] dark:text-gray-300">
         {icon}
-
       </div>
 
       <div className="min-w-0">
 
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+        <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-gray-400">
           {title}
         </p>
 
-        <p className="mt-1 break-words text-sm font-bold text-gray-900 dark:text-white">
+        <p className="mt-1.5 break-words text-sm font-bold text-gray-900 dark:text-white">
           {value}
         </p>
 
@@ -733,7 +696,6 @@ function ContactInfo({
   return content;
 }
 
-
 /* =========================================================
    INPUT FIELD
 ========================================================= */
@@ -750,7 +712,7 @@ function InputField({
   return (
     <div>
 
-      <label className="mb-2 block text-sm font-semibold">
+      <label className="mb-2.5 block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
         {label}
       </label>
 
@@ -763,10 +725,9 @@ function InputField({
         required={required}
         className="
           w-full
-          rounded-xl
           border
-          border-gray-200
-          bg-gray-50
+          border-[#d6d6d1]
+          bg-[#fafaf8]
           px-4
           py-3.5
           text-sm
@@ -775,13 +736,12 @@ function InputField({
           transition-all
           duration-200
           placeholder:text-gray-400
-          focus:border-yellow-400
+          focus:border-black
           focus:bg-white
-          focus:ring-4
-          focus:ring-yellow-400/10
           dark:border-[#333]
           dark:bg-[#202020]
           dark:text-white
+          dark:focus:border-white
           dark:focus:bg-[#202020]
         "
       />
@@ -789,7 +749,6 @@ function InputField({
     </div>
   );
 }
-
 
 /* =========================================================
    FAQ ITEM
@@ -816,13 +775,13 @@ function FAQItem({
           items-center
           justify-between
           gap-5
-          px-5
-          py-5
+          px-6
+          py-6
           text-left
           transition-colors
           duration-200
-          hover:bg-gray-50
-          sm:px-7
+          hover:bg-[#fafaf8]
+          sm:px-8
           dark:hover:bg-[#202020]
         "
       >
@@ -839,19 +798,19 @@ function FAQItem({
             shrink-0
             items-center
             justify-center
-            rounded-lg
+            border
             transition-all
             duration-300
             ${
               isOpen
-                ? "bg-yellow-400 text-black"
-                : "bg-gray-100 text-gray-500 dark:bg-[#242424] dark:text-gray-400"
+                ? "border-[#ffd600] bg-[#ffd600] text-black"
+                : "border-[#deded9] bg-[#f7f7f5] text-gray-500 dark:border-[#333] dark:bg-[#222] dark:text-gray-400"
             }
           `}
         >
 
           <FiChevronDown
-            size={17}
+            size={16}
             className={`transition-transform duration-300 ${
               isOpen ? "rotate-180" : ""
             }`}
@@ -876,7 +835,7 @@ function FAQItem({
 
         <div className="overflow-hidden">
 
-          <p className="px-5 pb-5 text-sm leading-7 text-gray-500 sm:px-7 dark:text-gray-400">
+          <p className="max-w-4xl px-6 pb-6 text-sm leading-7 text-gray-500 sm:px-8 dark:text-gray-400">
             {answer}
           </p>
 

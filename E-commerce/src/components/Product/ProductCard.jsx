@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 import {
@@ -6,10 +7,8 @@ import {
   FiStar,
   FiEye,
   FiAward,
-  FiCheck,
   FiArrowUpRight,
   FiZap,
-  FiTruck,
 } from "react-icons/fi";
 
 import { Link } from "react-router-dom";
@@ -28,7 +27,6 @@ function ProductCard({ product, index = 0 }) {
   const [loginAction, setLoginAction] = useState("cart");
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
   const wishlistItems = useSelector((state) => state.wishlist.items);
 
   // ========================================
@@ -141,134 +139,40 @@ function ProductCard({ product, index = 0 }) {
           group
           relative
           w-full
-          max-w-[290px]
+          max-w-[300px]
           overflow-hidden
-          rounded-[18px]
-          border
-          border-gray-200
           bg-white
-          dark:border-[#2a2a2a]
           dark:bg-[#1a1a1a]
-          transition-all
-          duration-500
-          hover:-translate-y-1
-          hover:border-gray-300
-          dark:hover:border-[#3a3a3a]
-          hover:shadow-[0_20px_50px_rgba(0,0,0,0.09)]
         "
       >
-        {/* IMAGE AREA */}
+
+        {/* =====================================================
+            IMAGE
+        ====================================================== */}
 
         <div
           className="
             relative
-            h-[250px]
+            aspect-[3/4]
             overflow-hidden
-            bg-[#f8f8f8]
-            dark:bg-[#202020]
+            bg-[#f5f5f5]
+            dark:bg-[#222]
           "
         >
-          {/* Background */}
+
+          {/* IMAGE BACKGROUND */}
 
           <div
             className="
               pointer-events-none
               absolute
               inset-0
-              bg-[radial-gradient(circle_at_50%_40%,#ffffff_0%,#f8f8f8_65%,#eeeeee_100%)]
-              dark:bg-[radial-gradient(circle_at_50%_40%,#292929_0%,#202020_65%,#1a1a1a_100%)]
+              bg-[#f5f5f5]
+              dark:bg-[#222]
             "
           />
 
-          {/* Best Seller */}
-
-          {isBestSeller && (
-            <div
-              className="
-                absolute
-                left-3
-                top-3
-                z-20
-                flex
-                items-center
-                gap-1.5
-                rounded-full
-                bg-gray-950
-                px-2.5
-                py-1.5
-                text-[9px]
-                font-extrabold
-                uppercase
-                tracking-[0.06em]
-                text-white
-              "
-            >
-              <FiAward size={11} />
-              Best Seller
-            </div>
-          )}
-
-          {/* Discount */}
-
-          {discount > 0 && (
-            <div
-              className="
-                absolute
-                left-3
-                top-[43px]
-                z-20
-                flex
-                items-center
-                gap-1
-                rounded-full
-                bg-[#ffd814]
-                px-2.5
-                py-1
-                text-[9px]
-                font-black
-                text-gray-950
-              "
-            >
-              <FiZap size={10} />
-              {discount}% OFF
-            </div>
-          )}
-
-          {/* Wishlist */}
-
-          <button
-            type="button"
-            onClick={handleWishlist}
-            aria-label="Add to wishlist"
-            className={` 
-              absolute 
-              right-3 
-              top-3 
-              z-30 
-              flex 
-              h-9 
-              w-9 
-              items-center 
-              justify-center 
-              rounded-full 
-              border 
-              transition-all 
-              duration-300 
-              hover:scale-110 
-              ${
-                isWishlisted
-                  ? "border-red-100 bg-red-50 text-red-500"
-                  : "border-gray-200 bg-white/90 text-gray-600 hover:border-gray-300 hover:text-red-500 dark:border-[#3a3a3a] dark:bg-[#252525]/90 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-red-400"
-              } 
-            `}
-          >
-            <FiHeart
-              size={16}
-              className={isWishlisted ? "fill-current" : ""}
-            />
-          </button>
-
-          {/* Product Image */}
+          {/* PRODUCT IMAGE */}
 
           <Link
             to={`/products/${productId}`}
@@ -289,93 +193,181 @@ function ProductCard({ product, index = 0 }) {
                 h-full
                 w-full
                 object-contain
-                p-8
+                p-5
                 transition-transform
                 duration-700
                 ease-out
-                group-hover:scale-[1.07]
+                group-hover:scale-[1.035]
               "
             />
           </Link>
 
-          {/* Quick View */}
+          {/* =================================================
+              TOP LEFT BADGES
+          ================================================== */}
+
+          <div
+            className="
+              absolute
+              left-3
+              top-3
+              z-20
+              flex
+              flex-col
+              items-start
+              gap-1.5
+            "
+          >
+
+            {isBestSeller && (
+              <span
+                className="
+                  inline-flex
+                  items-center
+                  gap-1.5
+                  bg-white
+                  px-2.5
+                  py-1.5
+                  text-[8px]
+                  font-bold
+                  uppercase
+                  tracking-[0.08em]
+                  text-gray-900
+                  shadow-sm
+                "
+              >
+                <FiAward size={10} />
+                Best Seller
+              </span>
+            )}
+
+            {discount > 0 && (
+              <span
+                className="
+                  inline-flex
+                  items-center
+                  gap-1
+                  bg-[#ffd814]
+                  px-2.5
+                  py-1.5
+                  text-[8px]
+                  font-black
+                  uppercase
+                  tracking-[0.04em]
+                  text-gray-950
+                "
+              >
+                <FiZap size={9} />
+                -{discount}%
+              </span>
+            )}
+
+          </div>
+
+          {/* =================================================
+              WISHLIST
+          ================================================== */}
+
+          <button
+            type="button"
+            onClick={handleWishlist}
+            aria-label="Add to wishlist"
+            className={`
+              absolute
+              right-3
+              top-3
+              z-30
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              bg-white/95
+              text-gray-800
+              transition-all
+              duration-300
+              hover:bg-white
+              hover:text-red-500
+              hover:scale-105
+              dark:bg-[#1b1b1b]/95
+              dark:text-white
+              dark:hover:bg-[#111]
+              dark:hover:text-red-400
+              ${
+                isWishlisted
+                  ? "text-red-500 dark:text-red-400"
+                  : ""
+              }
+            `}
+          >
+            <FiHeart
+              size={17}
+              className={isWishlisted ? "fill-current" : ""}
+            />
+          </button>
+
+          {/* =================================================
+              QUICK VIEW
+          ================================================== */}
 
           <Link
             to={`/products/${productId}`}
             className="
               absolute
-              bottom-3
-              left-1/2
+              bottom-0
+              left-0
+              right-0
               z-30
               flex
-              -translate-x-1/2
-              translate-y-3
+              translate-y-full
               items-center
+              justify-center
               gap-2
-              rounded-full
-              border
-              border-gray-200
-              bg-white
-              px-4
-              py-2
+              bg-white/95
+              py-3
               text-[9px]
-              font-extrabold
+              font-bold
               uppercase
-              tracking-wide
-              text-gray-800
-              opacity-0
-              shadow-lg
-              transition-all
+              tracking-[0.12em]
+              text-gray-900
+              backdrop-blur-sm
+              transition-transform
               duration-300
               group-hover:translate-y-0
-              group-hover:opacity-100
-              dark:border-[#3a3a3a]
-              dark:bg-[#252525]
+              dark:bg-[#181818]/95
               dark:text-white
             "
           >
             <FiEye size={12} />
             Quick View
           </Link>
+
         </div>
 
-        {/* PRODUCT CONTENT */}
+        {/* =====================================================
+            PRODUCT INFORMATION
+        ====================================================== */}
 
-        <div className="p-4">
-          {/* Category + Verified */}
+        <div className="px-1 pb-5 pt-4">
 
-          <div className="mb-2 flex items-center justify-between">
-            <span
-              className="
-                max-w-[150px]
-                truncate
-                text-[9px]
-                font-bold
-                uppercase
-                tracking-[0.12em]
-                text-gray-400
-              "
-            >
-              {product.category || "Featured"}
-            </span>
+          {/* CATEGORY */}
 
-            <span
-              className="
-                flex
-                items-center
-                gap-1
-                text-[9px]
-                font-bold
-                text-emerald-600
-                dark:text-emerald-400
-              "
-            >
-              <FiCheck size={10} />
-              Verified
-            </span>
-          </div>
+          <p
+            className="
+              mb-1.5
+              truncate
+              text-[9px]
+              font-semibold
+              uppercase
+              tracking-[0.14em]
+              text-gray-400
+              dark:text-gray-500
+            "
+          >
+            {product.category || "Featured"}
+          </p>
 
-          {/* Product Title */}
+          {/* TITLE */}
 
           <Link to={`/products/${productId}`}>
             <h3
@@ -383,60 +375,71 @@ function ProductCard({ product, index = 0 }) {
                 line-clamp-2
                 min-h-[42px]
                 text-[14px]
-                font-extrabold
-                leading-[1.45]
-                text-gray-950
-                dark:text-white
+                font-medium
+                leading-[1.4]
+                text-gray-900
                 transition-colors
                 duration-300
-                group-hover:text-gray-700
-                dark:group-hover:text-gray-300
+                hover:text-gray-500
+                dark:text-white
+                dark:hover:text-gray-300
               "
             >
               {product.title}
             </h3>
           </Link>
 
-          {/* Rating */}
+          {/* =================================================
+              RATING
+          ================================================== */}
 
-          <div className="mt-3 flex items-center gap-2">
-            <div
-              className="
-                flex
-                items-center
-                gap-1
-                rounded-md
-                bg-[#fff8d6]
-                px-2
-                py-1
-                text-[10px]
-                font-extrabold
-                text-gray-900
-              "
-            >
-              {product.rating
-                ? Number(product.rating).toFixed(1)
-                : "4.8"}
+          <div className="mt-2.5 flex items-center gap-2">
+
+            <div className="flex items-center gap-1">
 
               <FiStar
-                size={10}
+                size={11}
                 className="fill-[#f5b800] text-[#f5b800]"
               />
+
+              <span
+                className="
+                  text-[10px]
+                  font-semibold
+                  text-gray-700
+                  dark:text-gray-300
+                "
+              >
+                {product.rate !== undefined &&
+                product.rate !== null
+                  ? Number(product.rate).toFixed(1)
+                  : "0.0"}
+              </span>
+
             </div>
 
-            <span className="text-[10px] text-gray-400">
-              Excellent
-            </span>
-          </div>
-
-          {/* Price */}
-
-          <div className="mt-3 flex items-end gap-2">
             <span
               className="
-                text-[22px]
-                font-black
-                tracking-[-0.02em]
+                text-[9px]
+                text-gray-400
+              "
+            >
+              Excellent
+            </span>
+
+          </div>
+
+          {/* =================================================
+              PRICE
+          ================================================== */}
+
+          <div className="mt-3 flex items-baseline gap-2">
+
+            <span
+              className="
+                text-[17px]
+                font-bold
+                tracking-[-0.01em]
                 text-gray-950
                 dark:text-white
               "
@@ -447,9 +450,8 @@ function ProductCard({ product, index = 0 }) {
             {oldPrice && (
               <span
                 className="
-                  mb-1
                   text-[11px]
-                  font-medium
+                  font-normal
                   text-gray-400
                   line-through
                 "
@@ -457,127 +459,117 @@ function ProductCard({ product, index = 0 }) {
                 ${oldPrice.toFixed(2)}
               </span>
             )}
+
           </div>
 
-          {/* Delivery */}
+          {/* =================================================
+              DELIVERY
+          ================================================== */}
 
           <div
             className="
-              mt-3
+              mt-2.5
               flex
               items-center
-              gap-2
-              border-t
-              border-gray-100
-              dark:border-[#2a2a2a]
-              pt-3
+              gap-1.5
             "
           >
-            <FiTruck
-              size={14}
-              className="shrink-0 text-gray-500"
+
+            <span
+              className="
+                text-[9px]
+                font-medium
+                text-gray-500
+                dark:text-gray-400
+              "
+            >
+              Free delivery
+            </span>
+
+            <span
+              className="
+                h-1
+                w-1
+                rounded-full
+                bg-gray-300
+              "
             />
 
-            <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400">
-              Free delivery on eligible orders
-            </p>
+            <span
+              className="
+                text-[9px]
+                font-medium
+                text-gray-500
+                dark:text-gray-400
+              "
+            >
+              Easy returns
+            </span>
+
           </div>
 
-          {/* Add To Cart */}
+          {/* =================================================
+              ADD TO CART
+          ================================================== */}
 
           <button
             type="button"
             onClick={handleAddToCart}
             className="
-              group/cart
-              relative
-              mt-3
+              mt-4
               flex
               w-full
               items-center
               justify-center
               gap-2
-              overflow-hidden
-              rounded-xl
-              bg-gray-950
+              border
+              border-gray-900
+              bg-white
               px-4
-              py-3
-              text-[11px]
-              font-extrabold
-              text-white
+              py-2.5
+              text-[9px]
+              font-bold
+              uppercase
+              tracking-[0.12em]
+              text-gray-900
               transition-all
               duration-300
-              hover:bg-black
-              dark:hover:bg-[#2a2a2a]
-              hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)]
-              active:scale-[0.98]
+              hover:bg-gray-900
+              hover:text-white
+              active:scale-[0.99]
+              dark:border-white
+              dark:bg-transparent
+              dark:text-white
+              dark:hover:bg-white
+              dark:hover:text-black
             "
           >
-            {/* Shine */}
-
-            <span
-              className="
-                pointer-events-none
-                absolute
-                inset-y-0
-                -left-[100%]
-                w-1/2
-                skew-x-[-20deg]
-                bg-white/15
-                transition-all
-                duration-700
-                group-hover/cart:left-[130%]
-              "
-            />
 
             <FiShoppingCart
-              size={14}
-              className="
-                relative
-                z-10
-                transition-transform
-                duration-300
-                group-hover/cart:scale-110
-              "
+              size={13}
             />
 
-            <span className="relative z-10">
-              Add to Cart
-            </span>
+            Add to bag
 
             <FiArrowUpRight
-              size={13}
+              size={12}
               className="
-                relative
-                z-10
                 transition-transform
                 duration-300
-                group-hover/cart:translate-x-0.5
-                group-hover/cart:-translate-y-0.5
+                group-hover:translate-x-0.5
+                group-hover:-translate-y-0.5
               "
             />
+
           </button>
+
         </div>
 
-        {/* Bottom Accent */}
-
-        <div
-          className="
-            absolute
-            bottom-0
-            left-1/2
-            h-[2px]
-            w-0
-            -translate-x-1/2
-            bg-[#ffd814]
-            transition-all
-            duration-500
-            group-hover:w-1/2
-          "
-        />
       </article>
 
-      {/* LOGIN REQUIRED MODAL */}
+      {/* =====================================================
+          LOGIN REQUIRED MODAL
+      ====================================================== */}
 
       <LoginRequiredModal
         isOpen={showLoginModal}

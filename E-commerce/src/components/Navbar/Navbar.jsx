@@ -138,10 +138,10 @@ function Navbar() {
   const mobileLinkClass = ({
     isActive,
   }) =>
-    `flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition ${
+    `flex items-center justify-between border-b border-gray-100 px-1 py-4 text-sm font-medium transition dark:border-[#292929] ${
       isActive
-        ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-400/10 dark:!text-yellow-400"
-        : "text-gray-700 hover:bg-gray-100 dark:!text-white dark:hover:bg-[#222]"
+        ? "text-gray-950 dark:!text-white"
+        : "text-gray-600 hover:text-gray-950 dark:!text-gray-300 dark:hover:!text-white"
     }`;
 
   return (
@@ -150,7 +150,7 @@ function Navbar() {
           TOP ANNOUNCEMENT
       ====================================================== */}
 
-      <div className="bg-black px-4 py-2 text-center text-xs font-medium text-white dark:bg-[#0a0a0a]">
+      <div className="relative z-[60] border-b border-white/10 bg-[#111111] px-4 py-2.5 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white">
         Free delivery on orders over $50
       </div>
 
@@ -158,15 +158,15 @@ function Navbar() {
           MAIN NAVBAR
       ====================================================== */}
 
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur dark:border-[#2a2a2a] dark:bg-[#171717]/95">
+      <header className="sticky top-0 z-50 border-b border-[#e8e8e5] bg-white/95 backdrop-blur-xl dark:border-[#292929] dark:bg-[#111111]/95">
 
-        <div className="mx-auto max-w-[1400px] px-4">
+        <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
 
           {/* =================================================
               MAIN ROW
           ================================================= */}
 
-          <div className="flex min-h-[72px] items-center gap-4">
+          <div className="flex min-h-[76px] items-center gap-3 lg:gap-6">
 
             {/* MOBILE MENU */}
 
@@ -175,10 +175,10 @@ function Navbar() {
               onClick={() =>
                 setIsMobileMenuOpen(true)
               }
-              className="rounded-xl p-2 text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-[#252525] lg:hidden"
+              className="flex h-10 w-10 shrink-0 items-center justify-center text-gray-900 transition-colors hover:text-yellow-600 dark:text-white dark:hover:text-yellow-400 lg:hidden"
               aria-label="Open menu"
             >
-              <FiMenu size={22} />
+              <FiMenu size={22} strokeWidth={1.7} />
             </button>
 
             {/* LOGO */}
@@ -186,13 +186,13 @@ function Navbar() {
             <Link
               to="/"
               onClick={closeMobileMenu}
-              className="shrink-0 text-3xl font-black tracking-[-0.07em] transition-transform duration-300 hover:scale-105"
+              className="shrink-0 text-[29px] font-black tracking-[-0.075em] leading-none transition-opacity duration-300 hover:opacity-75 sm:text-[31px]"
             >
-              <span className="text-yellow-500">
+              <span className="text-[#f5c400]">
                 shop
               </span>
 
-              <span className="text-gray-900 dark:text-white">
+              <span className="text-gray-950 dark:text-white">
                 ly
               </span>
             </Link>
@@ -201,19 +201,20 @@ function Navbar() {
 
             <button
               type="button"
-              className="hidden items-center gap-2 rounded-xl px-3 py-2 text-left text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525] md:flex"
+              className="group hidden shrink-0 items-center gap-2 border-l border-gray-200 pl-5 text-left dark:border-[#2b2b2b] md:flex"
             >
               <FiMapPin
-                size={20}
-                className="text-gray-700 dark:text-gray-300"
+                size={18}
+                strokeWidth={1.7}
+                className="text-gray-700 transition-colors group-hover:text-yellow-600 dark:text-gray-300 dark:group-hover:text-yellow-400"
               />
 
               <div>
-                <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                <p className="text-[9px] font-medium uppercase tracking-[0.08em] text-gray-400">
                   Deliver to
                 </p>
 
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                <p className="mt-0.5 text-[12px] font-bold text-gray-900 dark:text-white">
                   Egypt
                 </p>
               </div>
@@ -225,11 +226,12 @@ function Navbar() {
 
             <form
               onSubmit={handleSearch}
-              className="relative hidden flex-1 md:block"
+              className="relative hidden min-w-0 flex-1 md:block"
             >
               <FiSearch
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                size={20}
+                size={18}
+                strokeWidth={1.7}
               />
 
               <input
@@ -240,8 +242,8 @@ function Navbar() {
                     event.target.value
                   )
                 }
-                placeholder="Search by product name..."
-                className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
+                placeholder="Search for products, brands and more"
+                className="h-[43px] w-full border border-[#dededb] bg-[#f7f7f5] pl-11 pr-4 text-[12px] text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-gray-500 focus:bg-white dark:border-[#303030] dark:bg-[#1b1b1b] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#555] dark:focus:bg-[#1b1b1b]"
               />
             </form>
 
@@ -252,34 +254,36 @@ function Navbar() {
 
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525]"
+                  className="flex items-center gap-2.5 px-1 py-2 text-gray-900 dark:text-white"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-400/10 dark:text-yellow-400">
-                    <FiUser size={19} />
+                  <div className="flex h-9 w-9 items-center justify-center bg-[#f4f4f1] text-gray-700 dark:bg-[#242424] dark:text-gray-200">
+                    <FiUser
+                      size={17}
+                      strokeWidth={1.7}
+                    />
                   </div>
 
-                  <div className="text-left">
-                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                  <div className="hidden text-left xl:block">
+                    <p className="text-[9px] uppercase tracking-[0.08em] text-gray-400">
                       Hello,{" "}
-                      {user.name
-                        .split(" ")[0]}
+                      {user.name.split(" ")[0]}
                     </p>
 
-                    <p className="max-w-[110px] truncate text-sm font-bold text-gray-900 dark:text-white">
+                    <p className="mt-0.5 max-w-[100px] truncate text-[12px] font-bold text-gray-900 dark:text-white">
                       {user.name}
                     </p>
                   </div>
                 </button>
 
-                <div className="invisible absolute right-0 top-full z-50 w-48 translate-y-2 rounded-2xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-[#2a2a2a] dark:bg-[#1a1a1a]">
+                <div className="invisible absolute right-0 top-[calc(100%+8px)] z-50 w-52 translate-y-2 border border-[#dededb] bg-white p-2 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,0.10)] transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-[#303030] dark:bg-[#181818]">
 
                   <Link
                     to="/profile"
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:!text-white dark:hover:bg-[#252525]"
+                    className="flex items-center gap-3 px-3 py-3 text-[12px] font-medium text-gray-700 transition-colors hover:bg-[#f6f6f4] hover:text-gray-950 dark:text-gray-300 dark:hover:bg-[#242424] dark:hover:text-white"
                   >
                     <FiUser
-                      size={17}
-                      className="text-gray-700 dark:!text-white"
+                      size={16}
+                      strokeWidth={1.7}
                     />
 
                     My Account
@@ -287,22 +291,27 @@ function Navbar() {
 
                   <Link
                     to="/orders"
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:!text-white dark:hover:bg-[#252525]"
+                    className="flex items-center gap-3 px-3 py-3 text-[12px] font-medium text-gray-700 transition-colors hover:bg-[#f6f6f4] hover:text-gray-950 dark:text-gray-300 dark:hover:bg-[#242424] dark:hover:text-white"
                   >
                     <FiPackage
-                      size={17}
-                      className="text-gray-700 dark:!text-white"
+                      size={16}
+                      strokeWidth={1.7}
                     />
 
                     My Orders
                   </Link>
 
+                  <div className="my-1 border-t border-gray-100 dark:border-[#292929]" />
+
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
+                    className="flex w-full items-center gap-3 px-3 py-3 text-[12px] font-medium text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
                   >
-                    <FiLogOut size={17} />
+                    <FiLogOut
+                      size={16}
+                      strokeWidth={1.7}
+                    />
 
                     Sign Out
                   </button>
@@ -313,16 +322,19 @@ function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="hidden items-center gap-2 rounded-xl px-3 py-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525] sm:flex"
+                className="hidden items-center gap-2.5 px-1 py-2 text-gray-900 transition-opacity hover:opacity-60 dark:text-white sm:flex"
               >
-                <FiUser size={21} />
+                <FiUser
+                  size={20}
+                  strokeWidth={1.7}
+                />
 
-                <div className="text-left">
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                <div className="hidden text-left xl:block">
+                  <p className="text-[9px] uppercase tracking-[0.08em] text-gray-400">
                     Hello, sign in
                   </p>
 
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <p className="mt-0.5 text-[12px] font-bold text-gray-900 dark:text-white">
                     Account
                   </p>
                 </div>
@@ -335,7 +347,7 @@ function Navbar() {
               type="button"
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-yellow-300 hover:bg-yellow-50 hover:text-yellow-600 hover:shadow-md dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:text-gray-300 dark:hover:border-yellow-400 dark:hover:bg-[#222] dark:hover:text-yellow-400"
+              className="group relative flex h-9 w-9 shrink-0 items-center justify-center text-gray-800 transition-colors hover:text-yellow-600 dark:text-gray-200 dark:hover:text-yellow-400"
             >
               <span
                 className={`absolute transition-all duration-500 ${
@@ -344,7 +356,10 @@ function Navbar() {
                     : "rotate-90 scale-0 opacity-0"
                 }`}
               >
-                <FiMoon size={20} />
+                <FiMoon
+                  size={19}
+                  strokeWidth={1.7}
+                />
               </span>
 
               <span
@@ -354,7 +369,10 @@ function Navbar() {
                     : "-rotate-90 scale-0 opacity-0"
                 }`}
               >
-                <FiSun size={20} />
+                <FiSun
+                  size={19}
+                  strokeWidth={1.7}
+                />
               </span>
             </button>
 
@@ -362,23 +380,25 @@ function Navbar() {
 
             <Link
               to="/wishlist"
-              className={`relative rounded-xl p-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-[#252525] ${
+              aria-label="Wishlist"
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center transition-colors duration-200 hover:text-red-500 ${
                 totalWishlistItems > 0
                   ? "text-red-500 dark:text-red-400"
                   : "text-gray-900 dark:text-white"
               }`}
             >
               <FiHeart
-                size={23}
+                size={21}
+                strokeWidth={1.7}
                 className={
                   totalWishlistItems > 0
                     ? "fill-red-500 dark:fill-red-400"
-                    : "text-gray-900 dark:text-white"
+                    : ""
                 }
               />
 
               {totalWishlistItems > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-black text-white shadow-sm">
+                <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center bg-red-500 px-1 text-[9px] font-bold text-white">
                   {totalWishlistItems}
                 </span>
               )}
@@ -388,15 +408,16 @@ function Navbar() {
 
             <Link
               to="/cart"
-              className="relative rounded-xl p-2 text-gray-900 transition hover:bg-gray-100 dark:text-white dark:hover:bg-[#252525]"
+              aria-label="Shopping cart"
+              className="relative flex h-9 w-9 shrink-0 items-center justify-center text-gray-900 transition-colors hover:text-yellow-600 dark:text-white dark:hover:text-yellow-400"
             >
               <FiShoppingCart
-                size={24}
-                className="text-gray-900 dark:text-white"
+                size={21}
+                strokeWidth={1.7}
               />
 
               {totalItems > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-xs font-black text-gray-900">
+                <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center bg-[#ffd600] px-1 text-[9px] font-black text-gray-950">
                   {totalItems}
                 </span>
               )}
@@ -416,7 +437,8 @@ function Navbar() {
 
               <FiSearch
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                size={19}
+                size={18}
+                strokeWidth={1.7}
               />
 
               <input
@@ -427,8 +449,8 @@ function Navbar() {
                     event.target.value
                   )
                 }
-                placeholder="Search by product name..."
-                className="h-11 w-full rounded-xl border border-transparent bg-gray-100 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-yellow-300 focus:bg-white focus:ring-4 focus:ring-yellow-100 dark:bg-[#242424] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-yellow-400 dark:focus:bg-[#242424] dark:focus:ring-yellow-400/10"
+                placeholder="Search for products, brands and more"
+                className="h-11 w-full border border-[#dededb] bg-[#f7f7f5] pl-11 pr-4 text-[12px] text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-gray-500 focus:bg-white dark:border-[#303030] dark:bg-[#1b1b1b] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-[#555]"
               />
 
             </div>
@@ -438,20 +460,48 @@ function Navbar() {
               DYNAMIC CATEGORIES
           ================================================= */}
 
-          <nav className="hidden h-12 items-center gap-7 overflow-x-auto border-t border-gray-100 dark:border-[#2a2a2a] lg:flex">
+          <nav className="hidden h-[49px] items-center gap-7 overflow-x-auto border-t border-gray-100 dark:border-[#292929] lg:flex">
 
             <NavLink
               to="/"
-              className="text-sm font-semibold text-gray-900 transition hover:text-yellow-600 dark:!text-white dark:hover:!text-yellow-400"
+              className={({ isActive }) =>
+                `relative flex h-full items-center text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                  isActive
+                    ? "text-gray-950 dark:text-white"
+                    : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                }`
+              }
             >
-              Home
+              {({ isActive }) => (
+                <>
+                  Home
+
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
+                  )}
+                </>
+              )}
             </NavLink>
 
             <NavLink
               to="/products"
-              className="text-sm font-semibold text-gray-900 transition hover:text-yellow-600 dark:!text-white dark:hover:!text-yellow-400"
+              className={({ isActive }) =>
+                `relative flex h-full items-center text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                  isActive
+                    ? "text-gray-950 dark:text-white"
+                    : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                }`
+              }
             >
-              All Products
+              {({ isActive }) => (
+                <>
+                  All Products
+
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
+                  )}
+                </>
+              )}
             </NavLink>
 
             {navCategories.map(
@@ -461,15 +511,29 @@ function Navbar() {
                   to={`/products?category=${encodeURIComponent(
                     category._id
                   )}`}
-                  className="shrink-0 text-sm font-medium text-gray-600 transition hover:text-black dark:!text-white dark:hover:!text-white"
+                  className={({ isActive }) =>
+                    `relative flex h-full shrink-0 items-center text-[11px] font-medium uppercase tracking-[0.07em] transition-colors ${
+                      isActive
+                        ? "text-gray-950 dark:text-white"
+                        : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                    }`
+                  }
                 >
-                  {category.name}
+                  {({ isActive }) => (
+                    <>
+                      {category.name}
+
+                      {isActive && (
+                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffd600]" />
+                      )}
+                    </>
+                  )}
                 </NavLink>
               )
             )}
 
-            <span className="ml-auto shrink-0 rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600 dark:bg-red-500/10 dark:!text-red-400">
-              SALE
+            <span className="ml-auto shrink-0 bg-[#111111] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.14em] text-white dark:bg-[#ffd600] dark:text-gray-950">
+              Sale
             </span>
 
           </nav>
@@ -506,18 +570,20 @@ function Navbar() {
           }`}
         >
 
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-5 dark:border-[#2a2a2a] dark:bg-[#111111]">
+          {/* MOBILE HEADER */}
+
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-5 dark:border-[#292929] dark:bg-[#111111]">
 
             <Link
               to="/"
               onClick={closeMobileMenu}
-              className="text-3xl font-black tracking-[-0.07em]"
+              className="text-[30px] font-black tracking-[-0.075em] leading-none"
             >
-              <span className="text-yellow-500">
+              <span className="text-[#f5c400]">
                 shop
               </span>
 
-              <span className="text-gray-900 dark:text-white">
+              <span className="text-gray-950 dark:text-white">
                 ly
               </span>
             </Link>
@@ -525,33 +591,39 @@ function Navbar() {
             <button
               type="button"
               onClick={closeMobileMenu}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200 dark:bg-[#222] dark:text-gray-300 dark:hover:bg-[#2a2a2a]"
+              className="flex h-9 w-9 items-center justify-center text-gray-700 transition hover:text-black dark:text-gray-300 dark:hover:text-white"
             >
-              <FiX size={21} />
+              <FiX
+                size={21}
+                strokeWidth={1.7}
+              />
             </button>
 
           </div>
 
           {/* ACCOUNT */}
 
-          <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
+          <div className="border-b border-gray-100 p-5 dark:border-[#292929]">
 
             {isLoggedIn && user ? (
-              <div className="rounded-2xl bg-gray-950 p-4 dark:bg-[#1c1c1c]">
+              <div className="bg-[#111111] p-5 dark:bg-[#1d1d1d]">
 
                 <div className="flex items-center gap-3">
 
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400 text-gray-950">
-                    <FiUser size={20} />
+                  <div className="flex h-11 w-11 items-center justify-center bg-yellow-400 text-gray-950">
+                    <FiUser
+                      size={20}
+                      strokeWidth={1.7}
+                    />
                   </div>
 
                   <div className="min-w-0">
 
-                    <p className="text-xs text-gray-400">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-gray-400">
                       Welcome back
                     </p>
 
-                    <p className="truncate text-sm font-black text-white">
+                    <p className="mt-1 truncate text-sm font-bold text-white">
                       {user.name}
                     </p>
 
@@ -559,12 +631,12 @@ function Navbar() {
 
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="mt-5 grid grid-cols-2 gap-2">
 
                   <Link
                     to="/profile"
                     onClick={closeMobileMenu}
-                    className="rounded-xl bg-white/10 px-3 py-2.5 text-center text-xs font-bold text-white transition hover:bg-white/20"
+                    className="border border-white/15 px-3 py-2.5 text-center text-[11px] font-bold text-white transition hover:bg-white/10"
                   >
                     My Account
                   </Link>
@@ -572,7 +644,7 @@ function Navbar() {
                   <Link
                     to="/orders"
                     onClick={closeMobileMenu}
-                    className="rounded-xl bg-yellow-400 px-3 py-2.5 text-center text-xs font-black text-gray-950 transition hover:bg-yellow-300"
+                    className="bg-yellow-400 px-3 py-2.5 text-center text-[11px] font-black text-gray-950 transition hover:bg-yellow-300"
                   >
                     My Orders
                   </Link>
@@ -584,22 +656,25 @@ function Navbar() {
               <Link
                 to="/login"
                 onClick={closeMobileMenu}
-                className="flex items-center justify-between rounded-2xl bg-gray-950 p-4 text-white transition hover:bg-gray-800 dark:bg-[#1c1c1c] dark:hover:bg-[#252525]"
+                className="flex items-center justify-between bg-[#111111] p-5 text-white transition hover:bg-[#222] dark:bg-[#1d1d1d]"
               >
 
                 <div className="flex items-center gap-3">
 
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400 text-gray-950">
-                    <FiUser size={20} />
+                  <div className="flex h-11 w-11 items-center justify-center bg-yellow-400 text-gray-950">
+                    <FiUser
+                      size={20}
+                      strokeWidth={1.7}
+                    />
                   </div>
 
                   <div>
 
-                    <p className="text-xs text-gray-400">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-gray-400">
                       Welcome to Shoply
                     </p>
 
-                    <p className="text-sm font-medium text-white">
+                    <p className="mt-1 text-sm font-medium text-white">
                       Sign in to your account
                     </p>
 
@@ -609,7 +684,7 @@ function Navbar() {
 
                 <FiChevronRight
                   className="text-gray-400"
-                  size={20}
+                  size={19}
                 />
 
               </Link>
@@ -619,35 +694,41 @@ function Navbar() {
 
           {/* THEME */}
 
-          <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
+          <div className="border-b border-gray-100 p-5 dark:border-[#292929]">
 
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex w-full items-center justify-between rounded-2xl border border-gray-100 bg-gray-50 p-4 text-left transition-all duration-300 hover:border-yellow-200 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:bg-[#1a1a1a] dark:hover:border-yellow-400 dark:hover:bg-[#222]"
+              className="flex w-full items-center justify-between border border-gray-200 bg-[#fafafa] p-4 text-left transition-colors hover:border-gray-400 dark:border-[#303030] dark:bg-[#1a1a1a] dark:hover:border-[#4a4a4a]"
             >
 
               <div className="flex items-center gap-3">
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm dark:bg-[#252525] dark:text-yellow-400">
+                <div className="flex h-9 w-9 items-center justify-center bg-white text-gray-700 dark:bg-[#252525] dark:text-yellow-400">
 
                   {theme === "light" ? (
-                    <FiMoon size={19} />
+                    <FiMoon
+                      size={18}
+                      strokeWidth={1.7}
+                    />
                   ) : (
-                    <FiSun size={19} />
+                    <FiSun
+                      size={18}
+                      strokeWidth={1.7}
+                    />
                   )}
 
                 </div>
 
                 <div>
 
-                  <p className="text-sm font-black text-gray-900 dark:text-white">
+                  <p className="text-[12px] font-bold text-gray-900 dark:text-white">
                     {theme === "light"
                       ? "Dark Mode"
                       : "Light Mode"}
                   </p>
 
-                  <p className="text-xs text-gray-400">
+                  <p className="mt-0.5 text-[10px] text-gray-400">
                     {theme === "light"
                       ? "Switch to dark theme"
                       : "Switch to light theme"}
@@ -658,7 +739,7 @@ function Navbar() {
               </div>
 
               <div
-                className={`relative h-6 w-11 rounded-full transition-colors duration-300 ${
+                className={`relative h-5 w-10 rounded-full transition-colors duration-300 ${
                   theme === "dark"
                     ? "bg-yellow-400"
                     : "bg-gray-300"
@@ -666,7 +747,7 @@ function Navbar() {
               >
 
                 <span
-                  className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                  className={`absolute top-1 h-3 w-3 rounded-full bg-white shadow-sm transition-transform duration-300 ${
                     theme === "dark"
                       ? "translate-x-6"
                       : "translate-x-1"
@@ -681,9 +762,9 @@ function Navbar() {
 
           {/* QUICK ACTIONS */}
 
-          <div className="border-b border-gray-100 p-5 dark:border-[#2a2a2a]">
+          <div className="border-b border-gray-100 p-5 dark:border-[#292929]">
 
-            <p className="mb-3 px-1 text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
+            <p className="mb-4 px-1 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
               Quick access
             </p>
 
@@ -692,13 +773,14 @@ function Navbar() {
               <Link
                 to="/wishlist"
                 onClick={closeMobileMenu}
-                className="relative flex items-center gap-3 rounded-2xl border border-gray-100 p-4 transition hover:-translate-y-0.5 hover:border-red-100 hover:bg-red-50 dark:border-[#2a2a2a] dark:hover:border-red-500/20 dark:hover:bg-red-500/10"
+                className="relative border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-[#303030] dark:hover:border-red-500/20 dark:hover:bg-red-500/10"
               >
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-500 dark:bg-red-500/10">
+                <div className="mb-4 flex h-9 w-9 items-center justify-center bg-red-50 text-red-500 dark:bg-red-500/10">
 
                   <FiHeart
-                    size={19}
+                    size={18}
+                    strokeWidth={1.7}
                     className={
                       totalWishlistItems > 0
                         ? "fill-red-500"
@@ -708,43 +790,38 @@ function Navbar() {
 
                 </div>
 
-                <div>
+                <p className="text-[12px] font-bold text-gray-900 dark:text-white">
+                  Wishlist
+                </p>
 
-                  <p className="text-sm font-black text-gray-900 dark:text-white">
-                    Wishlist
-                  </p>
-
-                  <p className="text-xs text-gray-400">
-                    {totalWishlistItems} saved
-                  </p>
-
-                </div>
+                <p className="mt-1 text-[10px] text-gray-400">
+                  {totalWishlistItems} saved
+                </p>
 
               </Link>
 
               <Link
                 to="/cart"
                 onClick={closeMobileMenu}
-                className="relative flex items-center gap-3 rounded-2xl border border-gray-100 p-4 transition hover:-translate-y-0.5 hover:border-yellow-200 hover:bg-yellow-50 dark:border-[#2a2a2a] dark:hover:border-yellow-400/30 dark:hover:bg-yellow-400/10"
+                className="relative border border-gray-200 p-4 transition hover:border-yellow-200 hover:bg-yellow-50 dark:border-[#303030] dark:hover:border-yellow-400/30 dark:hover:bg-yellow-400/10"
               >
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-50 text-gray-900 dark:bg-yellow-400/10 dark:text-yellow-400">
+                <div className="mb-4 flex h-9 w-9 items-center justify-center bg-yellow-50 text-gray-900 dark:bg-yellow-400/10 dark:text-yellow-400">
 
-                  <FiShoppingCart size={19} />
-
-                </div>
-
-                <div>
-
-                  <p className="text-sm font-black text-gray-900 dark:text-white">
-                    Cart
-                  </p>
-
-                  <p className="text-xs text-gray-400">
-                    {totalItems} items
-                  </p>
+                  <FiShoppingCart
+                    size={18}
+                    strokeWidth={1.7}
+                  />
 
                 </div>
+
+                <p className="text-[12px] font-bold text-gray-900 dark:text-white">
+                  Cart
+                </p>
+
+                <p className="mt-1 text-[10px] text-gray-400">
+                  {totalItems} items
+                </p>
 
               </Link>
 
@@ -758,11 +835,11 @@ function Navbar() {
 
           <div className="p-5">
 
-            <p className="mb-3 px-1 text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
+            <p className="mb-2 px-1 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
               Shop
             </p>
 
-            <nav className="space-y-1">
+            <nav>
 
               <NavLink
                 to="/"
@@ -773,7 +850,7 @@ function Navbar() {
 
                 <FiChevronRight
                   size={17}
-                  className="shrink-0 dark:text-white"
+                  className="shrink-0"
                 />
               </NavLink>
 
@@ -786,7 +863,7 @@ function Navbar() {
 
                 <FiChevronRight
                   size={17}
-                  className="shrink-0 dark:text-white"
+                  className="shrink-0"
                 />
               </NavLink>
 
@@ -804,7 +881,7 @@ function Navbar() {
 
                     <FiChevronRight
                       size={17}
-                      className="shrink-0 dark:text-white"
+                      className="shrink-0"
                     />
                   </NavLink>
                 )
@@ -814,21 +891,22 @@ function Navbar() {
 
             {/* LOCATION */}
 
-            <div className="mt-6 rounded-2xl bg-gray-50 p-4 dark:bg-[#1a1a1a]">
+            <div className="mt-7 border-t border-gray-100 pt-6 dark:border-[#292929]">
 
               <div className="flex items-center gap-3">
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm dark:bg-[#252525] dark:text-gray-300">
-                  <FiMapPin size={19} />
-                </div>
+                <FiMapPin
+                  size={18}
+                  className="text-gray-500"
+                />
 
                 <div>
 
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-[10px] uppercase tracking-[0.1em] text-gray-400">
                     Deliver to
                   </p>
 
-                  <p className="text-sm font-black text-gray-900 dark:text-white">
+                  <p className="mt-0.5 text-[12px] font-bold text-gray-900 dark:text-white">
                     Egypt
                   </p>
 
@@ -844,12 +922,15 @@ function Navbar() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="mt-3 flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
+                className="mt-6 flex w-full items-center justify-between border-t border-gray-100 px-1 pt-5 text-[12px] font-bold text-red-500 dark:border-[#292929]"
               >
 
                 <span className="flex items-center gap-3">
 
-                  <FiLogOut size={18} />
+                  <FiLogOut
+                    size={17}
+                    strokeWidth={1.7}
+                  />
 
                   Sign Out
 
@@ -862,9 +943,11 @@ function Navbar() {
 
           </div>
 
-          <div className="border-t border-gray-100 px-5 py-6 dark:border-[#2a2a2a]">
+          {/* FOOTER */}
 
-            <p className="text-center text-xs text-gray-400">
+          <div className="border-t border-gray-100 px-5 py-6 dark:border-[#292929]">
+
+            <p className="text-center text-[10px] text-gray-400">
               © 2026 Shoply. All rights reserved.
             </p>
 

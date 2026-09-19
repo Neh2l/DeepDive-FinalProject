@@ -51,7 +51,7 @@ function ResetPassword() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Reset link is invalid or expired."
+          "Reset link is invalid or expired.",
       );
     } finally {
       setLoading(false);
@@ -64,74 +64,71 @@ function ResetPassword() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[#f7f7f7] px-4 py-10 dark:bg-[#111111]">
-        <div className="mx-auto flex min-h-[85vh] max-w-[470px] items-center justify-center">
+      <main className="min-h-screen bg-[#f5f5f3] px-5 py-10 dark:bg-[#111] sm:px-8 sm:py-14">
+        <div className="mx-auto flex min-h-[85vh] max-w-[500px] items-center justify-center">
           <div className="w-full">
-
             {/* SHOPLY LOGO */}
-            <div className="mb-6 flex justify-center">
-              <Link
-                to="/"
-                className="group flex items-center gap-2.5"
-              >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ffd800] shadow-sm transition-transform duration-300 group-hover:scale-105">
-                  <span className="text-xl font-black text-gray-950">
+            <div className="mb-8 flex justify-center">
+              <Link to="/" className="group flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center bg-[#ffd600] transition-transform duration-300 group-hover:scale-105">
+                  <span className="text-lg font-black text-black">
                     S
                   </span>
                 </div>
 
-                <span className="text-[28px] font-black tracking-tight text-gray-950 dark:text-white">
+                <span className="text-[27px] font-black tracking-[-0.04em] text-gray-950 dark:text-white">
                   Shoply
                 </span>
               </Link>
             </div>
 
-            {/* SUCCESS CARD */}
-            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:border-[#292929] dark:bg-[#1a1a1a]">
+            {/* SUCCESS */}
+            <div className="border border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#171717]">
+              <div className="h-1.5 w-full bg-[#ffd600]" />
 
-              <div className="h-1.5 w-full bg-[#ffd800]" />
-
-              <div className="px-6 py-10 text-center sm:px-9 sm:py-11">
-
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-500/10 dark:text-green-400">
+              <div className="px-7 py-11 text-center sm:px-10 sm:py-13">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center bg-green-50 text-green-600 dark:bg-green-950/20 dark:text-green-400">
                   <FiCheck size={29} strokeWidth={2.5} />
                 </div>
 
-                <h1 className="text-[25px] font-black tracking-tight text-gray-950 dark:text-white">
+                <p className="mt-8 text-[9px] font-black uppercase tracking-[0.28em] text-green-600 dark:text-green-400">
+                  Password Recovery
+                </p>
+
+                <h1 className="mt-3 text-3xl font-black tracking-[-0.04em] text-gray-950 sm:text-4xl dark:text-white">
                   Password Updated
                 </h1>
 
-                <p className="mx-auto mt-3 max-w-[350px] text-sm leading-6 text-gray-500 dark:text-gray-400">
-                  Your password has been changed successfully. You can now
-                  sign in using your new password.
+                <p className="mx-auto mt-4 max-w-[370px] text-sm leading-7 text-gray-500 dark:text-gray-400">
+                  Your password has been changed successfully. You can
+                  now sign in using your new password.
                 </p>
 
                 <button
                   onClick={() => navigate("/login")}
-                  className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#ffd800] px-6 text-sm font-black text-gray-950 transition-all duration-300 hover:bg-[#f5cd00] hover:shadow-md"
+                  className="group mt-8 flex h-12 w-full items-center justify-center gap-2 bg-[#ffd600] px-6 text-xs font-black uppercase tracking-[0.08em] text-black transition-all duration-300 hover:bg-[#f5cc00]"
                 >
                   Go to Login
+
                   <FiArrowLeft
                     size={16}
-                    className="rotate-180"
+                    className="rotate-180 transition-transform duration-300 group-hover:translate-x-1"
                   />
                 </button>
 
-                <div className="mt-7 flex items-center justify-center gap-2 border-t border-gray-100 pt-6 text-xs text-gray-400 dark:border-[#2a2a2a]">
+                <div className="mt-8 flex items-center justify-center gap-2 border-t border-gray-100 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-400 dark:border-[#2a2a2a]">
                   <FiShield size={14} />
-                  <span>Your account is protected by Shoply</span>
+                  Your account is protected by Shoply
                 </div>
-
               </div>
             </div>
 
-            <p className="mt-5 text-center text-xs text-gray-400">
+            <p className="mt-6 text-center text-[10px] uppercase tracking-[0.12em] text-gray-400">
               © 2026 Shoply. All rights reserved.
             </p>
-
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -140,83 +137,61 @@ function ResetPassword() {
   ========================= */
 
   return (
-    <div className="min-h-screen bg-[#f7f7f7] px-4 py-10 dark:bg-[#111111]">
-      <div className="mx-auto flex min-h-[85vh] max-w-[470px] items-center justify-center">
+    <main className="min-h-screen bg-[#f5f5f3] px-5 py-10 dark:bg-[#111] sm:px-8 sm:py-14">
+      <div className="mx-auto flex min-h-[85vh] max-w-[500px] items-center justify-center">
         <div className="w-full">
-
-          {/* =========================
-              SHOPLY LOGO
-          ========================= */}
-
-          <div className="mb-6 flex justify-center">
-            <Link
-              to="/"
-              className="group flex items-center gap-2.5"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ffd800] shadow-sm transition-transform duration-300 group-hover:scale-105">
-                <span className="text-xl font-black text-gray-950">
+          {/* SHOPLY LOGO */}
+          <div className="mb-8 flex justify-center">
+            <Link to="/" className="group flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center bg-[#ffd600] transition-transform duration-300 group-hover:scale-105">
+                <span className="text-lg font-black text-black">
                   S
                 </span>
               </div>
 
-              <span className="text-[28px] font-black tracking-tight text-gray-950 dark:text-white">
+              <span className="text-[27px] font-black tracking-[-0.04em] text-gray-950 dark:text-white">
                 Shoply
               </span>
             </Link>
           </div>
 
-          {/* =========================
-              MAIN CARD
-          ========================= */}
+          {/* MAIN CARD */}
+          <div className="border border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#171717]">
+            <div className="h-1.5 w-full bg-[#ffd600]" />
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:border-[#292929] dark:bg-[#1a1a1a]">
-
-            {/* Yellow top line */}
-            <div className="h-1.5 w-full bg-[#ffd800]" />
-
-            <div className="px-6 py-8 sm:px-9 sm:py-9">
-
-              {/* =========================
-                  HEADER
-              ========================= */}
-
-              <div className="mb-8 text-center">
-
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#fff4b8] text-gray-950 dark:bg-[#ffd800]/15 dark:text-[#ffd800]">
+            <div className="px-7 py-9 sm:px-10 sm:py-11">
+              {/* HEADER */}
+              <div className="mb-9 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center bg-[#fff4b8] text-gray-950 dark:bg-[#ffd600]/15 dark:text-[#ffd600]">
                   <FiLock size={25} strokeWidth={2.2} />
                 </div>
 
-                <h1 className="text-[25px] font-black tracking-tight text-gray-950 dark:text-white">
+                <p className="mt-7 text-[9px] font-black uppercase tracking-[0.28em] text-gray-400">
+                  Account Security
+                </p>
+
+                <h1 className="mt-3 text-3xl font-black tracking-[-0.04em] text-gray-950 dark:text-white">
                   Create a new password
                 </h1>
 
-                <p className="mx-auto mt-2 max-w-[350px] text-sm leading-6 text-gray-500 dark:text-gray-400">
-                  Choose a strong password to keep your Shoply account secure.
+                <p className="mx-auto mt-4 max-w-[370px] text-sm leading-7 text-gray-500 dark:text-gray-400">
+                  Choose a strong password to keep your Shoply account
+                  secure.
                 </p>
-
               </div>
 
-              {/* =========================
-                  FORM
-              ========================= */}
-
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-5"
-              >
-
+              {/* FORM */}
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* NEW PASSWORD */}
-
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200">
+                  <label className="mb-2.5 block text-[10px] font-black uppercase tracking-[0.15em] text-gray-700 dark:text-gray-300">
                     New password
                   </label>
 
                   <div className="relative">
-
                     <FiLock
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
-                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={17}
                     />
 
                     <input
@@ -225,7 +200,7 @@ function ResetPassword() {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter new password"
                       autoComplete="new-password"
-                      className="h-12 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-11 text-sm text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 dark:border-[#3a3a3a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+                      className="h-12 w-full border border-gray-300 bg-white pl-11 pr-12 text-sm text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-gray-900 dark:border-[#363636] dark:bg-[#151515] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-300"
                     />
 
                     <button
@@ -233,7 +208,7 @@ function ResetPassword() {
                       onClick={() =>
                         setShowPassword((prev) => !prev)
                       }
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-700 dark:hover:text-white"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-900 dark:hover:text-white"
                     >
                       {showPassword ? (
                         <FiEyeOff size={18} />
@@ -241,22 +216,19 @@ function ResetPassword() {
                         <FiEye size={18} />
                       )}
                     </button>
-
                   </div>
                 </div>
 
                 {/* CONFIRM PASSWORD */}
-
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200">
+                  <label className="mb-2.5 block text-[10px] font-black uppercase tracking-[0.15em] text-gray-700 dark:text-gray-300">
                     Confirm password
                   </label>
 
                   <div className="relative">
-
                     <FiLock
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
-                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={17}
                     />
 
                     <input
@@ -271,7 +243,7 @@ function ResetPassword() {
                       }
                       placeholder="Confirm your new password"
                       autoComplete="new-password"
-                      className="h-12 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-11 text-sm text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 dark:border-[#3a3a3a] dark:bg-[#171717] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+                      className="h-12 w-full border border-gray-300 bg-white pl-11 pr-12 text-sm text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-gray-900 dark:border-[#363636] dark:bg-[#151515] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-300"
                     />
 
                     <button
@@ -279,7 +251,7 @@ function ResetPassword() {
                       onClick={() =>
                         setShowConfirmPassword((prev) => !prev)
                       }
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-700 dark:hover:text-white"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-900 dark:hover:text-white"
                     >
                       {showConfirmPassword ? (
                         <FiEyeOff size={18} />
@@ -287,40 +259,45 @@ function ResetPassword() {
                         <FiEye size={18} />
                       )}
                     </button>
-
                   </div>
                 </div>
 
                 {/* PASSWORD INFO */}
-
-                <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 dark:border-[#303030] dark:bg-[#151515]">
+                <div className="border border-gray-200 bg-[#f7f7f5] px-4 py-4 dark:border-[#303030] dark:bg-[#151515]">
                   <div className="flex gap-3">
                     <FiShield
                       className="mt-0.5 shrink-0 text-gray-400"
                       size={16}
                     />
 
-                    <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
-                      Your password must contain at least 6 characters.
-                    </p>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-gray-700 dark:text-gray-300">
+                        Password requirement
+                      </p>
+
+                      <p className="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">
+                        Your password must contain at least 6
+                        characters.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* SUBMIT */}
-
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#ffd800] text-sm font-black text-gray-950 transition-all duration-300 hover:bg-[#f5cd00] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                  className="group flex h-12 w-full items-center justify-center gap-2 bg-[#ffd600] text-xs font-black uppercase tracking-[0.08em] text-black transition-all duration-300 hover:bg-[#f5cc00] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? (
                     <>
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-950 border-t-transparent" />
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
                       Updating...
                     </>
                   ) : (
                     <>
                       Update Password
+
                       <FiArrowLeft
                         size={16}
                         className="rotate-180 transition-transform duration-300 group-hover:translate-x-1"
@@ -328,36 +305,27 @@ function ResetPassword() {
                     </>
                   )}
                 </button>
-
               </form>
 
-              {/* =========================
-                  BACK TO LOGIN
-              ========================= */}
-
+              {/* BACK TO LOGIN */}
               <Link
                 to="/login"
-                className="mt-7 flex items-center justify-center gap-2 text-sm font-bold text-gray-500 transition hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                className="mt-7 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.08em] text-gray-500 transition hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
               >
-                <FiArrowLeft size={16} />
+                <FiArrowLeft size={15} />
                 Back to Login
               </Link>
 
               {/* SECURITY */}
-
-              <div className="mt-7 flex items-center justify-center gap-2 border-t border-gray-100 pt-6 text-xs text-gray-400 dark:border-[#2a2a2a]">
+              <div className="mt-7 flex items-center justify-center gap-2 border-t border-gray-100 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-400 dark:border-[#2a2a2a]">
                 <FiShield size={14} />
-                <span>Secure password recovery powered by Shoply</span>
+                Secure password recovery powered by Shoply
               </div>
-
             </div>
           </div>
-
-         
-
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
