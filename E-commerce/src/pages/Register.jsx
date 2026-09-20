@@ -368,7 +368,6 @@ function Register() {
                 )}
               </div>
 
-              {/* BUTTON */}
               <button
                 type="submit"
                 disabled={loading}
