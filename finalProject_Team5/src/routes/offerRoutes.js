@@ -1,20 +1,42 @@
-const express = require('express');
+const express = require("express");
+
 const router = express.Router();
-const { 
-    createOffer, 
-    getOffers, 
-    updateOffer, 
-    deleteOffer 
-} = require('../controllers/offerController');
 
-const authMiddleware = require('../middlewares/auth.middleware'); 
+const {
+  createOffer,
+  getOffers,
+  updateOffer,
+  deleteOffer
+} = require("../controllers/offerController");
 
-router.get('/', getOffers);
+const authMiddleware = require("../middlewares/auth.middleware");
 
-router.post('/', authMiddleware, createOffer); 
+const offerValidation = require("../validations/offer.validation");
 
-router.put('/:id', authMiddleware, updateOffer);
+const validation = require("../middlewares/validation.middleware");
 
-router.delete('/:id', authMiddleware, deleteOffer);
+router.get("/", getOffers);
+
+router.post(
+  "/",
+  offerValidation,
+  validation,
+  authMiddleware,
+  createOffer
+);
+
+router.put(
+  "/:id",
+  offerValidation,
+  validation,
+  authMiddleware,
+  updateOffer
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  deleteOffer
+);
 
 module.exports = router;

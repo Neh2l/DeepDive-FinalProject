@@ -12,10 +12,22 @@ const {
 } = require("../controllers/order.controller");
 
 const authMiddleware = require("../middlewares/auth.middleware");
+
 const authorize = require("../middlewares/role.middleware");
 
+const orderValidation = require("../validations/order.validation");
+
+const validation = require("../middlewares/validation.middleware");
+
 // Buyer
-router.post("/", authMiddleware, createOrder);
+
+router.post(
+    "/",
+    orderValidation,
+    validation,
+    authMiddleware,
+    createOrder
+);
 
 router.get("/my-orders", authMiddleware, getMyOrders);
 
@@ -23,8 +35,8 @@ router.get("/:id", authMiddleware, getOrderById);
 
 router.patch("/:id/cancel", authMiddleware, cancelOrder);
 
-
 // Admin
+
 router.get(
     "/",
     authMiddleware,

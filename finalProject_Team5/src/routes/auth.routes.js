@@ -10,16 +10,27 @@ const {
   resetPassword,
 } = require("../controllers/auth.controller");
 
-router.post("/register", register);
+const userValidation = require("../validations/user.validation");
+const validationMiddleware = require("../middlewares/validation.middleware");
+
+router.post(
+  "/register",
+  userValidation,
+  validationMiddleware,
+  register
+);
 
 router.post("/verify-email", verifyEmail);
 
 router.post("/login", login);
 
 // Forgot Password
+
 router.post("/forgot-password", forgotPassword);
 
 // Reset Password
+
 router.post("/reset-password/:token", resetPassword);
 
 module.exports = router;
+
