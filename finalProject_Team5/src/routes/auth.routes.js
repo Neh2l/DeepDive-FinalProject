@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   register,
   verifyEmail,
+  resendVerificationCode,
   login,
   forgotPassword,
   resetPassword,
@@ -20,6 +21,10 @@ router.post(
   register
 );
 
+router.post(
+  "/resend-verification",
+  resendVerificationCode
+);
 router.post("/verify-email", verifyEmail);
 
 router.post("/login", login);

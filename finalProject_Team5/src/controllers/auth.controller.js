@@ -122,7 +122,115 @@ const register = async (req, res) => {
     });
   }
 };
+// ==========================================
+// RESEND VERIFICATION CODE
+// ==========================================
 
+const resendVerificationCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required",
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Check if already registered
+    const existingUser = await User.findOne({
+      email: normalizedEmail,
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: "This email is already registered",
+      });
+    }
+
+    // Find pending registration
+    const pendingUser = await PendingUser.findOne({
+      email: normalizedEmail,
+    });
+
+    if (!pendingUser) {
+      return res.status(404).json({
+        message:
+          "Registration not found. Please register again.",
+      });
+    }
+
+    // Generate a new verification code
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    // New expiration: 10 minutes
+    const verificationCodeExpires =
+      Date.now() + 10 * 60 * 1000;
+
+    // Update pending user
+    pendingUser.verificationCode = verificationCode;
+    pendingUser.verificationCodeExpires =
+      verificationCodeExpires;
+
+    await pendingUser.save();
+
+    // Send new verification email
+    try {
+      await sendEmail({
+        email: pendingUser.email,
+        subject: "New Email Verification Code",
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Verify Your Email</h2>
+
+            <p>Your new verification code is:</p>
+
+            <h1 style="
+              color: #4CAF50;
+              letter-spacing: 2px;
+            ">
+              ${verificationCode}
+            </h1>
+
+            <p>This code expires in 10 minutes.</p>
+
+            <p>
+              If you did not request this code,
+              you can safely ignore this email.
+            </p>
+          </div>
+        `,
+      });
+    } catch (emailError) {
+      console.error(
+        "RESEND EMAIL ERROR:",
+        emailError
+      );
+
+      return res.status(500).json({
+        message:
+          "Could not send verification email. Please try again.",
+      });
+    }
+
+    return res.status(200).json({
+      message:
+        "A new verification code has been sent to your email.",
+    });
+  } catch (error) {
+    console.error(
+      "RESEND VERIFICATION ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
 // ==========================================
 // VERIFY EMAIL
 // ==========================================
@@ -499,6 +607,7 @@ const resetPassword = async (req, res) => {
 module.exports = {
   register,
   verifyEmail,
+  resendVerificationCode,
   login,
   forgotPassword,
   resetPassword,
