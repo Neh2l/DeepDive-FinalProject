@@ -1051,105 +1051,106 @@ function AdminDashboard() {
       </div>
     );
   };
-  const renderOrders = () => {
-    const pendingCount = orders.filter(
-      (order) => order.status === "Pending",
-    ).length;
 
-    const shippedCount = orders.filter(
-      (order) => order.status === "Shipped",
-    ).length;
+const renderOrders = () => {
+  const pendingCount = orders.filter(
+    (order) => order.status === "Pending",
+  ).length;
 
-    const deliveredCount = orders.filter(
-      (order) => order.status === "Delivered",
-    ).length;
+  const shippedCount = orders.filter(
+    (order) => order.status === "Shipped",
+  ).length;
 
-    const canceledCount = orders.filter(
-      (order) => order.status === "Canceled",
-    ).length;
+  const deliveredCount = orders.filter(
+    (order) => order.status === "Delivered",
+  ).length;
 
-    const pageSales = orders.reduce(
-      (sum, order) => sum + Number(order.total || 0),
-      0,
-    );
+  const canceledCount = orders.filter(
+    (order) => order.status === "Canceled",
+  ).length;
 
-    const getStatusStyle = (status) => {
-      switch (status) {
-        case "Pending":
-          return "bg-yellow-50 text-yellow-700 border-yellow-200";
+  const pageSales = orders.reduce(
+    (sum, order) => sum + Number(order.total || 0),
+    0,
+  );
 
-        case "Shipped":
-          return "bg-blue-50 text-blue-700 border-blue-200";
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800";
 
-        case "Delivered":
-          return "bg-green-50 text-green-700 border-green-200";
+      case "Shipped":
+        return "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800";
 
-        case "Canceled":
-          return "bg-red-50 text-red-700 border-red-200";
+      case "Delivered":
+        return "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800";
 
-        default:
-          return "bg-gray-50 text-gray-600 border-gray-200";
-      }
-    };
+      case "Canceled":
+        return "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800";
 
-    const getNextStatusOptions = (status) => {
-      if (status === "Pending") {
-        return ["Pending", "Shipped", "Canceled"];
-      }
+      default:
+        return "bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700";
+    }
+  };
 
-      if (status === "Shipped") {
-        return ["Shipped", "Delivered"];
-      }
+  const getNextStatusOptions = (status) => {
+    if (status === "Pending") {
+      return ["Pending", "Shipped", "Canceled"];
+    }
 
-      return [status];
-    };
+    if (status === "Shipped") {
+      return ["Shipped", "Delivered"];
+    }
 
-    return (
-      <div className="space-y-6">
-        {/* ================= HEADER ================= */}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400 text-black shadow-sm">
-                <FiShoppingBag size={21} />
-              </div>
+    return [status];
+  };
 
-              <div>
-                <h1 className="text-2xl font-black tracking-tight text-gray-900">
-                  Orders
-                </h1>
+  return (
+    <div className="space-y-6">
+      {/* ================= HEADER ================= */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-400 text-black shadow-sm">
+              <FiShoppingBag size={21} />
+            </div>
 
-                <p className="mt-1 text-sm text-gray-500">
-                  Manage and track all customer orders.
-                </p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
+                Orders
+              </h1>
+
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Manage and track all customer orders.
+              </p>
             </div>
           </div>
+        </div>
 
-          <button
-            type="button"
-            onClick={async () => {
-              try {
-                const response = await getAllOrders({
-                  page: ordersPage,
-                  limit: 10,
-                  status: orderStatusFilter || undefined,
-                  search: orderSearch || undefined,
-                });
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const response = await getAllOrders({
+                page: ordersPage,
+                limit: 10,
+                status: orderStatusFilter || undefined,
+                search: orderSearch || undefined,
+              });
 
-                setOrders(response.orders || []);
-                setOrdersTotal(response.total || 0);
+              setOrders(response.orders || []);
+              setOrdersTotal(response.total || 0);
 
-                toast.success("Orders refreshed");
-              } catch (error) {
-                console.error("Refresh orders error:", error);
+              toast.success("Orders refreshed");
+            } catch (error) {
+              console.error("Refresh orders error:", error);
 
-                toast.error(
-                  error?.response?.data?.message || "Failed to refresh orders",
-                );
-              }
-            }}
-            className="
+              toast.error(
+                error?.response?.data?.message || "Failed to refresh orders",
+              );
+            }
+          }}
+          className="
             inline-flex
             items-center
             justify-center
@@ -1169,127 +1170,132 @@ function AdminDashboard() {
             hover:border-gray-300
             hover:bg-gray-50
             hover:shadow-md
+            dark:border-gray-700
+            dark:bg-[#1a1a1a]
+            dark:text-gray-200
+            dark:hover:border-gray-600
+            dark:hover:bg-[#222222]
           "
-          >
-            <FiActivity size={17} />
-            Refresh
-          </button>
-        </div>
+        >
+          <FiActivity size={17} />
+          Refresh
+        </button>
+      </div>
 
-        {/* ================= STATS ================= */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {/* Total Orders */}
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                  Total Orders
-                </p>
+      {/* ================= STATS ================= */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {/* Total Orders */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Total Orders
+              </p>
 
-                <h3 className="mt-2 text-2xl font-black text-gray-900">
-                  {ordersTotal}
-                </h3>
+              <h3 className="mt-2 text-2xl font-black text-gray-900 dark:text-white">
+                {ordersTotal}
+              </h3>
 
-                <p className="mt-1 text-xs text-gray-400">
-                  All customer orders
-                </p>
-              </div>
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
-                <FiShoppingCart size={19} />
-              </div>
+              <p className="mt-1 text-xs text-gray-400">
+                All customer orders
+              </p>
             </div>
-          </div>
 
-          {/* Pending */}
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                  Pending
-                </p>
-
-                <h3 className="mt-2 text-2xl font-black text-gray-900">
-                  {pendingCount}
-                </h3>
-
-                <p className="mt-1 text-xs text-gray-400">
-                  Waiting for processing
-                </p>
-              </div>
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600">
-                <FiClock size={19} />
-              </div>
-            </div>
-          </div>
-
-          {/* Shipped */}
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                  Shipped
-                </p>
-
-                <h3 className="mt-2 text-2xl font-black text-gray-900">
-                  {shippedCount}
-                </h3>
-
-                <p className="mt-1 text-xs text-gray-400">
-                  On the way to customers
-                </p>
-              </div>
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                <FiPackage size={19} />
-              </div>
-            </div>
-          </div>
-
-          {/* Delivered */}
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                  Delivered
-                </p>
-
-                <h3 className="mt-2 text-2xl font-black text-gray-900">
-                  {deliveredCount}
-                </h3>
-
-                <p className="mt-1 text-xs text-gray-400">
-                  Successfully completed
-                </p>
-              </div>
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
-                <FiCheckCircle size={19} />
-              </div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <FiShoppingCart size={19} />
             </div>
           </div>
         </div>
 
-        {/* ================= FILTER BAR ================= */}
-        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            {/* Search */}
-            <div className="relative w-full xl:max-w-md">
-              <FiSearch
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+        {/* Pending */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Pending
+              </p>
 
-              <input
-                type="text"
-                value={orderSearch}
-                onChange={(e) => {
-                  setOrderSearch(e.target.value);
-                  setOrdersPage(1);
-                }}
-                placeholder="Search by customer or order ID..."
-                className="
+              <h3 className="mt-2 text-2xl font-black text-gray-900 dark:text-white">
+                {pendingCount}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Waiting for processing
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400">
+              <FiClock size={19} />
+            </div>
+          </div>
+        </div>
+
+        {/* Shipped */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Shipped
+              </p>
+
+              <h3 className="mt-2 text-2xl font-black text-gray-900 dark:text-white">
+                {shippedCount}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                On the way to customers
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+              <FiPackage size={19} />
+            </div>
+          </div>
+        </div>
+
+        {/* Delivered */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Delivered
+              </p>
+
+              <h3 className="mt-2 text-2xl font-black text-gray-900 dark:text-white">
+                {deliveredCount}
+              </h3>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Successfully completed
+              </p>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400">
+              <FiCheckCircle size={19} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= FILTER BAR ================= */}
+      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-[#1a1a1a]">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          {/* Search */}
+          <div className="relative w-full xl:max-w-md">
+            <FiSearch
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+
+            <input
+              type="text"
+              value={orderSearch}
+              onChange={(e) => {
+                setOrderSearch(e.target.value);
+                setOrdersPage(1);
+              }}
+              placeholder="Search by customer or order ID..."
+              className="
                 h-12
                 w-full
                 rounded-xl
@@ -1308,20 +1314,25 @@ function AdminDashboard() {
                 focus:bg-white
                 focus:ring-4
                 focus:ring-yellow-100
+                dark:border-gray-700
+                dark:bg-[#111111]
+                dark:text-white
+                dark:placeholder:text-gray-500
+                dark:focus:bg-[#111111]
               "
-              />
-            </div>
+            />
+          </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              {/* Status Filter */}
-              <div className="relative">
-                <select
-                  value={orderStatusFilter}
-                  onChange={(e) => {
-                    setOrderStatusFilter(e.target.value);
-                    setOrdersPage(1);
-                  }}
-                  className="
+          <div className="flex flex-col gap-3 sm:flex-row">
+            {/* Status Filter */}
+            <div className="relative">
+              <select
+                value={orderStatusFilter}
+                onChange={(e) => {
+                  setOrderStatusFilter(e.target.value);
+                  setOrdersPage(1);
+                }}
+                className="
                   h-12
                   min-w-[170px]
                   appearance-none
@@ -1340,31 +1351,35 @@ function AdminDashboard() {
                   focus:bg-white
                   focus:ring-4
                   focus:ring-yellow-100
+                  dark:border-gray-700
+                  dark:bg-[#111111]
+                  dark:text-white
+                  dark:focus:bg-[#111111]
                 "
-                >
-                  <option value="">All Statuses</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Canceled">Canceled</option>
-                </select>
+              >
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Canceled">Canceled</option>
+              </select>
 
-                <FiChevronRight
-                  size={16}
-                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-gray-400"
-                />
-              </div>
+              <FiChevronRight
+                size={16}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-gray-400"
+              />
+            </div>
 
-              {/* Clear */}
-              {(orderSearch || orderStatusFilter) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOrderSearch("");
-                    setOrderStatusFilter("");
-                    setOrdersPage(1);
-                  }}
-                  className="
+            {/* Clear */}
+            {(orderSearch || orderStatusFilter) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setOrderSearch("");
+                  setOrderStatusFilter("");
+                  setOrdersPage(1);
+                }}
+                className="
                   inline-flex
                   h-12
                   items-center
@@ -1381,217 +1396,224 @@ function AdminDashboard() {
                   transition-all
                   hover:border-gray-300
                   hover:bg-gray-50
+                  dark:border-gray-700
+                  dark:bg-[#1a1a1a]
+                  dark:text-gray-300
+                  dark:hover:border-gray-600
+                  dark:hover:bg-[#222222]
                 "
-                >
-                  <FiX size={16} />
-                  Clear
-                </button>
-              )}
+              >
+                <FiX size={16} />
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ================= ORDERS TABLE ================= */}
+      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-[#1a1a1a]">
+        {/* Table Header */}
+        <div className="border-b border-gray-100 px-6 py-5 dark:border-gray-800">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-black text-gray-900 dark:text-white">
+                All Orders
+              </h2>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Review products, customers, payment and order status.
+              </p>
+            </div>
+
+            <div className="rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500 dark:bg-gray-800 dark:text-gray-300">
+              {orders.length} orders on this page
             </div>
           </div>
         </div>
 
-        {/* ================= ORDERS TABLE ================= */}
-        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-          {/* Table Header */}
-          <div className="border-b border-gray-100 px-6 py-5">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-lg font-black text-gray-900">All Orders</h2>
-
-                <p className="mt-1 text-xs text-gray-400">
-                  Review products, customers, payment and order status.
-                </p>
-              </div>
-
-              <div className="rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500">
-                {orders.length} orders on this page
-              </div>
+        {orders.length === 0 ? (
+          <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500">
+              <FiShoppingBag size={28} />
             </div>
+
+            <h3 className="mt-5 text-lg font-black text-gray-800 dark:text-white">
+              No orders found
+            </h3>
+
+            <p className="mt-2 max-w-sm text-sm leading-6 text-gray-400">
+              There are no orders matching your current search or filter.
+            </p>
           </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1100px]">
+              <thead>
+                <tr className="border-b border-gray-100 bg-[#fafafa] dark:border-gray-800 dark:bg-[#151515]">
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Order
+                  </th>
 
-          {orders.length === 0 ? (
-            <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
-                <FiShoppingBag size={28} />
-              </div>
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Customer
+                  </th>
 
-              <h3 className="mt-5 text-lg font-black text-gray-800">
-                No orders found
-              </h3>
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Products
+                  </th>
 
-              <p className="mt-2 max-w-sm text-sm leading-6 text-gray-400">
-                There are no orders matching your current search or filter.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1100px]">
-                <thead>
-                  <tr className="border-b border-gray-100 bg-[#fafafa]">
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Order
-                    </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Total
+                  </th>
 
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Customer
-                    </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Payment
+                  </th>
 
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Products
-                    </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Status
+                  </th>
 
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Total
-                    </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
+                    Date
+                  </th>
+                </tr>
+              </thead>
 
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Payment
-                    </th>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {orders.map((order) => (
+                  <tr
+                    key={order._id}
+                    className="group transition-colors duration-200 hover:bg-[#fffdf5] dark:hover:bg-[#202020]"
+                  >
+                    {/* ORDER */}
+                    <td className="px-6 py-5 align-top">
+                      <div>
+                        <p className="font-mono text-xs font-black text-gray-900 dark:text-white">
+                          #{order._id?.slice(-8).toUpperCase()}
+                        </p>
 
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Status
-                    </th>
+                        <p className="mt-1 text-[11px] text-gray-400">
+                          {order.items?.length || 0} product
+                          {(order.items?.length || 0) !== 1 ? "s" : ""}
+                        </p>
+                      </div>
+                    </td>
 
-                    <th className="px-6 py-4 text-left text-[11px] font-black uppercase tracking-wider text-gray-400">
-                      Date
-                    </th>
-                  </tr>
-                </thead>
+                    {/* CUSTOMER */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="max-w-[180px]">
+                        <p className="truncate text-sm font-black text-gray-800 dark:text-gray-100">
+                          {order.user?.name || "Unknown Customer"}
+                        </p>
 
-                <tbody className="divide-y divide-gray-100">
-                  {orders.map((order) => (
-                    <tr
-                      key={order._id}
-                      className="group transition-colors duration-200 hover:bg-[#fffdf5]"
-                    >
-                      {/* ORDER */}
-                      <td className="px-6 py-5 align-top">
-                        <div>
-                          <p className="font-mono text-xs font-black text-gray-900">
-                            #{order._id?.slice(-8).toUpperCase()}
-                          </p>
+                        <p className="mt-1 truncate text-xs text-gray-400">
+                          {order.user?.email || "No email"}
+                        </p>
+                      </div>
+                    </td>
 
-                          <p className="mt-1 text-[11px] text-gray-400">
-                            {order.items?.length || 0} product
-                            {(order.items?.length || 0) !== 1 ? "s" : ""}
-                          </p>
-                        </div>
-                      </td>
+                    {/* PRODUCTS */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="space-y-3">
+                        {order.items?.map((item, index) => {
+                          const product = item.product;
 
-                      {/* CUSTOMER */}
-                      <td className="px-6 py-5 align-top">
-                        <div className="max-w-[180px]">
-                          <p className="truncate text-sm font-black text-gray-800">
-                            {order.user?.name || "Unknown Customer"}
-                          </p>
+                          const productImage =
+                            typeof product?.images?.[0] === "string"
+                              ? product.images[0]
+                              : product?.images?.[0]?.url || "";
 
-                          <p className="mt-1 truncate text-xs text-gray-400">
-                            {order.user?.email || "No email"}
-                          </p>
-                        </div>
-                      </td>
+                          console.log("ORDER PRODUCT:", product);
+                          console.log(
+                            "ORDER PRODUCT IMAGES:",
+                            product?.images,
+                          );
+                          console.log(
+                            "ORDER FIRST IMAGE:",
+                            product?.images?.[0],
+                          );
+                          console.log("ORDER IMAGE URL:", productImage);
 
-                      {/* PRODUCTS */}
-                      <td className="px-6 py-5 align-top">
-                        <div className="space-y-3">
-                          {order.items?.map((item, index) => {
-                            const product = item.product;
+                          return (
+                            <div
+                              key={`${order._id}-${product?._id || index}`}
+                              className="flex min-w-[280px] items-center gap-3"
+                            >
+                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
+                                {productImage ? (
+                                  <img
+                                    src={productImage}
+                                    alt={product?.name || "Product"}
+                                    className="h-full w-full object-cover"
+                                    onError={(e) => {
+                                      console.log(
+                                        "IMAGE FAILED:",
+                                        productImage,
+                                      );
 
-                            const productImage =
-                              typeof product?.images?.[0] === "string"
-                                ? product.images[0]
-                                : product?.images?.[0]?.url || "";
-
-                            console.log("ORDER PRODUCT:", product);
-                            console.log(
-                              "ORDER PRODUCT IMAGES:",
-                              product?.images,
-                            );
-                            console.log(
-                              "ORDER FIRST IMAGE:",
-                              product?.images?.[0],
-                            );
-                            console.log("ORDER IMAGE URL:", productImage);
-
-                            return (
-                              <div
-                                key={`${order._id}-${product?._id || index}`}
-                                className="flex min-w-[280px] items-center gap-3"
-                              >
-                                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                                  {productImage ? (
-                                    <img
-                                      src={productImage}
-                                      alt={product?.name || "Product"}
-                                      className="h-full w-full object-cover"
-                                      onError={(e) => {
-                                        console.log(
-                                          "IMAGE FAILED:",
-                                          productImage,
-                                        );
-
-                                        e.currentTarget.style.display = "none";
-                                      }}
-                                    />
-                                  ) : (
-                                    <div className="flex h-full w-full items-center justify-center text-gray-300">
-                                      <FiPackage size={18} />
-                                    </div>
-                                  )}
-                                </div>
-
-                                <div className="min-w-0">
-                                  <p className="max-w-[220px] truncate text-sm font-bold text-gray-800">
-                                    {product?.name || "Product unavailable"}
-                                  </p>
-
-                                  <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-                                    <span>
-                                      Qty:{" "}
-                                      <span className="font-bold text-gray-600">
-                                        {item.quantity}
-                                      </span>
-                                    </span>
-
-                                    <span>•</span>
-
-                                    <span>
-                                      {Number(item.price || 0).toFixed(2)} EGP
-                                    </span>
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="flex h-full w-full items-center justify-center text-gray-300 dark:text-gray-500">
+                                    <FiPackage size={18} />
                                   </div>
+                                )}
+                              </div>
+
+                              <div className="min-w-0">
+                                <p className="max-w-[220px] truncate text-sm font-bold text-gray-800 dark:text-gray-100">
+                                  {product?.name || "Product unavailable"}
+                                </p>
+
+                                <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                                  <span>
+                                    Qty:{" "}
+                                    <span className="font-bold text-gray-600 dark:text-gray-300">
+                                      {item.quantity}
+                                    </span>
+                                  </span>
+
+                                  <span>•</span>
+
+                                  <span>
+                                    {Number(item.price || 0).toFixed(2)} EGP
+                                  </span>
                                 </div>
                               </div>
-                            );
-                          })}
-                        </div>
-                      </td>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </td>
 
-                      {/* TOTAL */}
-                      <td className="px-6 py-5 align-top">
-                        <p className="whitespace-nowrap text-sm font-black text-gray-900">
-                          {Number(order.total || 0).toFixed(2)} EGP
-                        </p>
-                      </td>
+                    {/* TOTAL */}
+                    <td className="px-6 py-5 align-top">
+                      <p className="whitespace-nowrap text-sm font-black text-gray-900 dark:text-white">
+                        {Number(order.total || 0).toFixed(2)} EGP
+                      </p>
+                    </td>
 
-                      {/* PAYMENT */}
-                      <td className="px-6 py-5 align-top">
-                        <div className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
-                          <span className="text-sm">💵</span>
+                    {/* PAYMENT */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-800">
+                        <span className="text-sm">💵</span>
 
-                          <span className="text-xs font-bold text-gray-600">
-                            {order.paymentMethod === "COD"
-                              ? "Cash on Delivery"
-                              : order.paymentMethod || "N/A"}
-                          </span>
-                        </div>
-                      </td>
+                        <span className="text-xs font-bold text-gray-600 dark:text-gray-300">
+                          {order.paymentMethod === "COD"
+                            ? "Cash on Delivery"
+                            : order.paymentMethod || "N/A"}
+                        </span>
+                      </div>
+                    </td>
 
-                      {/* STATUS */}
-                      <td className="px-6 py-5 align-top">
-                        <div className="flex flex-col items-start gap-2">
-                          <span
-                            className={`
+                    {/* STATUS */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="flex flex-col items-start gap-2">
+                        <span
+                          className={`
                             inline-flex
                             items-center
                             rounded-full
@@ -1602,21 +1624,21 @@ function AdminDashboard() {
                             font-black
                             ${getStatusStyle(order.status)}
                           `}
-                          >
-                            {order.status}
-                          </span>
+                        >
+                          {order.status}
+                        </span>
 
-                          {order.status !== "Delivered" &&
-                            order.status !== "Canceled" && (
-                              <select
-                                value={order.status}
-                                onChange={(e) =>
-                                  handleOrderStatusChange(
-                                    order._id,
-                                    e.target.value,
-                                  )
-                                }
-                                className="
+                        {order.status !== "Delivered" &&
+                          order.status !== "Canceled" && (
+                            <select
+                              value={order.status}
+                              onChange={(e) =>
+                                handleOrderStatusChange(
+                                  order._id,
+                                  e.target.value,
+                                )
+                              }
+                              className="
                                 rounded-lg
                                 border
                                 border-gray-200
@@ -1631,74 +1653,79 @@ function AdminDashboard() {
                                 focus:border-yellow-400
                                 focus:ring-2
                                 focus:ring-yellow-100
+                                dark:border-gray-700
+                                dark:bg-[#111111]
+                                dark:text-gray-200
                               "
-                              >
-                                {getNextStatusOptions(order.status).map(
-                                  (status) => (
-                                    <option key={status} value={status}>
-                                      {status}
-                                    </option>
-                                  ),
-                                )}
-                              </select>
-                            )}
-                        </div>
-                      </td>
+                            >
+                              {getNextStatusOptions(order.status).map(
+                                (status) => (
+                                  <option key={status} value={status}>
+                                    {status}
+                                  </option>
+                                ),
+                              )}
+                            </select>
+                          )}
+                      </div>
+                    </td>
 
-                      {/* DATE */}
-                      <td className="px-6 py-5 align-top">
-                        <div className="whitespace-nowrap">
-                          <p className="text-sm font-bold text-gray-700">
-                            {order.createdAt
-                              ? new Date(order.createdAt).toLocaleDateString(
-                                  "en-GB",
-                                )
-                              : "—"}
-                          </p>
+                    {/* DATE */}
+                    <td className="px-6 py-5 align-top">
+                      <div className="whitespace-nowrap">
+                        <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
+                          {order.createdAt
+                            ? new Date(order.createdAt).toLocaleDateString(
+                                "en-GB",
+                              )
+                            : "—"}
+                        </p>
 
-                          <p className="mt-1 text-xs text-gray-400">
-                            {order.createdAt
-                              ? new Date(order.createdAt).toLocaleTimeString(
-                                  [],
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  },
-                                )
-                              : ""}
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                        <p className="mt-1 text-xs text-gray-400">
+                          {order.createdAt
+                            ? new Date(order.createdAt).toLocaleTimeString(
+                                [],
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                },
+                              )
+                            : ""}
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-          {/* ================= PAGINATION ================= */}
-          {ordersTotal > 10 && (
-            <div className="flex flex-col gap-4 border-t border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs font-medium text-gray-400">
-                Showing{" "}
-                <span className="font-bold text-gray-700">
-                  {(ordersPage - 1) * 10 + 1}
-                </span>{" "}
-                -{" "}
-                <span className="font-bold text-gray-700">
-                  {Math.min(ordersPage * 10, ordersTotal)}
-                </span>{" "}
-                of{" "}
-                <span className="font-bold text-gray-700">{ordersTotal}</span>{" "}
-                orders
-              </p>
+        {/* ================= PAGINATION ================= */}
+        {ordersTotal > 10 && (
+          <div className="flex flex-col gap-4 border-t border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800">
+            <p className="text-xs font-medium text-gray-400">
+              Showing{" "}
+              <span className="font-bold text-gray-700 dark:text-gray-200">
+                {(ordersPage - 1) * 10 + 1}
+              </span>{" "}
+              -{" "}
+              <span className="font-bold text-gray-700 dark:text-gray-200">
+                {Math.min(ordersPage * 10, ordersTotal)}
+              </span>{" "}
+              of{" "}
+              <span className="font-bold text-gray-700 dark:text-gray-200">
+                {ordersTotal}
+              </span>{" "}
+              orders
+            </p>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={ordersPage === 1}
-                  onClick={() => setOrdersPage((prev) => prev - 1)}
-                  className="
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={ordersPage === 1}
+                onClick={() => setOrdersPage((prev) => prev - 1)}
+                className="
                   flex
                   h-10
                   w-10
@@ -1713,368 +1740,379 @@ function AdminDashboard() {
                   hover:bg-gray-50
                   disabled:cursor-not-allowed
                   disabled:opacity-40
+                  dark:border-gray-700
+                  dark:bg-[#1a1a1a]
+                  dark:text-gray-300
+                  dark:hover:bg-[#222222]
                 "
-                >
-                  <FiChevronRight size={17} className="rotate-180" />
-                </button>
+              >
+                <FiChevronRight size={17} className="rotate-180" />
+              </button>
 
-                <div className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-yellow-400 px-3 text-sm font-black text-black">
-                  {ordersPage}
-                </div>
-
-                <button
-                  type="button"
-                  disabled={ordersPage * 10 >= ordersTotal}
-                  onClick={() => setOrdersPage((prev) => prev + 1)}
-                  className="
-                  flex
-                  h-10
-                  w-10
-                  items-center
-                  justify-center
-                  rounded-lg
-                  border
-                  border-gray-200
-                  bg-white
-                  text-gray-600
-                  transition-all
-                  hover:bg-gray-50
-                  disabled:cursor-not-allowed
-                  disabled:opacity-40
-                "
-                >
-                  <FiChevronRight size={17} />
-                </button>
+              <div className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-yellow-400 px-3 text-sm font-black text-black">
+                {ordersPage}
               </div>
+
+              <button
+                type="button"
+                disabled={ordersPage * 10 >= ordersTotal}
+                onClick={() => setOrdersPage((prev) => prev + 1)}
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-lg
+                  border
+                  border-gray-200
+                  bg-white
+                  text-gray-600
+                  transition-all
+                  hover:bg-gray-50
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                  dark:border-gray-700
+                  dark:bg-[#1a1a1a]
+                  dark:text-gray-300
+                  dark:hover:bg-[#222222]
+                "
+              >
+                <FiChevronRight size={17} />
+              </button>
             </div>
-          )}
+          </div>
+        )}
+      </div>
+
+      {/* ================= SMALL SUMMARY ================= */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <p className="text-xs font-bold text-gray-400">Pending</p>
+
+          <p className="mt-1 text-lg font-black text-yellow-600">
+            {pendingCount}
+          </p>
         </div>
 
-        {/* ================= SMALL SUMMARY ================= */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-            <p className="text-xs font-bold text-gray-400">Pending</p>
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <p className="text-xs font-bold text-gray-400">Shipped</p>
 
-            <p className="mt-1 text-lg font-black text-yellow-600">
-              {pendingCount}
+          <p className="mt-1 text-lg font-black text-blue-600">
+            {shippedCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <p className="text-xs font-bold text-gray-400">Delivered</p>
+
+          <p className="mt-1 text-lg font-black text-green-600">
+            {deliveredCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm dark:border-gray-800 dark:bg-[#1a1a1a]">
+          <p className="text-xs font-bold text-gray-400">Page Sales</p>
+
+          <p className="mt-1 text-lg font-black text-gray-900 dark:text-white">
+            {pageSales.toFixed(2)} EGP
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+const renderSettings = () => {
+  const handleFooterChange = (e) => {
+    const { name, value } = e.target;
+
+    setFooterSettings((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFooterSave = async (e) => {
+    e.preventDefault();
+
+    try {
+      setFooterSaving(true);
+
+      const response = await updateFooterSettings(footerSettings);
+
+      setFooterSettings(response.data);
+
+      toast.success("settings saved successfully");
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        error?.response?.data?.message || "Failed to save footer settings",
+      );
+    } finally {
+      setFooterSaving(false);
+    }
+  };
+
+  return (
+    <div className="min-h-full bg-[#f7f7f7] p-4 sm:p-6 lg:p-8 dark:bg-[#111111]">
+      {/* Page Header */}
+      <div className="mb-7">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[#ffcf00]" />
+
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+                Store Configuration
+              </span>
+            </div>
+
+            <h1 className="text-2xl font-black tracking-tight text-gray-900 sm:text-3xl dark:text-white">
+              Settings
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400">
+              Manage the contact information and social media links displayed
+              in your Shoply footer.
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-            <p className="text-xs font-bold text-gray-400">Shipped</p>
-
-            <p className="mt-1 text-lg font-black text-blue-600">
-              {shippedCount}
+          <div className="hidden rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:block dark:border-gray-700 dark:bg-[#1a1a1a]">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              Status
             </p>
-          </div>
 
-          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-            <p className="text-xs font-bold text-gray-400">Delivered</p>
-
-            <p className="mt-1 text-lg font-black text-green-600">
-              {deliveredCount}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm">
-            <p className="text-xs font-bold text-gray-400">Page Sales</p>
-
-            <p className="mt-1 text-lg font-black text-gray-900">
-              {pageSales.toFixed(2)} EGP
+            <p className="mt-1 flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
+              <span className="h-2 w-2 rounded-full bg-green-500" />
+              Active
             </p>
           </div>
         </div>
       </div>
-    );
-  };
-  const renderSettings = () => {
-    const handleFooterChange = (e) => {
-      const { name, value } = e.target;
 
-      setFooterSettings((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    };
-
-    const handleFooterSave = async (e) => {
-      e.preventDefault();
-
-      try {
-        setFooterSaving(true);
-
-        const response = await updateFooterSettings(footerSettings);
-
-        setFooterSettings(response.data);
-
-        toast.success("settings saved successfully");
-      } catch (error) {
-        console.error(error);
-
-        toast.error(
-          error?.response?.data?.message || "Failed to save footer settings",
-        );
-      } finally {
-        setFooterSaving(false);
-      }
-    };
-
-    return (
-      <div className="min-h-full bg-[#f7f7f7] p-4 sm:p-6 lg:p-8">
-        {/* Page Header */}
-        <div className="mb-7">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="mb-2 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#ffcf00]" />
-
-                <span className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500">
-                  Store Configuration
-                </span>
+      {/* Main Card */}
+      <form onSubmit={handleFooterSave}>
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-[#1a1a1a]">
+          {/* Card Header */}
+          <div className="border-b border-gray-100 px-5 py-5 sm:px-7 dark:border-gray-800">
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
+                <FiSettings className="text-xl" />
               </div>
 
-              <h1 className="text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
-                Settings
-              </h1>
+              <div>
+                <h2 className="text-base font-extrabold text-gray-900 dark:text-white">
+                  Contact Information
+                </h2>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
-                Manage the contact information and social media links displayed
-                in your Shoply footer.
-              </p>
-            </div>
-
-            <div className="hidden rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:block">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                Status
-              </p>
-
-              <p className="mt-1 flex items-center gap-2 text-sm font-bold text-gray-900">
-                <span className="h-2 w-2 rounded-full bg-green-500" />
-                Active
-              </p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  Update the information your customers see in the website
+                  footer.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Main Card */}
-        <form onSubmit={handleFooterSave}>
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-            {/* Card Header */}
-            <div className="border-b border-gray-100 px-5 py-5 sm:px-7">
+          {/* Contact Information */}
+          <div className="p-5 sm:p-7">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+              {/* Phone */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Phone Number
+                </label>
+
+                <div className="group relative">
+                  <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={footerSettings.phone}
+                    onChange={handleFooterChange}
+                    placeholder="01092362189"
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Email Address
+                </label>
+
+                <div className="group relative">
+                  <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="email"
+                    name="email"
+                    value={footerSettings.email}
+                    onChange={handleFooterChange}
+                    placeholder="support@shoply.com"
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Location
+                </label>
+
+                <div className="group relative">
+                  <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="text"
+                    name="location"
+                    value={footerSettings.location}
+                    onChange={handleFooterChange}
+                    placeholder="Egypt"
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Media */}
+          <div className="border-t border-gray-100 dark:border-gray-800">
+            <div className="px-5 py-5 sm:px-7">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
-                  <FiSettings className="text-xl" />
+                  <FiInstagram className="text-xl" />
                 </div>
 
                 <div>
-                  <h2 className="text-base font-extrabold text-gray-900">
-                    Contact Information
+                  <h2 className="text-base font-extrabold text-gray-900 dark:text-white">
+                    Social Media
                   </h2>
 
-                  <p className="mt-1 text-sm text-gray-500">
-                    Update the information your customers see in the website
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Add or update the social media links displayed in the
                     footer.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Contact Information */}
-            <div className="p-5 sm:p-7">
-              <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-                {/* Phone */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    Phone Number
-                  </label>
-
-                  <div className="group relative">
-                    <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={footerSettings.phone}
-                      onChange={handleFooterChange}
-                      placeholder="01092362189"
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    Email Address
-                  </label>
-
-                  <div className="group relative">
-                    <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="email"
-                      name="email"
-                      value={footerSettings.email}
-                      onChange={handleFooterChange}
-                      placeholder="support@shoply.com"
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    Location
-                  </label>
-
-                  <div className="group relative">
-                    <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="text"
-                      name="location"
-                      value={footerSettings.location}
-                      onChange={handleFooterChange}
-                      placeholder="Egypt"
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Social Media */}
-            <div className="border-t border-gray-100">
-              <div className="px-5 py-5 sm:px-7">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#d5a900]">
-                    <FiInstagram className="text-xl" />
-                  </div>
-
-                  <div>
-                    <h2 className="text-base font-extrabold text-gray-900">
-                      Social Media
-                    </h2>
-
-                    <p className="mt-1 text-sm text-gray-500">
-                      Add or update the social media links displayed in the
-                      footer.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-5 border-t border-gray-100 p-5 sm:grid-cols-2 sm:p-7">
-                {/* Facebook */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    Facebook
-                  </label>
-
-                  <div className="group relative">
-                    <FiFacebook className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="url"
-                      name="facebook"
-                      value={footerSettings.facebook}
-                      onChange={handleFooterChange}
-                      placeholder="https://facebook.com/..."
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-
-                {/* Instagram */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    Instagram
-                  </label>
-
-                  <div className="group relative">
-                    <FiInstagram className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="url"
-                      name="instagram"
-                      value={footerSettings.instagram}
-                      onChange={handleFooterChange}
-                      placeholder="https://instagram.com/..."
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-
-                {/* Twitter */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    X / Twitter
-                  </label>
-
-                  <div className="group relative">
-                    <FiTwitter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="url"
-                      name="twitter"
-                      value={footerSettings.twitter}
-                      onChange={handleFooterChange}
-                      placeholder="https://x.com/..."
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-
-                {/* YouTube */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500">
-                    YouTube
-                  </label>
-
-                  <div className="group relative">
-                    <FiYoutube className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900" />
-
-                    <input
-                      type="url"
-                      name="youtube"
-                      value={footerSettings.youtube}
-                      onChange={handleFooterChange}
-                      placeholder="https://youtube.com/..."
-                      className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Action */}
-            <div className="flex flex-col gap-4 border-t border-gray-100 bg-[#fafafa] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+            <div className="grid grid-cols-1 gap-5 border-t border-gray-100 p-5 sm:grid-cols-2 sm:p-7 dark:border-gray-800">
+              {/* Facebook */}
               <div>
-                <p className="text-sm font-bold text-gray-900">
-                  Save your changes
-                </p>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Facebook
+                </label>
 
-                <p className="mt-1 text-xs text-gray-500">
-                  These settings will appear on the storefront footer.
-                </p>
+                <div className="group relative">
+                  <FiFacebook className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="url"
+                    name="facebook"
+                    value={footerSettings.facebook}
+                    onChange={handleFooterChange}
+                    placeholder="https://facebook.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={footerSaving}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#ffcf00] px-7 py-3.5 text-sm font-extrabold text-gray-950 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#f5c500] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
-              >
-                <FiSave className="text-base" />
+              {/* Instagram */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Instagram
+                </label>
 
-                {footerSaving ? "Saving..." : "Save Changes"}
-              </button>
+                <div className="group relative">
+                  <FiInstagram className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="url"
+                    name="instagram"
+                    value={footerSettings.instagram}
+                    onChange={handleFooterChange}
+                    placeholder="https://instagram.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
+              </div>
+
+              {/* Twitter */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  X / Twitter
+                </label>
+
+                <div className="group relative">
+                  <FiTwitter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="url"
+                    name="twitter"
+                    value={footerSettings.twitter}
+                    onChange={handleFooterChange}
+                    placeholder="https://x.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-300 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
+              </div>
+
+              {/* YouTube */}
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  YouTube
+                </label>
+
+                <div className="group relative">
+                  <FiYoutube className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+
+                  <input
+                    type="url"
+                    name="youtube"
+                    value={footerSettings.youtube}
+                    onChange={handleFooterChange}
+                    placeholder="https://youtube.com/..."
+                    className="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-300 hover:border-gray-300 focus:border-gray-900 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:bg-[#111111] dark:text-white dark:placeholder:text-gray-600 dark:hover:border-gray-600 dark:focus:border-gray-500 dark:focus:ring-gray-800"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </form>
-      </div>
-    );
-  };
+
+          {/* Bottom Action */}
+          <div className="flex flex-col gap-4 border-t border-gray-100 bg-[#fafafa] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7 dark:border-gray-800 dark:bg-[#151515]">
+            <div>
+              <p className="text-sm font-bold text-gray-900 dark:text-white">
+                Save your changes
+              </p>
+
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                These settings will appear on the storefront footer.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={footerSaving}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#ffcf00] px-7 py-3.5 text-sm font-extrabold text-gray-950 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#f5c500] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+            >
+              <FiSave className="text-base" />
+
+              {footerSaving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
+
   /*
   ========================================
   DASHBOARD PAGE
