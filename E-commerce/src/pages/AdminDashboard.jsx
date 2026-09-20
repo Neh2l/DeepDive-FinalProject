@@ -1502,17 +1502,21 @@ const renderOrders = () => {
                     </td>
 
                     {/* CUSTOMER */}
-                    <td className="px-6 py-5 align-top">
-                      <div className="max-w-[180px]">
-                        <p className="truncate text-sm font-black text-gray-800 dark:text-gray-100">
-                          {order.user?.name || "Unknown Customer"}
-                        </p>
+                 <td className="px-6 py-5 align-top">
+  <div className="max-w-[220px]">
+    <p className="truncate text-sm font-black text-gray-800 dark:text-gray-100">
+      {order.user?.name || "Unknown Customer"}
+    </p>
 
-                        <p className="mt-1 truncate text-xs text-gray-400">
-                          {order.user?.email || "No email"}
-                        </p>
-                      </div>
-                    </td>
+    <p className="mt-1 truncate text-xs text-gray-400">
+      {order.user?.email || "No email"}
+    </p>
+
+    <p className="mt-1 text-xs font-medium leading-5 text-gray-500 dark:text-gray-400">
+      {order.shippingAddress || "No address"}
+    </p>
+  </div>
+</td>
 
                     {/* PRODUCTS */}
                     <td className="px-6 py-5 align-top">
