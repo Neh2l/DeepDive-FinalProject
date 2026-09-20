@@ -1,3 +1,4 @@
+
 import axiosInstance from "./axiosInstance";
 
 export const registerUser = async (userData) => {
@@ -10,6 +11,16 @@ export const verifyEmail = async (verificationData) => {
     "/auth/verify-email",
     verificationData
   );
+  return response.data;
+};
+
+// RESEND VERIFICATION CODE
+export const resendVerificationCode = async (email) => {
+  const response = await axiosInstance.post(
+    "/auth/resend-verification",
+    { email }
+  );
+
   return response.data;
 };
 

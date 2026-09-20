@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 import {
   verifyEmail,
-  registerUser,
+  resendVerificationCode,
 } from "../redux/authSlice";
 
 function VerifyEmail() {
@@ -188,23 +188,30 @@ function VerifyEmail() {
     try {
       setResending(true);
 
-      /*
-       * We use registerUser here only if your backend
-       * sends the verification email again during registration.
-       *
-       * If your backend has a dedicated resendVerification API,
-       * replace this section with that API.
-       */
+      const result = await dispatch(
+        resendVerificationCode(email)
+      );
 
-      toast.info("Please request a new verification code.");
+      if (resendVerificationCode.fulfilled.match(result)) {
+        toast.success(
+          "A new verification code has been sent to your email."
+        );
 
-      setCountdown(60);
-      setCode(["", "", "", "", "", ""]);
-      inputRefs.current[0]?.focus();
+        setCountdown(60);
+
+        setCode(["", "", "", "", "", ""]);
+
+        inputRefs.current[0]?.focus();
+      } else {
+        toast.error(
+          result.payload ||
+            "Failed to resend verification code."
+        );
+      }
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to resend verification code.",
+          "Failed to resend verification code."
       );
     } finally {
       setResending(false);
@@ -221,7 +228,6 @@ function VerifyEmail() {
         <div className="mx-auto flex min-h-[85vh] max-w-[500px] items-center justify-center">
           <div className="w-full">
 
-            {/* SHOPLY LOGO */}
             <div className="mb-8 flex justify-center">
               <Link
                 to="/"
@@ -239,7 +245,6 @@ function VerifyEmail() {
               </Link>
             </div>
 
-            {/* SUCCESS CARD */}
             <div className="border border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#171717]">
               <div className="h-1.5 w-full bg-[#ffd600]" />
 
@@ -308,14 +313,12 @@ function VerifyEmail() {
             </Link>
           </div>
 
-          {/* CARD */}
           <div className="border border-gray-200 bg-white dark:border-[#2a2a2a] dark:bg-[#171717]">
 
             <div className="h-1.5 w-full bg-[#ffd600]" />
 
             <div className="px-7 py-10 sm:px-10 sm:py-12">
 
-              {/* ICON */}
               <div className="flex justify-center">
                 <div className="flex h-14 w-14 items-center justify-center bg-[#fff8d6] text-black dark:bg-[#332f17] dark:text-[#ffd600]">
                   <FiShield
@@ -325,7 +328,6 @@ function VerifyEmail() {
                 </div>
               </div>
 
-              {/* HEADING */}
               <div className="mt-7 text-center">
 
                 <p className="text-[9px] font-black uppercase tracking-[0.28em] text-gray-400 dark:text-gray-500">
@@ -346,13 +348,11 @@ function VerifyEmail() {
 
               </div>
 
-              {/* FORM */}
               <form
                 onSubmit={handleVerify}
                 className="mt-9"
               >
 
-                {/* CODE INPUTS */}
                 <div
                   className="flex justify-center gap-2.5 sm:gap-3"
                   onPaste={handlePaste}
@@ -407,7 +407,6 @@ function VerifyEmail() {
                   ))}
                 </div>
 
-                {/* VERIFY BUTTON */}
                 <button
                   type="submit"
                   disabled={
@@ -458,7 +457,6 @@ function VerifyEmail() {
 
               </form>
 
-              {/* RESEND */}
               <div className="mt-7 text-center">
 
                 <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -504,7 +502,6 @@ function VerifyEmail() {
 
               </div>
 
-              {/* BACK */}
               <div className="mt-8 border-t border-gray-100 pt-6 text-center dark:border-[#2a2a2a]">
 
                 <Link
@@ -533,7 +530,6 @@ function VerifyEmail() {
             </div>
           </div>
 
-          {/* SECURITY NOTE */}
           <div className="mt-6 flex items-center justify-center gap-2 text-[10px] text-gray-400 dark:text-gray-600">
             <FiMail size={13} />
             <span>Check your inbox and spam folder</span>

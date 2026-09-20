@@ -1,8 +1,10 @@
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import {
   registerUser as registerUserApi,
   verifyEmail as verifyEmailApi,
+  resendVerificationCode as resendVerificationCodeApi,
   loginUser as loginUserApi,
 } from "../Apis/authApi";
 
@@ -33,6 +35,22 @@ export const verifyEmail = createAsyncThunk(
       return rejectWithValue(
         error.response?.data?.message ||
           "Verification failed. Please try again."
+      );
+    }
+  }
+);
+
+// RESEND VERIFICATION CODE
+export const resendVerificationCode = createAsyncThunk(
+  "auth/resendVerificationCode",
+  async (email, { rejectWithValue }) => {
+    try {
+      const data = await resendVerificationCodeApi(email);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Failed to resend verification code."
       );
     }
   }
@@ -156,6 +174,22 @@ const authSlice = createSlice({
 
       .addCase(verifyEmail.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
+      })
+
+      // =========================
+      // RESEND VERIFICATION CODE
+      // =========================
+
+      .addCase(resendVerificationCode.pending, (state) => {
+        state.error = null;
+      })
+
+      .addCase(resendVerificationCode.fulfilled, (state) => {
+        state.error = null;
+      })
+
+      .addCase(resendVerificationCode.rejected, (state, action) => {
         state.error = action.payload;
       })
 
