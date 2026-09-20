@@ -222,6 +222,46 @@ const createPaymentIntention = async (req, res) => {
 
 
         /* =====================================================
+           ADD DELIVERY FEE TO PAYMOB ITEMS
+        ===================================================== */
+
+        const itemsTotal = paymobItems.reduce(
+            (total, item) =>
+                total +
+                Number(item.amount) *
+                Number(item.quantity),
+            0
+        );
+
+
+        const orderTotalCents =
+            Math.round(
+                Number(order.total) * 100
+            );
+
+
+        const deliveryAmount =
+            orderTotalCents - itemsTotal;
+
+
+        if (deliveryAmount > 0) {
+
+            paymobItems.push({
+
+                name: "Delivery",
+
+                amount: deliveryAmount,
+
+                description: "Delivery fee",
+
+                quantity: 1
+
+            });
+
+        }
+
+
+        /* =====================================================
            CREATE PAYMENT INTENTION
         ===================================================== */
 
@@ -236,9 +276,7 @@ const createPaymentIntention = async (req, res) => {
                 ================================================= */
 
                 amount:
-                    Math.round(
-                        Number(order.total) * 100
-                    ),
+                    orderTotalCents,
 
 
                 currency: "EGP",
@@ -626,6 +664,7 @@ const paymobWebhook = async (req, res) => {
                         await Product.findOneAndUpdate(
 
                             {
+
                                 _id:
                                     item.product,
 
@@ -638,11 +677,13 @@ const paymobWebhook = async (req, res) => {
                             },
 
                             {
+
                                 $inc:
                                     {
                                         stock:
                                             -item.quantity
                                     }
+
                             },
 
                             {
