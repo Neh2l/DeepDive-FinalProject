@@ -15,11 +15,11 @@
 </p>
 
 <p align="center">
-
   <a href="https://deep-dive-final-project.vercel.app/">Live Demo</a>
-  <a href="https://youtu.be/vVju0Pc2eEc">Project Demo</a>
+  <span> • </span>
+  <a href="https://youtu.be/QXxUTzdW62o">Project Demo</a>
+  <span> • </span>
   <a href="https://github.com/Neh2l/DeepDive-FinalProject">Source Code</a>
-
 </p>
 
 ---
@@ -38,7 +38,7 @@ The platform supports both customer and admin workflows, including authenticatio
 
 ### Quick Demo
 
-[![Shoply Project Demo](./cover/video%20cover.png)](https://youtu.be/vVju0Pc2eEc)
+[![Shoply Project Demo](./cover/video%20cover.png)](https://youtu.be/QXxUTzdW62o?si=7KLfgYkTW6LEDs2I)
 
 The project demo demonstrates the main customer shopping experience and the admin dashboard features.
 
