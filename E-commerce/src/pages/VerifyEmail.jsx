@@ -505,7 +505,7 @@ function VerifyEmail() {
               <div className="mt-8 border-t border-gray-100 pt-6 text-center dark:border-[#2a2a2a]">
 
                 <Link
-                  to="/register"
+                  to="/signup"
                   className="
                     inline-flex
                     items-center
