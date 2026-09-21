@@ -8,11 +8,7 @@
 
 <h1 align="center">Shoply</h1>
 
-<p align="center">
 
-  A modern full-stack e-commerce platform built with React.js, Node.js, Express.js, and MongoDB.
-
-</p>
 
 <p align="center">
   <a href="https://deep-dive-final-project.vercel.app/">Live Demo</a>
