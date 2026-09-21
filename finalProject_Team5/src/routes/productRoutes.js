@@ -11,13 +11,9 @@ const {
 } = require("../controllers/productController");
 
 const authMiddleware = require("../middlewares/auth.middleware");
-
 const authorize = require("../middlewares/role.middleware");
-
 const upload = require("../middlewares/upload.middleware");
-
 const productValidation = require("../validations/product.validation");
-
 const validation = require("../middlewares/validation.middleware");
 
 // Public
@@ -30,21 +26,21 @@ router.get("/:id", getProductById);
 
 router.post(
     "/",
-    productValidation,
-    validation,
     authMiddleware,
     authorize("Admin"),
     upload.array("images", 5),
+    productValidation,
+    validation,
     createProduct
 );
 
 router.put(
     "/:id",
-    productValidation,
-    validation,
     authMiddleware,
     authorize("Admin"),
     upload.array("images", 5),
+    productValidation,
+    validation,
     updateProduct
 );
 
