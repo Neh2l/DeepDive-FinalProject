@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   FiArrowRight,
@@ -21,6 +21,7 @@ import {
 } from "react-icons/fi";
 
 import { sendContactMessage } from "../Apis/contactApi";
+import { getFooterSettings } from "../Apis/footerSettingsApi";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -35,8 +36,32 @@ function Contact() {
   const [sending, setSending] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
 
+  const [footerSettings, setFooterSettings] = useState({
+    phone: "",
+    email: "",
+    location: "",
+  });
+
   /* =========================================================
-     HANDLE INPUT
+     FETCH FOOTER SETTINGS
+  ========================================================= */
+
+  useEffect(() => {
+    const fetchFooterSettings = async () => {
+      try {
+        const response = await getFooterSettings();
+
+        setFooterSettings(response.data);
+      } catch (error) {
+        console.error("Footer settings error:", error);
+      }
+    };
+
+    fetchFooterSettings();
+  }, []);
+
+  /* =========================================================
+     HANDLE INPUT 
   ========================================================= */
 
   const handleChange = (e) => {
@@ -267,21 +292,29 @@ function Contact() {
                 <ContactInfo
                   icon={<FiPhone />}
                   title="Phone"
-                  value="+20 100 000 0000"
-                  href="tel:+201000000000"
+                  value={footerSettings.phone || "Not available"}
+                  href={
+                    footerSettings.phone
+                      ? `tel:${footerSettings.phone}`
+                      : undefined
+                  }
                 />
 
                 <ContactInfo
                   icon={<FiMail />}
                   title="Email"
-                  value="support@shoply.com"
-                  href="mailto:support@shoply.com"
+                  value={footerSettings.email || "Not available"}
+                  href={
+                    footerSettings.email
+                      ? `mailto:${footerSettings.email}`
+                      : undefined
+                  }
                 />
 
                 <ContactInfo
                   icon={<FiMapPin />}
                   title="Location"
-                  value="Cairo, Egypt"
+                  value={footerSettings.location || "Not available"}
                 />
 
                 <ContactInfo
