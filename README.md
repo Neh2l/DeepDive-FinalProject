@@ -17,13 +17,7 @@
 <p align="center">
 
   <a href="https://deep-dive-final-project.vercel.app/">Live Demo</a>
-
-  •
-
   <a href="https://youtu.be/vVju0Pc2eEc">Project Demo</a>
-
-  •
-
   <a href="https://github.com/Neh2l/DeepDive-FinalProject">Source Code</a>
 
 </p>
@@ -44,7 +38,7 @@ The platform supports both customer and admin workflows, including authenticatio
 
 ### Quick Demo
 
-[![Shoply Project Demo](./cover/cover.jpeg)](https://youtu.be/vVju0Pc2eEc)
+[![Shoply Project Demo](./cover/video%20cover.png)](https://youtu.be/vVju0Pc2eEc)
 
 The project demo demonstrates the main customer shopping experience and the admin dashboard features.
 
@@ -743,24 +737,3 @@ https://github.com/ayagamal11x
 
 This project was developed for educational and development purposes.
 
----
-
-# Live Project
-
-<p align="center">
-
-<a href="https://deep-dive-final-project.vercel.app/">
-
-Live Demo
-
-</a>
-
-&nbsp;&nbsp;|&nbsp;&nbsp;
-
-<a href="https://github.com/Neh2l/DeepDive-FinalProject">
-
-GitHub Repository
-
-</a>
-
-</p>
