@@ -245,12 +245,12 @@ function Login() {
                     Password
                   </label>
 
-                  <Link
-                    to="/forgot-password"
-                    className="text-[10px] font-bold text-gray-500 transition-colors hover:text-gray-950 hover:underline dark:text-gray-400 dark:hover:text-[#ffd800]"
-                  >
-                    Forgot password?
-                  </Link>
+                <Link 
+  to="/forgot-password" 
+  className="text-[10px] font-bold text-gray-500 transition-colors hover:text-gray-950 hover:underline !text-gray-500 dark:!text-white dark:hover:!text-[#ffd800]"
+>
+  Forgot password?
+</Link>
                 </div>
 
                 <div className="relative">

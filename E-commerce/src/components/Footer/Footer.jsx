@@ -222,82 +222,33 @@ function Footer() {
 
           {/* NEWSLETTER */}
 
-          <div>
+        <div>
+  <p
+    className="
+      text-[9px]
+      font-bold
+      uppercase
+      tracking-[0.2em]
+      text-gray-400
+    "
+  >
+    Shoply / 2026
+  </p>
 
-            <p
-              className="
-                text-[9px]
-                font-bold
-                uppercase
-                tracking-[0.2em]
-                text-gray-400
-              "
-            >
-              Stay in the know
-            </p>
-
-            <div
-              className="
-                mt-4
-                flex
-                border-b
-                border-gray-900
-                dark:border-white
-              "
-            >
-
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="
-                  min-w-0
-                  flex-1
-                  bg-transparent
-                  px-0
-                  py-3
-                  text-[12px]
-                  text-gray-900
-                  outline-none
-                  placeholder:text-gray-400
-                  dark:text-white
-                "
-              />
-
-              <button
-                type="button"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-2
-                  pb-3
-                  pl-4
-                  text-[9px]
-                  font-bold
-                  uppercase
-                  tracking-[0.15em]
-                  text-gray-900
-                  transition-all
-                  hover:text-gray-500
-                  dark:text-white
-                "
-              >
-                Subscribe
-
-                <FiArrowUpRight
-                  size={13}
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                    group-hover:-translate-y-1
-                  "
-                />
-              </button>
-
-            </div>
-
-          </div>
+  <p
+    className="
+      mt-4
+      text-[11px]
+      leading-5
+      text-gray-500
+      dark:text-gray-400
+    "
+  >
+    A curated digital marketplace
+    <br />
+    for everyday essentials.
+  </p>
+</div>
 
         </div>
 
